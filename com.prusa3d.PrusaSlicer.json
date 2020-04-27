@@ -15,256 +15,19 @@
     "modules": [
         "shared-modules/glu/glu-9.json",
         "shared-modules/glew/glew.json",
-        {
-            "name": "jemalloc",
-            "config-opts": [
-                "--disable-documentation",
-                "--disable-static"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/jemalloc/jemalloc/releases/download/5.2.1/jemalloc-5.2.1.tar.bz2",
-                    "sha256": "34330e5ce276099e2e8950d9335db5a875689a4c6a56751ef3b1d8c537f887f6"
-                }
-            ],
-            "cleanup": [
-                "/bin",
-                "/include",
-                "/lib/*.a",
-                "/lib/pkgconfig",
-                "/share/doc",
-                "/share/man"
-            ]
-        },
-        {
-            "name": "openexr",
-            "buildsystem": "cmake",
-            "builddir": true,
-            "config-opts": [
-                "-DCMAKE_INSTALL_PREFIX=/app",
-                "-DBUILD_TESTING=OFF",
-                "-DPYILMBASE_ENABLE=OFF",
-                "-DOPENEXR_VIEWERS_ENABLE=OFF",
-                "-DOPENEXR_BUILD_UTILS=OFF"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/v2.4.0.tar.gz",
-                    "sha256": "4904c5ea7914a58f60a5e2fbc397be67e7a25c380d7d07c1c31a3eefff1c92f1"
-                }
-            ],
-            "cleanup": [
-                "/bin",
-                "/include",
-                "/lib/*.la",
-                "/lib/cmake",
-                "/lib/pkgconfig",
-                "/share/aclocal",
-                "/share/doc"
-            ]
-        },
-        {
-            "name": "tbb",
-            "buildsystem": "simple",
-            "build-commands": [
-                "make tbb tbbmalloc tbbproxy",
-                "install -d usr/lib/",
-                "install -m755 build/linux_*/*.so* /app/lib/",
-                "install -d usr/include",
-                "cp -a include/tbb /app/include/",
-                "cmake -DINSTALL_DIR=/app/lib/cmake/TBB -DSYSTEM_NAME=Linux -DTBB_VERSION_FILE=/app/include/tbb/tbb_stddef.h -P cmake/tbb_config_installer.cmake"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/intel/tbb/archive/v2020.2.tar.gz",
-                    "sha256": "4804320e1e6cbe3a5421997b52199e3c1a3829b2ecb6489641da4b8e32faf500"
-                }
-            ],
-            "cleanup": [
-                "/include"
-            ]
-        },
-        {
-            "name": "boost",
-            "buildsystem": "simple",
-            "build-commands": [
-                "./bootstrap.sh --prefix=/app --with-libraries=filesystem,iostreams,locale,regex,system,thread,log,atomic",
-                "./b2 --reconfigure link=static,shared variant=release debug-symbols=off boost.locale.icu=off threading=multi cflags=-fPIC cxxflags=-fPIC install"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://dl.bintray.com/boostorg/release/1.68.0/source/boost_1_68_0.tar.bz2",
-                    "sha256": "7f6130bc3cf65f56a618888ce9d5ea704fa10b462be126ad053e80e553d6d8b7"
-                }
-            ],
-            "cleanup": [
-                "/include"
-            ]
-        },
-        {
-            "name": "blosc",
-            "buildsystem": "cmake-ninja",
-            "builddir": true,
-            "config-opts": [
-                "-DCMAKE_PREFIX_PATH=/app",
-                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                "-DBUILD_BENCHMARKS=OFF",
-                "-DBUILD_TESTS=OFF",
-                "-DPREFER_EXTERNAL_ZLIB=ON"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/Blosc/c-blosc/archive/v1.18.1.tar.gz",
-                    "sha256": "18730e3d1139aadf4002759ef83c8327509a9fca140661deb1d050aebba35afb"
-                }
-            ],
-            "cleanup": [
-                "/include",
-                "/lib/*.a",
-                "/lib/pkgconfig"
-            ]
-        },
-        {
-            "name": "openvdb",
-            "subdir": "openvdb",
-            "buildsystem": "simple",
-            "build-commands": [
-                "make lib HDSO=/app/lib HT=/app DESTDIR=/app LOG4CPLUS_INCL_DIR= GLFW_INCL_DIR= PYTHON_VERSION= DOXYGEN= install"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/AcademySoftwareFoundation/openvdb/archive/v7.0.0.tar.gz",
-                    "sha256": "97bc8ae35ef7ccbf49a4e25cb73e8c2eccae6b235bac86f2150707efcd1e910d"
-                }
-            ],
-            "cleanup": [
-                "/bin",
-                "/include",
-                "/lib/*.a"
-            ]
-        },
-        {
-            "name": "nlopt",
-            "buildsystem": "cmake",
-            "config-opts": [
-                "-DNLOPT_PYTHON=OFF",
-                "-DNLOPT_OCTAVE=OFF",
-                "-DNLOPT_MATLAB=OFF",
-                "-DNLOPT_GUILE=OFF",
-                "-DCMAKE_INSTALL_PREFIX=/app",
-                "-DCMAKE_INSTALL_LIBDIR=/app/lib"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/stevengj/nlopt/archive/v2.6.1/nlopt-2.6.1.tar.gz",
-                    "sha256": "66d63a505187fb6f98642703bd0ef006fedcae2f9a6d1efa4f362ea919a02650"
-                }
-            ]
-        },
-        {
-            "name": "cereal",
-            "buildsystem": "cmake",
-            "config-opts": [
-                "-DCMAKE_INSTALL_PREFIX=/app",
-                "-DJUST_INSTALL_CEREAL=ON"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/USCiLab/cereal/archive/v1.3.0.tar.gz",
-                    "sha256": "329ea3e3130b026c03a4acc50e168e7daff4e6e661bc6a7dfec0d77b570851d5"
-                }
-            ]
-        },
-        {
-            "name": "eigen",
-            "builddir": true,
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
-                "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-            ],
-            "cleanup": [
-                "/share"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz",
-                    "sha256": "d56fbad95abf993f8af608484729e3d87ef611dd85b3380a8bad1d5cbc373a57"
-                }
-            ]
-        },
-        {
-            "name": "mpfr",
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz",
-                    "sha256": "1d3be708604eae0e42d578ba93b390c2a145f17743a744d8f3f8c2ad5855a38a"
-                }
-            ]
-        },
-        {
-            "name": "cgal",
-            "cleanup": [
-                "/bin"
-            ],
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
-                "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-            ],
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/CGAL/cgal/releases/download/releases%2FCGAL-4.14.2/CGAL-4.14.2.tar.xz",
-                    "sha256": "819b6863614ee65ab0edc98bf70321b6cb65e0b40b8d40fe7bd737eee0b89922"
-                }
-            ]
-        },
-        {
-            "name": "wxWidgets",
-            "cleanup": [
-                "/bin",
-                "/share/bakefile"
-            ],
-            "config-opts": [
-                "--with-gtk=3",
-                "--with-zlib",
-                "--with-opengl",
-                "--with-regex=builtin",
-                "--with-libpng=builtin",
-                "--with-libxpm=builtin",
-                "--with-libjpeg=builtin",
-                "--with-libtiff=builtin",
-                "--disable-sdltest",
-                "--disable-precomp-headers",
-                "--enable-unicode",
-                "--enable-display",
-                "--enable-propgrid",
-                "--enable-debug_info",
-                "--enable-debug_gdb",
-                "--disable-debug",
-                "--disable-debug_flag",
-                "--with-expat=builtin"
-            ],
-            "build-options": {
-                "cxxflags": "-std=c++0x"
-            },
-            "sources": [
-                {
-                    "type": "archive",
-                    "url": "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.3/wxWidgets-3.1.3.tar.bz2",
-                    "sha256": "fffc1d34dac54ff7008df327907984b156c50cff5a2f36ee3da6052744ab554a"
-                }
-            ]
-        },
+        "dependencies/jemalloc.json",
+        "dependencies/openexr.json",
+        "dependencies/tbb.json",
+        "dependencies/boost.json",
+        "dependencies/blosc.json",
+        "dependencies/openvdb.json",
+        "dependencies/nlopt.json",
+        "dependencies/cereal.json",
+        "dependencies/eigen.json",
+        "dependencies/mpfr.json",
+        "dependencies/cgal.json",
+        "shared-modules/gtk2/gtk2.json",
+        "dependencies/wxWidgets.json",
         {
             "name": "PrusaSlicer",
             "buildsystem": "cmake-ninja",
@@ -275,7 +38,7 @@
                 "-DSLIC3R_PCH=OFF",
                 "-DSLIC3R_PERL_XS=OFF",
                 "-DSLIC3R_WX_STABLE=OFF",
-                "-DSLIC3R_GTK=3",
+                "-DSLIC3R_GTK=2",
                 "-DSLIC3R_STATIC=OFF",
                 "-DSLIC3R_BUILD_SANDBOXES=OFF",
                 "-DSLIC3R_BUILD_TESTS=OFF",

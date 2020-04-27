@@ -50,6 +50,11 @@
     </screenshots>
     <content_rating type="oars-1.1" />
     <releases>
+        <release version="2.2.0-1" date="2020-04-27">
+            <description>
+                <p>Flatpak: switched to wxGtk2 due to many bugs with wxGtk3</p>
+            </description>
+        </release>
         <release version="2.2.0" date="2020-03-21">
             <description>
                 <p>This is final release of PrusaSlicer 2.2.0 introducing SLA hollowing and hole drilling, support for 3rd party printer vendors, 3Dconnexion support, 

@@ -1,0 +1,28 @@
+{
+    "name": "openexr",
+    "buildsystem": "cmake",
+    "builddir": true,
+    "config-opts": [
+        "-DCMAKE_INSTALL_PREFIX=/app",
+        "-DBUILD_TESTING=OFF",
+        "-DPYILMBASE_ENABLE=OFF",
+        "-DOPENEXR_VIEWERS_ENABLE=OFF",
+        "-DOPENEXR_BUILD_UTILS=OFF"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/v2.4.0.tar.gz",
+            "sha256": "4904c5ea7914a58f60a5e2fbc397be67e7a25c380d7d07c1c31a3eefff1c92f1"
+        }
+    ],
+    "cleanup": [
+        "/bin",
+        "/include",
+        "/lib/*.la",
+        "/lib/cmake",
+        "/lib/pkgconfig",
+        "/share/aclocal",
+        "/share/doc"
+    ]
+}
