@@ -50,9 +50,9 @@
     </screenshots>
     <content_rating type="oars-1.1" />
     <releases>
-        <release version="2.2.0" date="2020-04-27">
+        <release version="2.2.0-1" date="2020-04-27">
             <description>
-                <p>Flatpak: this use wxGtk2 due to bugs with wxGtk3</p>
+                <p>Flatpak: switched to wxGtk2 due to many bugs with wxGtk3</p>
             </description>
         </release>
         <release version="2.2.0" date="2020-03-21">
