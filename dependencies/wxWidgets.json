@@ -9,7 +9,6 @@
         "--with-zlib",
         "--with-opengl",
         "--with-regex=builtin",
-        "--with-libpng=builtin",
         "--with-libxpm=builtin",
         "--with-libjpeg=builtin",
         "--with-libtiff=builtin",
