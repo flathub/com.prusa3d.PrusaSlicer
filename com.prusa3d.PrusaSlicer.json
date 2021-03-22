@@ -26,7 +26,6 @@
         "dependencies/eigen.json",
         "dependencies/mpfr.json",
         "dependencies/cgal.json",
-        "shared-modules/gtk2/gtk2.json",
         "dependencies/wxWidgets.json",
         {
             "name": "PrusaSlicer",
@@ -38,7 +37,7 @@
                 "-DSLIC3R_PCH=OFF",
                 "-DSLIC3R_PERL_XS=OFF",
                 "-DSLIC3R_WX_STABLE=OFF",
-                "-DSLIC3R_GTK=2",
+                "-DSLIC3R_GTK=3",
                 "-DSLIC3R_STATIC=OFF",
                 "-DSLIC3R_BUILD_SANDBOXES=OFF",
                 "-DSLIC3R_BUILD_TESTS=OFF",
@@ -66,8 +65,8 @@
                 },
                 {
                     "type": "archive",
-                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.2.0.tar.gz",
-                    "sha256": "e6e0c83bf92e448ec058fd3063b84caca69f58b8b419e48eace6e8ce534937c0"
+                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.0.tar.gz",
+                    "sha256": "cd3bac5e29b5441fc4690f28cd7b1064e97dc00207bbdc88f7bd7832308d6ca5"
                 }
             ]
         }
