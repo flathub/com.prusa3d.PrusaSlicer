@@ -50,6 +50,13 @@
     </screenshots>
     <content_rating type="oars-1.1" />
     <releases>
+        <release version="2.3.1" date="2021-04-19">
+            <description>
+                <p>This a final release of PrusaSlicer 2.3.1, introducing native builds for the new Apple Silicon MacBooks, Chrome OS support, performance improvements 
+                in G-code rendering, security fixes and new 3rd party printer profiles. For full changelog on PrusaSlicer 2.3.1 series, please check the PrusaSlicer 
+                2.3.1-rc change log.</p>
+            </description>
+        </release>
         <release version="2.3.0" date="2021-01-11">
             <description>
                 <p>This a final release of PrusaSlicer 2.3.0, introducing paint-on supports, ironing, monotonic infill, seam painting, adaptive and support cubic infill,
