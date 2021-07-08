@@ -65,8 +65,8 @@
                 },
                 {
                     "type": "archive",
-                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.1.tar.gz",
-                    "sha256": "c1315826d07f428dfe4b9aa6325727beb1257aa6f711d1659a2760f8e213cd51"
+                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.2.tar.gz",
+                    "sha256": "1dfc9e6e0cbc23ee70cb8cedad08bc1683724cd8fc319f2b758a7aa8a449d65b"
                 }
             ]
         }
