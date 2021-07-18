@@ -50,6 +50,12 @@
     </screenshots>
     <content_rating type="oars-1.1" />
     <releases>
+        <release version="2.3.3" date="2021-07-16">
+            <description>
+                <p>PrusaSlicer 2.3.3 is a patch release following PrusaSlicer 2.3.2 release, fixing an unfortunate bug in handling FDM multi-material 
+                project and configuration files #6711.</p>
+            </description>
+        </release>
         <release version="2.3.2" date="2021-07-08">
             <description>
                 <p>This is a final release of PrusaSlicer 2.3.2, following 2.3.2-beta and 2.3.2-rc. 
