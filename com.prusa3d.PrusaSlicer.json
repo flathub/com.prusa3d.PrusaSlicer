@@ -1,7 +1,7 @@
 {
     "app-id": "com.prusa3d.PrusaSlicer",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "19.08",
+    "runtime-version": "20.08",
     "sdk": "org.freedesktop.Sdk",
     "command": "prusa-slicer",
     "finish-args": [
@@ -26,7 +26,6 @@
         "dependencies/eigen.json",
         "dependencies/mpfr.json",
         "dependencies/cgal.json",
-        "shared-modules/gtk2/gtk2.json",
         "dependencies/wxWidgets.json",
         {
             "name": "PrusaSlicer",
@@ -38,7 +37,7 @@
                 "-DSLIC3R_PCH=OFF",
                 "-DSLIC3R_PERL_XS=OFF",
                 "-DSLIC3R_WX_STABLE=OFF",
-                "-DSLIC3R_GTK=2",
+                "-DSLIC3R_GTK=3",
                 "-DSLIC3R_STATIC=OFF",
                 "-DSLIC3R_BUILD_SANDBOXES=OFF",
                 "-DSLIC3R_BUILD_TESTS=OFF",
@@ -66,8 +65,8 @@
                 },
                 {
                     "type": "archive",
-                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.0-alpha0.tar.gz",
-                    "sha256": "3366a734a325a922063ebdbcfd9e0b21359be585729b3982b33de8bf1ec65edd"
+                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.3.tar.gz",
+                    "sha256": "deda209505f740ac3d6f59cb2a960f4df908269ee09bd30cd4edb9fc472d29ac"
                 }
             ]
         }
