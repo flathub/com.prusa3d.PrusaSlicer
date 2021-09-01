@@ -63,11 +63,21 @@
                 },
                 {
                     "type": "file",
+                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
+                    "dest-filename": "com.prusa3d.PrusaSlicer.GCodeViewer.png",
+                    "sha256": "abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550"
+                },
+                {
+                    "type": "file",
                     "path": "com.prusa3d.PrusaSlicer.metainfo.xml"
                 },
                 {
                     "type": "file",
                     "path": "com.prusa3d.PrusaSlicer.desktop"
+                },
+                {
+                    "type": "file",
+                    "path": "com.prusa3d.PrusaSlicer.GCodeViewer.desktop"
                 },
                 {
                     "type": "archive",
