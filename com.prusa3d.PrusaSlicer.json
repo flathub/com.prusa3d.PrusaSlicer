@@ -15,33 +15,12 @@
     "modules": [
         "shared-modules/glu/glu-9.json",
         "shared-modules/glew/glew.json",
-        "dependencies/jemalloc.json",
-        "dependencies/openexr.json",
-        "dependencies/tbb.json",
-        "dependencies/boost.json",
-        "dependencies/blosc.json",
-        "dependencies/openvdb.json",
-        "dependencies/nlopt.json",
-        "dependencies/cereal.json",
-        "dependencies/eigen.json",
-        "dependencies/mpfr.json",
-        "dependencies/cgal.json",
-        "dependencies/wxWidgets.json",
         {
             "name": "PrusaSlicer",
-            "buildsystem": "cmake-ninja",
-            "config-opts": [
-                "-DCMAKE_INSTALL_PREFIX=/app",
-                "-DCMAKE_INSTALL_LIBDIR=/app/lib",
-                "-DSLIC3R_FHS=ON",
-                "-DSLIC3R_PCH=OFF",
-                "-DSLIC3R_PERL_XS=OFF",
-                "-DSLIC3R_WX_STABLE=OFF",
-                "-DSLIC3R_GTK=3",
-                "-DSLIC3R_STATIC=OFF",
-                "-DSLIC3R_BUILD_SANDBOXES=OFF",
-                "-DSLIC3R_BUILD_TESTS=OFF",
-                "-DCMAKE_BUILD_TYPE=Release"
+            "buildsystem": "simple",
+            "build-commands": [
+                "mkdir -p deps/build && cd deps/build && cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL",
+                "mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install"
             ],
             "post-install": [
                 "install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml",
@@ -64,9 +43,111 @@
                     "path": "com.prusa3d.PrusaSlicer.desktop"
                 },
                 {
+                    "type": "file",
+                    "url": "https://github.com/tamasmeszaros/c-blosc/archive/refs/heads/v1.17.0_tm.zip",
+                    "sha256": "dcb48bf43a672fa3de6a4b1de2c4c238709dad5893d1e097b8374ad84b1fc3b3",
+                    "dest": "external-packages/Blosc"
+                },
+                {
+                    "type": "file",
+                    "url": "https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz",
+                    "sha256": "aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a",
+                    "dest": "external-packages/Boost"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/prusa3d/polygon/archive/refs/heads/prusaslicer_gmp.zip",
+                    "sha256": "abeb9710f0a7069fb9b22181ae5c56f6066002f125db210e7ffb27032aed6824",
+                    "dest": "external-packages/boost_polygon"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz",
+                    "sha256": "1921f26d2e1daf9132da3c432e2fd02093ecaedf846e65d7679ddf868c7289c4",
+                    "dest": "external-packages/Cereal"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/CGAL/cgal/archive/releases/CGAL-5.0.zip",
+                    "sha256": "c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5",
+                    "dest": "external-packages/CGAL"
+                },
+                {
+                    "type": "file",
+                    "url": "https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2",
+                    "sha256": "eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c",
+                    "dest": "external-packages/GMP"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.0.6.zip",
+                    "sha256": "017bdc33ff3a72e11301c0feb4657cb27719d7f97fa67a78ed506c594218bbf1",
+                    "dest": "external-packages/JPEG"
+                },
+                {
+                    "type": "file",
+                    "url": "http://ftp.vim.org/ftp/gnu/mpfr/mpfr-3.1.6.tar.bz2",
+                    "sha256": "cf4f4b2d80abb79e820e78c8077b6725bbbb4e8f41896783c899087be0e94068",
+                    "dest": "external-packages/MPFR"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz",
+                    "sha256": "c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae",
+                    "dest": "external-packages/NLopt"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v2.5.5.zip",
+                    "sha256": "0307a3d7e1fa1e77e9d84d7e9a8694583fbbbfd50bdc6884e2c96b8ef6b902de",
+                    "dest": "external-packages/OpenEXR"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0l.tar.gz",
+                    "sha256": "e2acf0cf58d9bff2b42f2dc0aee79340c8ffe2c5e45d3ca4533dd5d4f5775b1d",
+                    "dest": "external-packages/OpenSSL"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/tamasmeszaros/openvdb/archive/refs/tags/v6.2.1-prusa3d.zip",
+                    "sha256": "caf9f0c91976722883ff9cb32420ef142af22f7e625fc643b91c23d6e4172f62",
+                    "dest": "external-packages/OpenVDB"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip",
+                    "sha256": "3d22d46c566b1761a0e15ea397589b3a5f36ac09b7c785382e6470156c04247f",
+                    "dest": "external-packages/PNG"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/qhull/qhull/archive/v8.0.1.zip",
+                    "sha256": "5287f5edd6a0372588f5d6640799086a4033d89d19711023ef8229dd9301d69b",
+                    "dest": "external-packages/Qhull"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/wjakob/tbb/archive/a0dc9bf76d0120f917b641ed095360448cabc85b.tar.gz",
+                    "sha256": "0545cb6033bd1873fcae3ea304def720a380a88292726943ae3b9b207f322efe",
+                    "dest": "external-packages/TBB"
+                },
+                {
+                    "type": "file",
+                    "url": "https://gitlab.com/libtiff/libtiff/-/archive/v4.1.0/libtiff-v4.1.0.zip",
+                    "sha256": "c56edfacef0a60c0de3e6489194fcb2f24c03dbb550a8a7de5938642d045bd32",
+                    "dest": "external-packages/TIFF"
+                },
+                {
+                    "type": "file",
+                    "url": "https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip",
+                    "sha256": "a1e145a083d173cf320c0bd8522c7ee5829052b49b68fe5268ac84f0c576b940",
+                    "dest": "external-packages/wxWidgets"
+                },
+                {
                     "type": "archive",
-                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.3.tar.gz",
-                    "sha256": "deda209505f740ac3d6f59cb2a960f4df908269ee09bd30cd4edb9fc472d29ac"
+                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/refs/heads/tm_flatpak_help_3.zip",
+                    "sha256": "706b2b444c25894bdc0ff7c7b7b08ba23fed190144ef22c261329e497665f48b"
                 }
             ]
         }
