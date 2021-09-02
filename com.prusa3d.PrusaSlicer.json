@@ -50,7 +50,9 @@
             "post-install": [
                 "install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml",
         	    "install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png",
-        	    "install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop"
+        	    "install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop",
+                "install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png",
+        	    "install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop"
             ],
             "sources": [
                 {
