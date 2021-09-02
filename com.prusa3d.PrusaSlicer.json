@@ -10,7 +10,11 @@
         "--device=dri",
         "--share=network",
         "--device=all",
-        "--filesystem=home"
+        "--filesystem=home",
+        "--filesystem=/run/media",
+        "--filesystem=/media",
+        "--filesystem=/mnt",
+        "--system-talk-name=org.freedesktop.UDisks2"
     ],
     "modules": [
         "shared-modules/glu/glu-9.json",
@@ -46,7 +50,9 @@
             "post-install": [
                 "install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml",
         	    "install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png",
-        	    "install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop"
+        	    "install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop",
+                "install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png",
+        	    "install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop"
             ],
             "sources": [
                 {
@@ -57,11 +63,21 @@
                 },
                 {
                     "type": "file",
+                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
+                    "dest-filename": "com.prusa3d.PrusaSlicer.GCodeViewer.png",
+                    "sha256": "abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550"
+                },
+                {
+                    "type": "file",
                     "path": "com.prusa3d.PrusaSlicer.metainfo.xml"
                 },
                 {
                     "type": "file",
                     "path": "com.prusa3d.PrusaSlicer.desktop"
+                },
+                {
+                    "type": "file",
+                    "path": "com.prusa3d.PrusaSlicer.GCodeViewer.desktop"
                 },
                 {
                     "type": "archive",
