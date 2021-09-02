@@ -10,7 +10,11 @@
         "--device=dri",
         "--share=network",
         "--device=all",
-        "--filesystem=home"
+        "--filesystem=home",
+        "--filesystem=/run/media",
+        "--filesystem=/media",
+        "--filesystem=/mnt",
+        "--system-talk-name=org.freedesktop.UDisks2"
     ],
     "modules": [
         "shared-modules/glu/glu-9.json",
