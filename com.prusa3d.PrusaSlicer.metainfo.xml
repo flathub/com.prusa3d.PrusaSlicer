@@ -50,6 +50,11 @@
     </screenshots>
     <content_rating type="oars-1.1" />
     <releases>
+        <release version="2.4.0-alpha1" date="2021-09-02">
+            <description>
+                <p>https://github.com/prusa3d/PrusaSlicer/wiki/PrusaSlicer-2.4.0-alpha1-full-change-log</p>
+            </description>
+        </release>
         <release version="2.3.3" date="2021-07-16">
             <description>
                 <p>PrusaSlicer 2.3.3 is a patch release following PrusaSlicer 2.3.2 release, fixing an unfortunate bug in handling FDM multi-material 

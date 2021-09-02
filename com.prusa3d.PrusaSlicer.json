@@ -156,8 +156,8 @@
                 },
                 {
                     "type": "archive",
-                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/refs/heads/tm_flatpak_help_3.zip",
-                    "sha256": "706b2b444c25894bdc0ff7c7b7b08ba23fed190144ef22c261329e497665f48b"
+                    "url": "https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip",
+                    "sha256": "9612400be0f2fec11cbc712df3e235c225df276ce98f663befd6157dbaefe3b6"
                 }
             ]
         }
