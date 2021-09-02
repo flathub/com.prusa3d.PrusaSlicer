@@ -55,7 +55,7 @@
                 {
                     "type": "file",
                     "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/flatpak/com.prusa3d.PrusaSlicer.GCodeViewer.desktop",
-                    "dest-filenameh": "com.prusa3d.PrusaSlicer.GCodeViewer.desktop",
+                    "dest-filename": "com.prusa3d.PrusaSlicer.GCodeViewer.desktop",
                     "sha256": "f5c2f7fd889dbe2d98825cb49b35df9398b9f899f0380b8029ee8c8a5cf614ca"
                 },
                 {
