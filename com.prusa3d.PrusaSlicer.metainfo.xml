@@ -52,7 +52,14 @@
     <releases>
         <release version="2.4.0-alpha1" date="2021-09-02">
             <description>
-                <p>https://github.com/prusa3d/PrusaSlicer/wiki/PrusaSlicer-2.4.0-alpha1-full-change-log</p>
+                <p>This is the first alpha release of PrusaSlicer 2.4.0, introducing Multi-material painting tool, improved FDM supports and raft, Windows dark mode, Fuzzy Skin, per object Brim configuration, Negative volumes, automatic Color Print for signs, Shape Gallery, "Tip of the day" notifications, Model simplification, support for Marlin 2 acceleration control, support of 3DLabPrint airplane models, new 3rd party printer profiles and many more new features, improvements and bugfixes.
+                To let you enjoy the alpha without worries, the alpha builds save their profiles into PrusaSlicer-alpha directory, so you may use the alpha side by side with the current release without ruining your production configuration.
+                The software is based on work of Alessandro Ranelucci (@alranel) and the RepRap community. 
+                The first public commit is from 2011-09-01, meaning that exactly today, PrusaSlicer based on Slic3r celebrates its tenth birthday🎂🍾 
+                Thanks to all who contributed during the decade and helped to continuously improve the software.
+                Complete description of improvements and changes with respect to the current PrusaSlicer 2.3.3 release follows.
+                Because the github Releases page clips the text to 25 thousand characters, full PrusaSlicer 2.4.0-alpha1 release log is available at the wiki.
+                </p>
             </description>
         </release>
         <release version="2.3.3" date="2021-07-16">
