@@ -18,8 +18,8 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
 
 modules:
-  - shared-modules/shared-modules/glu/glu-9.json
-  - shared-modules/shared-modules/glew/glew.json
+  - shared-modules/glu/glu-9.json
+  - shared-modules/glew/glew.json
 
   - name: PrusaSlicer
     buildsystem: simple
