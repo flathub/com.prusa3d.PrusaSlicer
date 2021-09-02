@@ -1,0 +1,147 @@
+app-id: com.prusa3d.PrusaSlicer
+runtime: org.freedesktop.Sdk
+runtime-version: '20.08'
+sdk: org.freedesktop.Sdk
+command: prusa-slicer
+desktop-file-name-suffix: ' (Alpha)'
+separate-locales: false
+finish-args:
+  - --share=ipc
+  - --socket=x11
+  - --device=dri
+  - --share=network
+  - --device=all
+  - --filesystem=home
+  - --filesystem=/run/media
+  - --filesystem=/media
+  - --filesystem=/mnt
+  - --system-talk-name=org.freedesktop.UDisks2
+
+modules:
+  - shared-modules/shared-modules/glu/glu-9.json
+  - shared-modules/shared-modules/glew/glew.json
+
+  - name: PrusaSlicer
+    buildsystem: simple
+    build-commands:
+      - mkdir -p deps/build && cd deps/build && cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
+      - mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install
+
+    post-install:
+      - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
+      - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
+      - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
+      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
+      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+    sources:
+      - type: file
+        path: com.prusa3d.PrusaSlicer.metainfo.xml
+
+      - type: file
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer.png
+        dest-filename: com.prusa3d.PrusaSlicer.png
+        sha256: 484cf12a856f035d8c3ee12fd404d03c3012f815fb9e8fa334c5f7e4127b905a
+
+      - type: file
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer-gcodeviewer_128px.png
+        dest-filename: com.prusa3d.PrusaSlicer.GCodeViewer.png
+        sha256: abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550
+
+      - type: file
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/flatpak/com.prusa3d.PrusaSlicer.desktop
+        dest-filename: com.prusa3d.PrusaSlicer.desktop
+        sha256: 9e46f2857b9645931d609485b771aa36ab69ff2056bc9fa809ee4b89a6b9e0bd
+
+      - type: file
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/flatpak/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+        dest-filename: com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+        sha256: f5c2f7fd889dbe2d98825cb49b35df9398b9f899f0380b8029ee8c8a5cf614ca
+
+      - type: file
+        url: https://github.com/tamasmeszaros/c-blosc/archive/refs/heads/v1.17.0_tm.zip
+        dest-filename: external-packages/Blosc
+        sha256: dcb48bf43a672fa3de6a4b1de2c4c238709dad5893d1e097b8374ad84b1fc3b3
+
+      - type: file
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz
+        dest-filename: external-packages/Boost
+        sha256: aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a
+
+      - type: file
+        url: https://github.com/prusa3d/polygon/archive/refs/heads/prusaslicer_gmp.zip
+        dest-filename: external-packages/boost_polygon
+        sha256: abeb9710f0a7069fb9b22181ae5c56f6066002f125db210e7ffb27032aed6824
+
+      - type: file
+        url: https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz
+        dest-filename: external-packages/Cereal
+        sha256: 1921f26d2e1daf9132da3c432e2fd02093ecaedf846e65d7679ddf868c7289c4
+
+      - type: file
+        url: https://github.com/CGAL/cgal/archive/releases/CGAL-5.0.zip
+        dest-filename: external-packages/CGAL
+        sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
+
+      - type: file
+        url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
+        dest-filename: external-packages/GMP
+        sha256: eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c
+
+      - type: file
+        url: https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.0.6.zip
+        dest-filename: external-packages/JPEG
+        sha256: 017bdc33ff3a72e11301c0feb4657cb27719d7f97fa67a78ed506c594218bbf1
+
+      - type: file
+        url: http://ftp.vim.org/ftp/gnu/mpfr/mpfr-3.1.6.tar.bz2
+        dest-filename: external-packages/MPFR
+        sha256: cf4f4b2d80abb79e820e78c8077b6725bbbb4e8f41896783c899087be0e94068
+
+      - type: file
+        url: https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz
+        dest-filename: external-packages/NLopt
+        sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
+
+      - type: file
+        url: https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v2.5.5.zip
+        dest-filename: external-packages/OpenEXR
+        sha256: 0307a3d7e1fa1e77e9d84d7e9a8694583fbbbfd50bdc6884e2c96b8ef6b902de
+
+      - type: file
+        url: https://github.com/openssl/openssl/archive/OpenSSL_1_1_0l.tar.gz
+        dest-filename: external-packages/OpenSSL
+        sha256: e2acf0cf58d9bff2b42f2dc0aee79340c8ffe2c5e45d3ca4533dd5d4f5775b1d
+
+      - type: file
+        url: https://github.com/tamasmeszaros/openvdb/archive/refs/tags/v6.2.1-prusa3d.zip
+        dest-filename: external-packages/OpenVDB
+        sha256: caf9f0c91976722883ff9cb32420ef142af22f7e625fc643b91c23d6e4172f62
+
+      - type: file
+        url: https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip
+        dest-filename: external-packages/PNG
+        sha256: 3d22d46c566b1761a0e15ea397589b3a5f36ac09b7c785382e6470156c04247f
+
+      - type: file
+        url: https://github.com/qhull/qhull/archive/v8.0.1.zip
+        dest-filename: external-packages/Qhull
+        sha256: 5287f5edd6a0372588f5d6640799086a4033d89d19711023ef8229dd9301d69b
+
+      - type: file
+        url: https://github.com/wjakob/tbb/archive/a0dc9bf76d0120f917b641ed095360448cabc85b.tar.gz
+        dest-filename: external-packages/TBB
+        sha256: 0545cb6033bd1873fcae3ea304def720a380a88292726943ae3b9b207f322efe
+
+      - type: file
+        url: https://gitlab.com/libtiff/libtiff/-/archive/v4.1.0/libtiff-v4.1.0.zip
+        dest-filename: external-packages/TIFF
+        sha256: c56edfacef0a60c0de3e6489194fcb2f24c03dbb550a8a7de5938642d045bd32
+
+      - type: file
+        url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
+        dest-filename: external-packages/wxWidgets
+        sha256: a1e145a083d173cf320c0bd8522c7ee5829052b49b68fe5268ac84f0c576b940
+
+      - type: archive
+        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip
+        sha256: 9612400be0f2fec11cbc712df3e235c225df276ce98f663befd6157dbaefe3b6
