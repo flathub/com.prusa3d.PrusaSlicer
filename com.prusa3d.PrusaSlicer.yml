@@ -18,15 +18,51 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
 
 modules:
-  - shared-modules/glu/glu-9.json
-  - shared-modules/glew/glew.json
+
+  - name: glu
+    config-opts: 
+      - --disable-static
+    sources:
+      - type: archive
+        url: https://mesa.freedesktop.org/archive/glu/glu-9.0.2.tar.xz
+        sha256: 6e7280ff585c6a1d9dfcdf2fca489251634b3377bfc33c29e4002466a38d02d4
+    cleanup:
+      - /include
+      - /lib/*.a
+      - /lib/*.la
+      - /lib/pkgconfig
+  
+  - name: glew
+    no-autogen: true
+    make-args:
+      - GLEW_PREFIX=/app
+      - GLEW_DEST=/app
+      - LIBDIR=/app/lib
+    make-install-args:
+      - GLEW_PREFIX=/app
+      - GLEW_DEST=/app
+      - LIBDIR=/app/lib
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/project/glew/glew/2.2.0/glew-2.2.0.tgz
+        sha256: d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1
+    cleanup:
+      - /include
+      - /lib/*.a
+      - /lib/pkgconfig
 
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
+      - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}_Flathub.org")/g' version.inc
       - mkdir -p deps/build && cd deps/build && cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
       - mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install
     post-install:
+      # Replace icon names with flatpak icon names
+      - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+      - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
+      - sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
+      # Desktop Integration
       - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
       - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
       - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
@@ -48,14 +84,14 @@ modules:
         sha256: abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550
 
       - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/flatpak/com.prusa3d.PrusaSlicer.desktop
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/PrusaSlicer.desktop
         dest-filename: com.prusa3d.PrusaSlicer.desktop
-        sha256: 9e46f2857b9645931d609485b771aa36ab69ff2056bc9fa809ee4b89a6b9e0bd
+        sha256: 5c1d65ae247487dcb0be5ecc4688fb6e9878341e39f848cdcc7531d7b7a43e38
 
       - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/flatpak/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/src/platform/unix/PrusaGcodeviewer.desktop
         dest-filename: com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-        sha256: f5c2f7fd889dbe2d98825cb49b35df9398b9f899f0380b8029ee8c8a5cf614ca
+        sha256: fae5cb1d2dbcf4ce6eb12dd26390919a13404802ea367f2cf9d9acdea1314ace
 
       - type: file
         url: https://github.com/tamasmeszaros/c-blosc/archive/refs/heads/v1.17.0_tm.zip
