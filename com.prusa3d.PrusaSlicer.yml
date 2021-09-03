@@ -54,8 +54,9 @@ modules:
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
+      - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+Flathub.org")/g' version.inc
       - mkdir -p deps/build && cd deps/build && cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
-      - mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DSLIC3R_BUILD_ID=PrusaSlicer-${SLIC3R_VERSION}-Flatpak -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install
+      - mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install
     post-install:
       # Replace icon names with flatpak icon names
       - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
