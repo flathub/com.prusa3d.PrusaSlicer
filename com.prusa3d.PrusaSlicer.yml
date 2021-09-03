@@ -54,6 +54,31 @@ modules:
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
+      # Set PrusaSlicer version, reference Flathub.org for bug seperation.
+      - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}_Flathub.org")/g' version.inc
+
+      # start build
+      - |
+        mkdir -p deps/build && cd deps/build && \
+        cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
+        cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
+      - |
+        mkdir -p build && cd build && \
+        cmake ../ \
+          -GNinja \
+          -DCMAKE_INSTALL_PREFIX=/app \
+          -DCMAKE_INSTALL_LIBDIR=/app/lib \
+          -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
+          -DSLIC3R_FHS=ON \
+          -DSLIC3R_GTK=3 \
+          -DSLIC3R_STATIC=ON \
+          -DSLIC3R_STATIC_EXCLUDE_GLEW=ON \
+          -DSLIC3R_STATIC_EXCLUDE_CURL=ON \
+          -DSLIC3R_BUILD_TESTS=OFF \
+          -DCMAKE_BUILD_TYPE=Release && \
+        cmake --build . --target install
+
+    post-install:
       # append desktop action section to desktop file, TODO: remove when #6879 merged
       - |
         cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
@@ -67,21 +92,13 @@ modules:
 
         EOT
 
-      # overwrite icons on .desktop files with app-id.
-      - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}_Flathub.org")/g' version.inc
-
-      # start build
-      - mkdir -p deps/build && cd deps/build && cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
-      - mkdir -p build && cd build && cmake ../ -GNinja -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_INSTALL_LIBDIR=/app/lib -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local -DSLIC3R_FHS=ON -DSLIC3R_GTK=3 -DSLIC3R_STATIC=ON -DSLIC3R_STATIC_EXCLUDE_GLEW=ON -DSLIC3R_STATIC_EXCLUDE_CURL=ON -DSLIC3R_BUILD_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && cmake --build . --target install
-
-    post-install:
-      # Replace icon names with flatpak icons based on app-id
+      # Replace icon names with flatpak icon names based on app-id
       - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
       - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
       - sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
 
       # Desktop Integration Install
-      # Installs icons and desktop file for PrusaSlicer and Prusa G-Code Viewer
+      # Installs icons and desktop files for PrusaSlicer and Prusa G-Code Viewer
       - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
       - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
       - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
