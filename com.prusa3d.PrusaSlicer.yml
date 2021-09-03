@@ -38,7 +38,7 @@ modules:
       - GLEW_PREFIX=/app
       - GLEW_DEST=/app
       - LIBDIR=/app/lib
-    make-install-arg:
+    make-install-args:
       - GLEW_PREFIX=/app
       - GLEW_DEST=/app
       - LIBDIR=/app/lib
