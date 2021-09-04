@@ -7,6 +7,11 @@ command: prusa-slicer
 desktop-file-name-suffix: " (Alpha)"
 separate-locales: false
 finish-args:
+  # Allow PrusaSlicer to own its session bus. 
+  # FIXME: this should match the app-id
+  - --own-name=com.prusa3d.prusaslicer.*
+  - --system-own-name=com.prusa3d.prusaslicer.*
+  - --system-talk-name=org.freedesktop.UDisks2
   - --share=ipc
   - --socket=x11
   - --device=dri
@@ -14,9 +19,8 @@ finish-args:
   - --device=all
   - --filesystem=home
   - --filesystem=/run/media
+  - --filesystem=/var/run/media
   - --filesystem=/media
-  - --filesystem=/mnt
-  - --system-talk-name=org.freedesktop.UDisks2
 
 modules:
   - name: glu
@@ -54,9 +58,6 @@ modules:
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
-      # Set PrusaSlicer version, reference Flathub.org for bug seperation.
-      - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}_Flathub.org")/g' version.inc
-
       # start build
       - |
         mkdir -p deps/build && cd deps/build && \
@@ -79,26 +80,7 @@ modules:
         cmake --build . --target install
 
     post-install:
-      # append desktop action section to desktop file, TODO: remove when #6879 merged
-      - |
-        cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
-          Actions=GCodeViewer;
-
-          [Desktop Action GCodeViewer]
-          Exec=prusa-slicer --gcodeviewer %F
-          Name=G-Code Viewer
-          Name[de]=G-Code Vorschau
-          Icon=com.prusa3d.PrusaSlicer.GCodeViewer
-
-        EOT
-
-      # Replace icon names with flatpak icon names based on app-id
-      - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-      - sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
-      - sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
-
       # Desktop Integration Install
-      # Installs icons and desktop files for PrusaSlicer and Prusa G-Code Viewer
       - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
       - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
       - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
@@ -106,44 +88,11 @@ modules:
       - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
     sources:
-      # AppData metainfo for Gnome Software & Co.
-      - type: file
-        path: com.prusa3d.PrusaSlicer.metainfo.xml
-
-      # PrusaSlicer icon
-      # Update the ref hash in the url on every new app update from the released git tag
-      - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/e6eae6258487ad15d05b621557968d8c49239f86/resources/icons/PrusaSlicer.png
-        dest-filename: com.prusa3d.PrusaSlicer.png
-        sha256: 484cf12a856f035d8c3ee12fd404d03c3012f815fb9e8fa334c5f7e4127b905a
-
-      # G-Code Viewer icon
-      # Update the ref hash in the url on every new app update from the released git tag
-      - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/e6eae6258487ad15d05b621557968d8c49239f86/resources/icons/PrusaSlicer-gcodeviewer_128px.png
-        dest-filename: com.prusa3d.PrusaSlicer.GCodeViewer.png
-        sha256: abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550
-
-      # PrusaSlicer desktop file from prusa3d
-      # Update the ref hash in the url on every new app update from the released git tag
-      - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/e6eae6258487ad15d05b621557968d8c49239f86/src/platform/unix/PrusaSlicer.desktop
-        dest-filename: com.prusa3d.PrusaSlicer.desktop
-        sha256: 5c1d65ae247487dcb0be5ecc4688fb6e9878341e39f848cdcc7531d7b7a43e38
-
-      # G-Code Viewer desktop file from prusa3d
-      # Update the ref hash in the url on every new app update from the released git tag
-      - type: file
-        url: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/e6eae6258487ad15d05b621557968d8c49239f86/src/platform/unix/PrusaGcodeviewer.desktop
-        dest-filename: com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-        sha256: fae5cb1d2dbcf4ce6eb12dd26390919a13404802ea367f2cf9d9acdea1314ace
-
       # -
-      # Section bellow fetches all PrusaSlicer dependencies before the build process and stores them in external-packages/ .
-      # The build flag -DDEP_DOWNLOAD_DIR tells the build where to find them.
+      # Section bellow fetches all PrusaSlicer dependencies before the build process and stores them in external-packages/*/* .
+      # -DDEP_DOWNLOAD_DIR is set in the build process which has to match with dest.
       #
-      # The url, dest and sha256 must match those from PrusaSlicer's cmake scripts in PrusaSlicer/deps/
-      # PrusaSlicer cmake scripts will take care of the rest.
+      # NOTE: The url, dest folder name and sha256 must match from PrusaSlicer's cmake scripts and folder names in PrusaSlicer/deps/
       # -
 
       # Blosc
@@ -200,6 +149,12 @@ modules:
         dest: external-packages/NLopt
         sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
 
+      # OpenCSG
+      - type: file
+        url: https://github.com/floriankirsch/OpenCSG/archive/refs/tags/opencsg-1-4-2-release.zip
+        dest: external-packages/OpenCSG
+        sha256: 51afe0db79af8386e2027d56d685177135581e0ee82ade9d7f2caff8deab5ec5
+
       # OpenEXR
       - type: file
         url: https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v2.5.5.zip
@@ -242,7 +197,7 @@ modules:
         dest: external-packages/TIFF
         sha256: c56edfacef0a60c0de3e6489194fcb2f24c03dbb550a8a7de5938642d045bd32
 
-      # wxWidgets, patched with custom changes from Prusa3d
+      # wxWidgets, Prusa custom patched
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
         dest: external-packages/wxWidgets
@@ -252,3 +207,39 @@ modules:
       - type: archive
         url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip
         sha256: 9612400be0f2fec11cbc712df3e235c225df276ce98f663befd6157dbaefe3b6
+      
+      # Pre-Build
+      - type: shell
+        commands: 
+          # Set PrusaSlicer version, reference Flathub.org for bug seperation.
+          - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+flathub.org")/g' version.inc
+
+          - |
+            cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
+            cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
+            cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
+            cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+          
+          # Append desktop action section to PrusaSlicer.desktop file
+          # TODO: remove when #6879 merged
+          - |
+            cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
+              Actions=GCodeViewer;
+
+              [Desktop Action GCodeViewer]
+              Exec=prusa-slicer --gcodeviewer %F
+              Name=G-Code Viewer
+              Name[de]=G-Code Vorschau
+              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
+
+            EOT
+          
+          # Replace icon names with flatpak icon names based on app-id
+          - | 
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
+
+      # AppData metainfo for Gnome Software & Co.
+      - type: file
+        path: com.prusa3d.PrusaSlicer.metainfo.xml
