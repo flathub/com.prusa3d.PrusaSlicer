@@ -7,6 +7,9 @@ command: prusa-slicer
 desktop-file-name-suffix: " (Alpha)"
 separate-locales: false
 finish-args:
+  # Allow PrusaSlicer to own its session bus. 
+  # FIXME: this should match the app-id
+  - --own-name=com.prusa3d.prusaslicer.*
   - --share=ipc
   - --socket=x11
   - --device=dri
@@ -209,7 +212,7 @@ modules:
         commands: 
           # Set PrusaSlicer version, reference Flathub.org for bug seperation.
           - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+flathub.org")/g' version.inc
-          
+
           - |
             cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
             cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
