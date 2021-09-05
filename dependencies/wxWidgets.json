@@ -17,8 +17,6 @@
         "--enable-unicode",
         "--enable-display",
         "--enable-propgrid",
-        "--enable-debug_info",
-        "--enable-debug_gdb",
         "--disable-debug",
         "--disable-debug_flag",
         "--with-expat=builtin"
@@ -29,8 +27,8 @@
     "sources": [
         {
             "type": "archive",
-            "url": "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.3/wxWidgets-3.1.3.tar.bz2",
-            "sha256": "fffc1d34dac54ff7008df327907984b156c50cff5a2f36ee3da6052744ab554a"
+            "url": "https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.3-patched.zip",
+            "sha256": "c81c85913f5dc5a9c5361d2378637480eb409cdc6292330e15bbab145eaef949"
         }
     ]
 }
