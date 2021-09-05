@@ -14,9 +14,9 @@
         "--filesystem=/run/media",
         "--filesystem=/media",
         "--system-talk-name=org.freedesktop.UDisks2",
-        "--own-name=com.prusa3d.*",
+        "--own-name=com.prusa3d.prusaslicer.*",
         "--talk-name=org.freedesktop.Flatpak",
-        "--talk-name=org.prusa3d.*"
+        "--talk-name=com.prusa3d.prusaslicer.InstanceCheck.*"
     ],
     "modules": [
         "shared-modules/glu/glu-9.json",
