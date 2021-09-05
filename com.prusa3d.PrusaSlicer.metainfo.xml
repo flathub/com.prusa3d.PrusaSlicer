@@ -53,7 +53,7 @@
     <releases>
         <release version="2.3.3-1" date="2021-09-05">
             <description>
-                <p>This is a flatpak maintanance release. Includes fixes for wxWidgets, G-Code Viewer, permissions sdcard</p>
+                <p>This is a flatpak maintanance release.</p>
             </description>
         </release>
         <release version="2.3.3" date="2021-07-16">
