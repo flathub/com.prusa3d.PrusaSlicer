@@ -17,8 +17,6 @@
         "--enable-unicode",
         "--enable-display",
         "--enable-propgrid",
-        "--enable-debug_info",
-        "--enable-debug_gdb",
         "--disable-debug",
         "--disable-debug_flag",
         "--with-expat=builtin"

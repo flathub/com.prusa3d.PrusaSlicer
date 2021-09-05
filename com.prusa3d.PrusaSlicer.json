@@ -13,8 +13,10 @@
         "--filesystem=home",
         "--filesystem=/run/media",
         "--filesystem=/media",
-        "--filesystem=/mnt",
-        "--system-talk-name=org.freedesktop.UDisks2"
+        "--system-talk-name=org.freedesktop.UDisks2",
+        "--own-name=com.prusa3d.prusaslicer.*",
+        "--talk-name=org.freedesktop.Flatpak",
+        "--talk-name=com.prusa3d.prusaslicer.InstanceCheck.*"
     ],
     "modules": [
         "shared-modules/glu/glu-9.json",
@@ -57,13 +59,13 @@
             "sources": [
                 {
                     "type": "file",
-                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer.png",
+                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/8f0916e37135a47a6d23fe3ed9815b96f175df05/resources/icons/PrusaSlicer.png",
                     "dest-filename": "com.prusa3d.PrusaSlicer.png",
                     "sha256": "484cf12a856f035d8c3ee12fd404d03c3012f815fb9e8fa334c5f7e4127b905a"
                 },
                 {
                     "type": "file",
-                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/master/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
+                    "url": "hhttps://raw.githubusercontent.com/prusa3d/PrusaSlicer/8f0916e37135a47a6d23fe3ed9815b96f175df05/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
                     "dest-filename": "com.prusa3d.PrusaSlicer.GCodeViewer.png",
                     "sha256": "abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550"
                 },
@@ -83,6 +85,12 @@
                     "type": "archive",
                     "url": "https://github.com/prusa3d/PrusaSlicer/archive/version_2.3.3.tar.gz",
                     "sha256": "deda209505f740ac3d6f59cb2a960f4df908269ee09bd30cd4edb9fc472d29ac"
+                },
+                {
+                    "type": "shell",
+                    "commands": [
+                        "sed -i 's/+UNKNOWN/+flathub.org/g' version.inc"
+                    ]
                 }
             ]
         }
