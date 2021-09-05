@@ -34,6 +34,7 @@
             <li>wide automated unit testing</li>
         </ul>
     </description>
+    <developer_name>Prusa Research a.s</developer_name>
     <url type="homepage">https://www.prusa3d.com/prusaslicer/</url>
     <url type="help">https://help.prusa3d.com</url>
     <url type="bugtracker">https://github.com/prusa3d/PrusaSlicer/issues</url>
