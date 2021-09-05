@@ -213,7 +213,7 @@ modules:
       - type: shell
         commands: 
           # Set PrusaSlicer version, reference Flathub.org for bug seperation.
-          - sed -i 's/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+UNKNOWN")/set(SLIC3R_BUILD_ID "PrusaSlicer-${SLIC3R_VERSION}+flathub.org")/g' version.inc
+          - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
             cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
