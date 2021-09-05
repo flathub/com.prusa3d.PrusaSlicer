@@ -7,11 +7,6 @@ command: prusa-slicer
 desktop-file-name-suffix: " (Alpha)"
 separate-locales: false
 finish-args:
-  # Allow PrusaSlicer to own its session bus. 
-  # FIXME: this should match the app-id
-  - --own-name=com.prusa3d.prusaslicer.*
-  #- --system-own-name=com.prusa3d.prusaslicer.*
-  - --system-talk-name=org.freedesktop.UDisks2
   - --share=ipc
   - --socket=x11
   - --device=dri
@@ -19,8 +14,13 @@ finish-args:
   - --device=all
   - --filesystem=home
   - --filesystem=/run/media
-  - --filesystem=/var/run/media
   - --filesystem=/media
+  - --filesystem=/mnt
+  # Allow PrusaSlicer to own its session bus. 
+  # FIXME: this should match the app-id
+  #- --own-name=com.prusa3d.prusaslicer.*
+  #- --system-own-name=com.prusa3d.prusaslicer.*
+  - --system-talk-name=org.freedesktop.UDisks2
 
 modules:
   - name: glu
@@ -61,7 +61,9 @@ modules:
       # start build
       - |
         mkdir -p deps/build && cd deps/build && \
-        cmake ../ -DDEP_WX_GTK3=ON -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
+        cmake ../ \
+          -DDEP_WX_GTK3=ON \
+          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
         cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
       - |
         mkdir -p build && cd build && \
