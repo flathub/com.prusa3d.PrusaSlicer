@@ -10,7 +10,7 @@ finish-args:
   # Allow PrusaSlicer to own its session bus. 
   # FIXME: this should match the app-id
   - --own-name=com.prusa3d.prusaslicer.*
-  - --system-own-name=com.prusa3d.prusaslicer.*
+  #- --system-own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   - --share=ipc
   - --socket=x11
