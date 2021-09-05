@@ -14,13 +14,12 @@ finish-args:
   - --device=all
   - --filesystem=home
   - --filesystem=/run/media
-  #- --filesystem=/var/run/media
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
-  # bwrap: Can't make symlink at /var/run: File exists
-  - --own-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  #- --system-own-name=com.prusa3d.prusaslicer.*
+  - --own-name=com.prusa3d.*
   - --system-talk-name=org.freedesktop.UDisks2
+  - --talk-name=org.freedesktop.Flatpak
+  - --talk-name=org.prusa3d.*
 
 modules:
   - name: glu
