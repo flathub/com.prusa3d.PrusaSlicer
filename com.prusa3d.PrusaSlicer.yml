@@ -82,11 +82,17 @@ modules:
 
     post-install:
       # Desktop Integration Install
-      - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
-      - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
-      - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
-      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
-      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+      - |
+        install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
+        install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
+        install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
+        install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
+        install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+        
+      - |
+        mkdir -p /app/share/mime/packages/
+        install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
+        update-mime-database /app/share/mime
 
     sources:
       # -
@@ -244,3 +250,7 @@ modules:
       # AppData metainfo for Gnome Software & Co.
       - type: file
         path: com.prusa3d.PrusaSlicer.metainfo.xml
+      
+      # Adding MIME type for 3mf
+      - type: file
+        path: com.prusa3d.PrusaSlicer.mime.xml
