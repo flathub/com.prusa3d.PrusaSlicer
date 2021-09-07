@@ -14,9 +14,17 @@
     <metadata_license>0BSD</metadata_license>
     <project_license>AGPL-3.0-only</project_license>
     <content_rating type="oars-1.1" />
+    <requires>
+      <display_length compare="ge">768</display_length>
+    </requires>
+    <recommends>
+      <control>keyboard</control>
+      <control>pointing</control>
+    </recommends>
     <screenshots>
         <screenshot type="default">
             <image>https://user-images.githubusercontent.com/590307/131978407-a2618774-4af5-47d4-b380-7e17ae87a4da.png</image>
+            <caption>Screenshot caption</caption>
         </screenshot>
     </screenshots>
     <description>
@@ -26,10 +34,6 @@
             compatible with any modern printer based on the RepRap toolchain, including all
             those based on the Marlin, Prusa, Sprinter and Repetier firmware. It also works
             with Mach3, LinuxCNC and Machinekit controllers.
-        </p>
-        <p>
-            This is a community package of PrusaSlicer and not officially supported Prusa Research. 
-            Report bugs only through the linked issue tracker.
         </p>
     </description>
     <releases>
