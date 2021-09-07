@@ -1,5 +1,5 @@
 app-id: com.prusa3d.PrusaSlicer
-runtime: org.freedesktop.Sdk
+runtime: org.freedesktop.Platform
 runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: prusa-slicer
