@@ -15,7 +15,7 @@ finish-args:
   - --filesystem=home
   - --filesystem=/run/media
   - --filesystem=/media
-  # Allow PrusaSlicer to own its session bus. 
+  # Allow PrusaSlicer to own its session bus.
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   #- --talk-name=org.freedesktop.Flatpak
@@ -38,13 +38,13 @@ modules:
   - name: glew
     no-autogen: true
     make-args:
-      - GLEW_PREFIX=/app
-      - GLEW_DEST=/app
-      - LIBDIR=/app/lib
+      - GLEW_PREFIX=${FLATPAK_DEST}
+      - GLEW_DEST=${FLATPAK_DEST}
+      - LIBDIR=${FLATPAK_DEST}/lib
     make-install-args:
-      - GLEW_PREFIX=/app
-      - GLEW_DEST=/app
-      - LIBDIR=/app/lib
+      - GLEW_PREFIX=${FLATPAK_DEST}
+      - GLEW_DEST=${FLATPAK_DEST}
+      - LIBDIR=${FLATPAK_DEST}/lib
     sources:
       - type: archive
         url: https://downloads.sourceforge.net/project/glew/glew/2.2.0/glew-2.2.0.tgz
@@ -57,20 +57,22 @@ modules:
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
-      # start build
-      - |
-        mkdir -p deps/build && cd deps/build && \
+      - | # build depencenies first
+        mkdir -p ${FLATPAK_BUILDER_BUILDDIR}/deps/build && \
+        cd ${FLATPAK_BUILDER_BUILDDIR}/deps/build && \
         cmake ../ \
           -DDEP_WX_GTK3=ON \
-          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
-        cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
-      - |
-        mkdir -p build && cd build && \
+          -DDEP_DOWNLOAD_DIR=${FLATPAK_BUILDER_BUILDDIR}/external-packages && \
+        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL
+
+      - | # build PrusaSlicer
+        mkdir -p ${FLATPAK_BUILDER_BUILDDIR}/build && \
+        cd ${FLATPAK_BUILDER_BUILDDIR}/build && \
         cmake ../ \
           -GNinja \
-          -DCMAKE_INSTALL_PREFIX=/app \
-          -DCMAKE_INSTALL_LIBDIR=/app/lib \
-          -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
+          -DCMAKE_INSTALL_PREFIX=${FLATPAK_DEST} \
+          -DCMAKE_INSTALL_LIBDIR=${FLATPAK_DEST}/lib \
+          -DCMAKE_PREFIX_PATH=${FLATPAK_BUILDER_BUILDDIR}/deps/build/destdir/usr/local \
           -DSLIC3R_FHS=ON \
           -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=ON \
@@ -82,11 +84,11 @@ modules:
 
     post-install:
       # Desktop Integration Install
-      - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
-      - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
-      - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
-      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
-      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/metainfo ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.metainfo.xml
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/icons/hicolor/128x128/apps ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.png
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/applications ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/icons/hicolor/128x128/apps ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.png
+      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/applications ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
 
     sources:
       # -
@@ -99,148 +101,148 @@ modules:
       # Blosc
       - type: file
         url: https://github.com/tamasmeszaros/c-blosc/archive/refs/heads/v1.17.0_tm.zip
-        dest: external-packages/Blosc
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/Blosc
         sha256: dcb48bf43a672fa3de6a4b1de2c4c238709dad5893d1e097b8374ad84b1fc3b3
 
       # Boost
       - type: file
         url: https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz
-        dest: external-packages/Boost
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/Boost
         sha256: aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a
 
       # boost_polygon
       - type: file
         url: https://github.com/prusa3d/polygon/archive/refs/heads/prusaslicer_gmp.zip
-        dest: external-packages/boost_polygon
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/boost_polygon
         sha256: abeb9710f0a7069fb9b22181ae5c56f6066002f125db210e7ffb27032aed6824
 
       # Cereal
       - type: file
         url: https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz
-        dest: external-packages/Cereal
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/Cereal
         sha256: 1921f26d2e1daf9132da3c432e2fd02093ecaedf846e65d7679ddf868c7289c4
 
       # CGAL
       - type: file
         url: https://github.com/CGAL/cgal/archive/releases/CGAL-5.0.zip
-        dest: external-packages/CGAL
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/CGAL
         sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
 
       # GMP
       - type: file
         url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
-        dest: external-packages/GMP
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/GMP
         sha256: eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c
 
       # JPEG, libjpeg-turbo
       - type: file
         url: https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/2.0.6.zip
-        dest: external-packages/JPEG
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/JPEG
         sha256: 017bdc33ff3a72e11301c0feb4657cb27719d7f97fa67a78ed506c594218bbf1
 
       # MPFR
       - type: file
         url: http://ftp.vim.org/ftp/gnu/mpfr/mpfr-3.1.6.tar.bz2
-        dest: external-packages/MPFR
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/MPFR
         sha256: cf4f4b2d80abb79e820e78c8077b6725bbbb4e8f41896783c899087be0e94068
 
       # NLopt
       - type: file
         url: https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz
-        dest: external-packages/NLopt
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/NLopt
         sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
 
       # OpenCSG
       - type: file
         url: https://github.com/floriankirsch/OpenCSG/archive/refs/tags/opencsg-1-4-2-release.zip
-        dest: external-packages/OpenCSG
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/OpenCSG
         sha256: 51afe0db79af8386e2027d56d685177135581e0ee82ade9d7f2caff8deab5ec5
 
       # OpenEXR
       - type: file
         url: https://github.com/AcademySoftwareFoundation/openexr/archive/refs/tags/v2.5.5.zip
-        dest: external-packages/OpenEXR
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/OpenEXR
         sha256: 0307a3d7e1fa1e77e9d84d7e9a8694583fbbbfd50bdc6884e2c96b8ef6b902de
 
       # OpenSSL
       - type: file
         url: https://github.com/openssl/openssl/archive/OpenSSL_1_1_0l.tar.gz
-        dest: external-packages/OpenSSL
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/OpenSSL
         sha256: e2acf0cf58d9bff2b42f2dc0aee79340c8ffe2c5e45d3ca4533dd5d4f5775b1d
 
       # OpenVDB
       - type: file
         url: https://github.com/tamasmeszaros/openvdb/archive/refs/tags/v6.2.1-prusa3d.zip
-        dest: external-packages/OpenVDB
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/OpenVDB
         sha256: caf9f0c91976722883ff9cb32420ef142af22f7e625fc643b91c23d6e4172f62
 
       # PNG, libpng
       - type: file
         url: https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip
-        dest: external-packages/PNG
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/PNG
         sha256: 3d22d46c566b1761a0e15ea397589b3a5f36ac09b7c785382e6470156c04247f
 
       # Qhull
       - type: file
         url: https://github.com/qhull/qhull/archive/v8.0.1.zip
-        dest: external-packages/Qhull
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/Qhull
         sha256: 5287f5edd6a0372588f5d6640799086a4033d89d19711023ef8229dd9301d69b
 
       # TBB
       - type: file
         url: https://github.com/wjakob/tbb/archive/a0dc9bf76d0120f917b641ed095360448cabc85b.tar.gz
-        dest: external-packages/TBB
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/TBB
         sha256: 0545cb6033bd1873fcae3ea304def720a380a88292726943ae3b9b207f322efe
 
       # TIFF, libtiff
       - type: file
         url: https://gitlab.com/libtiff/libtiff/-/archive/v4.1.0/libtiff-v4.1.0.zip
-        dest: external-packages/TIFF
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/TIFF
         sha256: c56edfacef0a60c0de3e6489194fcb2f24c03dbb550a8a7de5938642d045bd32
 
       # wxWidgets, Prusa custom patched
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
-        dest: external-packages/wxWidgets
+        dest: ${FLATPAK_BUILDER_BUILDDIR}/external-packages/wxWidgets
         sha256: a1e145a083d173cf320c0bd8522c7ee5829052b49b68fe5268ac84f0c576b940
 
       # PrusaSlicer Source Archive
       - type: archive
         url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip
         sha256: 9612400be0f2fec11cbc712df3e235c225df276ce98f663befd6157dbaefe3b6
-      
+
       # Pre-Build
       - type: shell
-        commands: 
-          # Set PrusaSlicer version, reference Flathub.org for bug seperation.
-          - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
+        commands:
+          # reference Flathub.org for bug seperation.
+          - sed -i 's/+UNKNOWN/+flathub.org/g' ${FLATPAK_BUILDER_BUILDDIR}/version.inc
 
           - |
-            cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
-            cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
-            cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
-            cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-          
+            cp ${FLATPAK_BUILDER_BUILDDIR}/resources/icons/PrusaSlicer.png ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.png
+            cp ${FLATPAK_BUILDER_BUILDDIR}/resources/icons/PrusaSlicer-gcodeviewer_128px.png ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.png
+            cp ${FLATPAK_BUILDER_BUILDDIR}/src/platform/unix/PrusaSlicer.desktop ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
+            cp ${FLATPAK_BUILDER_BUILDDIR}/src/platform/unix/PrusaGcodeviewer.desktop ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
+
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove when #6879 merged
           - |
-            cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
+            cat <<EOT >> ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
               Exec=prusa-slicer --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
-              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
+              Icon=${FLATPAK_ID}.GCodeViewer
 
             EOT
-          
+
           # Replace icon names with flatpak icon names based on app-id
-          - | 
-            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
-            sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
+          - |
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon='${FLATPAK_ID}'.GCodeViewer/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon='${FLATPAK_ID}'.GCodeViewer/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
+            sed -i 's/Icon=PrusaSlicer/Icon='${FLATPAK_ID}'/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
 
       # AppData metainfo for Gnome Software & Co.
       - type: file
-        path: com.prusa3d.PrusaSlicer.metainfo.xml
+        path: ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.metainfo.xml
