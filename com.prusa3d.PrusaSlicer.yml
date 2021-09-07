@@ -15,7 +15,7 @@ finish-args:
   - --filesystem=home
   - --filesystem=/run/media
   - --filesystem=/media
-  # Allow PrusaSlicer to own its session bus.
+  # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   #- --talk-name=org.freedesktop.Flatpak
@@ -38,13 +38,13 @@ modules:
   - name: glew
     no-autogen: true
     make-args:
-      - GLEW_PREFIX=${FLATPAK_DEST}
-      - GLEW_DEST=${FLATPAK_DEST}
-      - LIBDIR=${FLATPAK_DEST}/lib
+      - GLEW_PREFIX=/app
+      - GLEW_DEST=/app
+      - LIBDIR=/app/lib
     make-install-args:
-      - GLEW_PREFIX=${FLATPAK_DEST}
-      - GLEW_DEST=${FLATPAK_DEST}
-      - LIBDIR=${FLATPAK_DEST}/lib
+      - GLEW_PREFIX=/app
+      - GLEW_DEST=/app
+      - LIBDIR=/app/lib
     sources:
       - type: archive
         url: https://downloads.sourceforge.net/project/glew/glew/2.2.0/glew-2.2.0.tgz
@@ -57,22 +57,20 @@ modules:
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
-      - | # build depencenies first
-        mkdir -p ${FLATPAK_BUILDER_BUILDDIR}/deps/build && \
-        cd ${FLATPAK_BUILDER_BUILDDIR}/deps/build && \
+      # start build
+      - |
+        mkdir -p deps/build && cd deps/build && \
         cmake ../ \
           -DDEP_WX_GTK3=ON \
-          -DDEP_DOWNLOAD_DIR=${FLATPAK_BUILDER_BUILDDIR}/external-packages && \
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL
-
-      - | # build PrusaSlicer
-        mkdir -p ${FLATPAK_BUILDER_BUILDDIR}/build && \
-        cd ${FLATPAK_BUILDER_BUILDDIR}/build && \
+          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
+        cmake --build . --target dep_Cereal dep_TBB dep_Boost dep_OpenVDB dep_NLopt dep_wxWidgets dep_CGAL
+      - |
+        mkdir -p build && cd build && \
         cmake ../ \
           -GNinja \
-          -DCMAKE_INSTALL_PREFIX=${FLATPAK_DEST} \
-          -DCMAKE_INSTALL_LIBDIR=${FLATPAK_DEST}/lib \
-          -DCMAKE_PREFIX_PATH=${FLATPAK_BUILDER_BUILDDIR}/deps/build/destdir/usr/local \
+          -DCMAKE_INSTALL_PREFIX=/app \
+          -DCMAKE_INSTALL_LIBDIR=/app/lib \
+          -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
           -DSLIC3R_FHS=ON \
           -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=ON \
@@ -84,11 +82,11 @@ modules:
 
     post-install:
       # Desktop Integration Install
-      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/metainfo ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.metainfo.xml
-      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/icons/hicolor/128x128/apps ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.png
-      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/applications ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
-      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/icons/hicolor/128x128/apps ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.png
-      - install -Dm644 --target-directory=${FLATPAK_DEST}/share/applications ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
+      - install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
+      - install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
+      - install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
+      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
+      - install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
     sources:
       # -
@@ -210,38 +208,38 @@ modules:
       - type: archive
         url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip
         sha256: 9612400be0f2fec11cbc712df3e235c225df276ce98f663befd6157dbaefe3b6
-
+      
       # Pre-Build
       - type: shell
-        commands:
-          # reference Flathub.org for bug seperation.
-          - sed -i 's/+UNKNOWN/+flathub.org/g' ${FLATPAK_BUILDER_BUILDDIR}/version.inc
+        commands: 
+          # Set PrusaSlicer version, reference Flathub.org for bug seperation.
+          - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
-            cp ${FLATPAK_BUILDER_BUILDDIR}/resources/icons/PrusaSlicer.png ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.png
-            cp ${FLATPAK_BUILDER_BUILDDIR}/resources/icons/PrusaSlicer-gcodeviewer_128px.png ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.png
-            cp ${FLATPAK_BUILDER_BUILDDIR}/src/platform/unix/PrusaSlicer.desktop ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
-            cp ${FLATPAK_BUILDER_BUILDDIR}/src/platform/unix/PrusaGcodeviewer.desktop ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
-
+            cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
+            cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
+            cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
+            cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+          
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove when #6879 merged
           - |
-            cat <<EOT >> ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
+            cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
               Exec=prusa-slicer --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
-              Icon=${FLATPAK_ID}.GCodeViewer
+              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
 
             EOT
-
+          
           # Replace icon names with flatpak icon names based on app-id
-          - |
-            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon='${FLATPAK_ID}'.GCodeViewer/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.GCodeViewer.desktop
-            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon='${FLATPAK_ID}'.GCodeViewer/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
-            sed -i 's/Icon=PrusaSlicer/Icon='${FLATPAK_ID}'/g' ${FLATPAK_BUILDER_BUILDDIR}/${FLATPAK_ID}.desktop
+          - | 
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+            sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
 
       # AppData metainfo for Gnome Software & Co.
       - type: file
