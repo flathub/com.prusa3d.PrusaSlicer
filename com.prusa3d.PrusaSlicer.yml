@@ -59,13 +59,13 @@ modules:
     build-commands:
       # start build
       - |
-        mkdir -p deps/build && cd deps/build && \
+        mkdir -p deps/build && cd deps/build
         cmake ../ \
           -DDEP_WX_GTK3=ON \
-          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages && \
+          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
         cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL
       - |
-        mkdir -p build && cd build && \
+        mkdir -p build && cd build
         cmake ../ \
           -GNinja \
           -DCMAKE_INSTALL_PREFIX=/app \
@@ -77,7 +77,7 @@ modules:
           -DSLIC3R_STATIC_EXCLUDE_GLEW=ON \
           -DSLIC3R_STATIC_EXCLUDE_CURL=ON \
           -DSLIC3R_BUILD_TESTS=OFF \
-          -DCMAKE_BUILD_TYPE=Release && \
+          -DCMAKE_BUILD_TYPE=Release 
         cmake --build . --target install
 
     post-install:
