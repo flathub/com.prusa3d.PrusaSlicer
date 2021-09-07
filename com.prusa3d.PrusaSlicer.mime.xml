@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="application/vnd.ms-3mfdocument">
-    <comment>3D Manufacturing Format</comment>
-    <sub-class-of type="application/zip"/>
-    <glob pattern="*.3mf"/>
-</mime-type>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+    <mime-type type="application/vnd.ms-3mfdocument">
+        <comment>3D Manufacturing Format</comment>
+        <sub-class-of type="application/zip"/>
+        <glob pattern="*.3mf"/>
+    </mime-type>
+</mime-info>
