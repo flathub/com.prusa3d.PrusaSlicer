@@ -7,9 +7,18 @@
     </provides>
     <name>PrusaSlicer</name>
     <summary>Powerful 3D printing slicer optimized for Prusa printers</summary>
+    <developer_name>Prusa Research a.s</developer_name>
+    <url type="homepage">https://www.prusa3d.com/prusaslicer/</url>
+    <url type="help">https://help.prusa3d.com</url>
+    <url type="bugtracker">https://github.com/flathub/com.prusa3d.PrusaSlicer/issues</url>
     <metadata_license>0BSD</metadata_license>
     <project_license>AGPL-3.0-only</project_license>
     <content_rating type="oars-1.1" />
+    <screenshots>
+        <screenshot type="default">
+            <image>https://user-images.githubusercontent.com/590307/131978407-a2618774-4af5-47d4-b380-7e17ae87a4da.png</image>
+        </screenshot>
+    </screenshots>
     <description>
         <p>
             PrusaSlicer takes 3D models (STL, OBJ, AMF) and converts them into G-code
@@ -23,17 +32,8 @@
             Report bugs only through the linked issue tracker.
         </p>
     </description>
-    <developer_name>Prusa Research a.s</developer_name>
-    <url type="homepage">https://www.prusa3d.com/prusaslicer/</url>
-    <url type="help">https://help.prusa3d.com</url>
-    <url type="bugtracker">https://github.com/flathub/com.prusa3d.PrusaSlicer/issues</url>
-    <screenshots>
-        <screenshot type="default">
-            <image>https://user-images.githubusercontent.com/590307/131978407-a2618774-4af5-47d4-b380-7e17ae87a4da.png</image>
-        </screenshot>
-    </screenshots>
     <releases>
-        <release version="2.4.0-alpha1" date="2021-09-02" type="development">
+        <release version="2.4.0-alpha1" date="2021-09-01" type="development">
             <description>
                 <p>This is the first alpha release of PrusaSlicer 2.4.0, introducing Multi-material painting tool, improved FDM supports and raft, 
                 Windows dark mode, Fuzzy Skin, per object Brim configuration, Negative volumes, automatic Color Print for signs, Shape Gallery, 
