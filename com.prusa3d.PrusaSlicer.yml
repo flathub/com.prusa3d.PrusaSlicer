@@ -216,7 +216,7 @@ modules:
         commands: 
           # test wx3.1.5
           - |
-            sed -i 's,github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip,github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-alpha1.zip,g' deps/wxWidgets/wxWidgets.cmake
+            sed -i 's,github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip,github.com/xarbit/wxWidgets/archive/refs/heads/v3.1.5-custom-prusa.zip,g' deps/wxWidgets/wxWidgets.cmake
             sed -i 's/a1e145a083d173cf320c0bd8522c7ee5829052b49b68fe5268ac84f0c576b940/02a698e6f46944fcd29e336a36d3944d79a59d372d239ec0aeb24b574e5a6eee/g' deps/wxWidgets/wxWidgets.cmake
 
           # Set PrusaSlicer version, reference Flathub.org for bug seperation.
