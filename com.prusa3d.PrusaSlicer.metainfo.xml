@@ -15,16 +15,16 @@
     <project_license>AGPL-3.0-only</project_license>
     <content_rating type="oars-1.1" />
     <requires>
-      <display_length compare="ge">768</display_length>
+        <display_length compare="ge">768</display_length>
     </requires>
     <recommends>
-      <control>keyboard</control>
-      <control>pointing</control>
+        <control>keyboard</control>
+        <control>pointing</control>
     </recommends>
     <screenshots>
         <screenshot type="default">
             <image>https://user-images.githubusercontent.com/590307/132481769-1588494a-68f8-49d2-b109-a7ff29d70b45.png</image>
-            <caption>CLEAR & SIMPLE UI</caption>
+            <caption>CLEAR AND SIMPLE UI</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481953-d511563f-9da0-4c18-be84-449b0b745ff3.png</image>
@@ -36,12 +36,13 @@
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481953-d511563f-9da0-4c18-be84-449b0b745ff3.png</image>
-            <caption>MSLA & MULTI MATERIAL SUPPORT</caption>
+            <caption>MSLA AND MULTI MATERIAL SUPPORT</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481881-8eba7c09-5c11-43b1-b5cf-0d1893b7b224.png</image>
             <caption>AUTO-UPDATING PROFILES</caption>
-        </screenshot><screenshot>
+        </screenshot>
+        <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481906-1afe7527-ff9b-47f8-bc44-34c7e00b4a12.pngg</image>
             <caption>FIRMWARE FLASHER</caption>
         </screenshot>
@@ -69,11 +70,11 @@
                 new 3rd party printer profiles and many more new features, improvements and bugfixes.</p>
             </description>
         </release>
-        <release version="2.3.3" date="2021-07-16"/>
-        <release version="2.3.2" date="2021-07-08"/>
-        <release version="2.3.1" date="2021-04-19"/>
-        <release version="2.3.0" date="2021-01-11"/>
-        <release version="2.2.0-1" date="2020-04-27"/>
-        <release version="2.2.0" date="2020-03-21"/>
-  </releases>
+        <release version="2.3.3" date="2021-07-16" />
+        <release version="2.3.2" date="2021-07-08" />
+        <release version="2.3.1" date="2021-04-19" />
+        <release version="2.3.0" date="2021-01-11" />
+        <release version="2.2.0-1" date="2020-04-27" />
+        <release version="2.2.0" date="2020-03-21" />
+    </releases>
 </component>
