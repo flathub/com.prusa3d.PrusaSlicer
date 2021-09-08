@@ -15,19 +15,26 @@
     <project_license>AGPL-3.0-only</project_license>
     <content_rating type="oars-1.1" />
     <requires>
-        <display_length compare="ge">768</display_length>
+        <display_length compare="gt">768</display_length>
     </requires>
     <recommends>
         <control>keyboard</control>
         <control>pointing</control>
     </recommends>
+    <provides>
+        <mediatype>text/x.gcode</mediatype>
+        <mediatype>model/stl</mediatype>
+        <mediatype>application/x-amf</mediatype>
+        <mediatype>application/prs.wavefront-obj</mediatype>
+        <mediatype>application/vnd.ms-3mfdocument</mediatype>
+    </provides>
     <screenshots>
         <screenshot type="default">
             <image>https://user-images.githubusercontent.com/590307/132481769-1588494a-68f8-49d2-b109-a7ff29d70b45.png</image>
             <caption>CLEAR AND SIMPLE UI</caption>
         </screenshot>
         <screenshot>
-            <image>https://user-images.githubusercontent.com/590307/132481953-d511563f-9da0-4c18-be84-449b0b745ff3.png</image>
+            <image>https://user-images.githubusercontent.com/590307/132481801-e10cfb66-f43c-4e41-a800-de67e4f8362f.png</image>
             <caption>PERFECT FOR ORIGINAL PRUSA</caption>
         </screenshot>
         <screenshot>
@@ -43,7 +50,7 @@
             <caption>AUTO-UPDATING PROFILES</caption>
         </screenshot>
         <screenshot>
-            <image>https://user-images.githubusercontent.com/590307/132481906-1afe7527-ff9b-47f8-bc44-34c7e00b4a12.pngg</image>
+            <image>https://user-images.githubusercontent.com/590307/132481906-1afe7527-ff9b-47f8-bc44-34c7e00b4a12.png</image>
             <caption>FIRMWARE FLASHER</caption>
         </screenshot>
         <screenshot>
