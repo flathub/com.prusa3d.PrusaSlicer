@@ -94,6 +94,11 @@ modules:
         install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
         update-mime-database /app/share/mime
 
+      - |
+        mkdir -p /app/share/icons/gnome/scalable/mimetypes
+        install -Dm644 vnd.ms-3mfdocument.svg /app/share/icons/gnome/scalable/mimetypes/com.prusa3d.PrusaSlicer.svg
+        gtk-update-icon-cache /app/share/icons/gnome/ -f
+
     sources:
       # -
       # Section bellow fetches all PrusaSlicer dependencies before the build process and stores them in external-packages/*/* .
@@ -224,6 +229,7 @@ modules:
           - |
             cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
             cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
+            cp resources/icons/prusa_slicer_logo.svg ./vnd.ms-3mfdocument.svg
             cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
           
