@@ -97,7 +97,7 @@ modules:
       - |
         mkdir -p /app/share/icons/gnome/scalable/mimetypes
         install -Dm644 vnd.ms-3mfdocument.svg /app/share/icons/gnome/scalable/mimetypes/com.prusa3d.PrusaSlicer.svg
-        gtk-update-icon-cache /app/share/icons/gnome/ -f
+        gtk-update-icon-cache -t -f /app/share/icons/gnome/
 
     sources:
       # -
