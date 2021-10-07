@@ -17,7 +17,14 @@
         "--system-talk-name=org.freedesktop.UDisks2",
         "--own-name=com.prusa3d.prusaslicer.*",
         "--talk-name=org.freedesktop.Flatpak",
-        "--talk-name=com.prusa3d.prusaslicer.InstanceCheck.*"
+        "--talk-name=com.prusa3d.prusaslicer.InstanceCheck.*",
+        "--env=LC_ADDRESS=C",
+        "--env=LC_COLLATE=C",
+        "--env=LC_MONETARY=C",
+        "--env=LC_MEASUREMENT=C",
+        "--env=LC_NAME=C",
+        "--env=LC_NUMERIC=C",
+        "--env=LC_TELEPHONE=C"
     ],
     "modules": [
         "shared-modules/glu/glu-9.json",
