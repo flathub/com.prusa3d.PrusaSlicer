@@ -20,21 +20,19 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  # FIXME: PrusaSlicer wont start if the locale is not supported */
-  - --env=LC_ALL=en_US.UTF-8
-  # - --env=LANG=C
-  # - --env=LC_CTYPE=C 
-  # - --env=LC_NUMERIC=C 
-  # - --env=LC_TIME=C 
-  # - --env=LC_COLLATE=C 
-  # - --env=LC_MONETARY=C 
-  # - --env=LC_MESSAGES=C 
-  # - --env=LC_PAPER=C 
-  # - --env=LC_NAME=C 
-  # - --env=LC_ADDRESS=C 
-  # - --env=LC_TELEPHONE=C 
-  # - --env=LC_MEASUREMENT=C 
-  # - --env=LC_IDENTIFICATION=C
+  # FIXME: PrusaSlicer wont start in mixed locale
+  - --env=LC_CTYPE=C 
+  - --env=LC_NUMERIC=C 
+  - --env=LC_TIME=C 
+  - --env=LC_COLLATE=C 
+  - --env=LC_MONETARY=C 
+  - --env=LC_MESSAGES=C 
+  - --env=LC_PAPER=C 
+  - --env=LC_NAME=C 
+  - --env=LC_ADDRESS=C 
+  - --env=LC_TELEPHONE=C 
+  - --env=LC_MEASUREMENT=C 
+  - --env=LC_IDENTIFICATION=C
 
 modules:
   - name: glu
