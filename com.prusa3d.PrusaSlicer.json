@@ -1,8 +1,9 @@
 {
     "app-id": "com.prusa3d.PrusaSlicer",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "20.08",
+    "runtime-version": "21.08",
     "sdk": "org.freedesktop.Sdk",
+    "separate-locales": false,
     "command": "prusa-slicer",
     "finish-args": [
         "--socket=x11",
@@ -65,7 +66,7 @@
                 },
                 {
                     "type": "file",
-                    "url": "hhttps://raw.githubusercontent.com/prusa3d/PrusaSlicer/8f0916e37135a47a6d23fe3ed9815b96f175df05/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
+                    "url": "https://raw.githubusercontent.com/prusa3d/PrusaSlicer/8f0916e37135a47a6d23fe3ed9815b96f175df05/resources/icons/PrusaSlicer-gcodeviewer_128px.png",
                     "dest-filename": "com.prusa3d.PrusaSlicer.GCodeViewer.png",
                     "sha256": "abb3b5eba59a76c3ab67643090a8eae10a888d716f0150b7d01d12014a529550"
                 },
