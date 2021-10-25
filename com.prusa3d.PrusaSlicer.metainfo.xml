@@ -69,7 +69,7 @@
         </p>
     </description>
     <releases>
-        <release version="2.4.0-alpha3" date="2021-10-01" type="development">
+        <release version="2.4.0-beta1" date="2021-10-25">
             <description>
                 <p>This is the development release of PrusaSlicer 2.4.0, introducing Multi-material painting tool, improved FDM supports and raft, 
                 Windows dark mode, Fuzzy Skin, per object Brim configuration, Negative volumes, automatic Color Print for signs, Shape Gallery, 
