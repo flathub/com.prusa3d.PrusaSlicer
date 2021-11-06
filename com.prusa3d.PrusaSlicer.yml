@@ -5,7 +5,7 @@ sdk: org.gnome.Sdk
 command: prusa-slicer
 # remove this desktop file suffix on stable release
 desktop-file-name-suffix: " (Beta)"
-separate-locales: false
+#separate-locales: false
 finish-args:
   - --share=ipc
   - --socket=x11
