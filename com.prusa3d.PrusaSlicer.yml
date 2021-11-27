@@ -5,7 +5,7 @@ sdk: org.freedesktop.Sdk
 command: prusa-slicer
 # remove this desktop file suffix on stable release
 desktop-file-name-suffix: " (Beta)"
-separate-locales: false
+separate-locales: true
 finish-args:
   - --share=ipc
   - --socket=x11
@@ -18,8 +18,9 @@ finish-args:
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
-  #- --talk-name=org.freedesktop.Flatpak
+  - --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
+  #- --env="LC_ALL=C"
 
 modules:
   - name: glu
@@ -81,15 +82,25 @@ modules:
         cmake --build . --target install
 
     post-install:
-      # Desktop Integration Install
-      - |
+
+      - | # locale
+        mkdir -p /app/share/runtime/locale
+        for i in $(ls /app/share/PrusaSlicer/localization)
+        do
+          lang=${i%[_@]*}
+          mkdir -p /app/share/runtime/locale/${lang}
+          mv /app/share/PrusaSlicer/localization/${i} /app/share/runtime/locale/${lang}
+          ln -rs /app/share/runtime/locale/${lang}/${i} /app/share/PrusaSlicer/localization/${i}
+        done
+
+      - | # Desktop Integration files
         install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
         install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
         install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         
-      - |
+      - | # Desktop Integration mime support
         mkdir -p /app/share/mime/packages/
         install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
         update-mime-database /app/share/mime
