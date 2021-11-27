@@ -4,7 +4,7 @@ runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: prusa-slicer
 # remove this desktop file suffix on stable release
-desktop-file-name-suffix: " (Alpha)"
+desktop-file-name-suffix: " (Beta)"
 separate-locales: false
 finish-args:
   - --share=ipc
