@@ -4,13 +4,10 @@ args=("$@")
 
 if [ "$PRUSA_SLICER_DARK_THEME" == "true" ]; then
     # dark theme
-    (GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args &>/dev/null)
-    A=$?
-    test $A -eq 0 && (/app/bin/set-dark-theme-variant.py &>/dev/null) || (LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args &>/dev/null) &
-    (/app/bin/set-dark-theme-variant.py)
+    $(env GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args &> /dev/null)
+    [ $? -eq 0 ] && /app/bin/set-dark-theme-variant.py &> /dev/null || env LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args & /app/bin/set-dark-theme-variant.py > /dev/null
 else
     # light theme
-    (/app/bin/prusa-slicer $args &>/dev/null)
-    B=$?
-    test $B -eq 0 && echo "starting normal" || (LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer $args)
+    $(/app/bin/prusa-slicer $args &> /dev/null)
+    [ $? -eq 0 ] && echo "all good" || env LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer $args > /dev/null
 fi
