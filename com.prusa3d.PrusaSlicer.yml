@@ -23,8 +23,22 @@ finish-args:
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
   #- --env="LC_ALL=C"
+  - --env="GTK_THEME=Adwaita:dark"
 
 modules:
+
+  - name: wmctrl
+    sources:
+      - type: archive
+        url: http://tripie.sweb.cz/utils/wmctrl/dist/wmctrl-1.07.tar.gz
+        sha256: d78a1efdb62f18674298ad039c5cbdb1edb6e8e149bb3a8e3a01a4750aa3cca9
+  
+  - name: xprop
+    sources:
+      - type: archive
+        url: https://xorg.freedesktop.org/archive/individual/app/xprop-1.2.5.tar.gz
+        sha256: b7bf6b6be6cf23e7966a153fc84d5901c14f01ee952fbd9d930aa48e2385d670
+  
   - name: glu
     config-opts:
       - --disable-static
