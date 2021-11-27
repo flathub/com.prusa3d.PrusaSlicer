@@ -33,7 +33,7 @@ modules:
         url: https://xorg.freedesktop.org/archive/individual/app/xprop-1.2.5.tar.gz
         sha256: b7bf6b6be6cf23e7966a153fc84d5901c14f01ee952fbd9d930aa48e2385d670
   
-  - name": python-setuptools_scm
+  - name: python-setuptools_scm
     buildsystem: simple
     build-commands:
       - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
@@ -42,9 +42,9 @@ modules:
         url: https://files.pythonhosted.org/packages/57/38/930b1241372a9f266a7df2b184fb9d4f497c2cef2e016b014f82f541fe7c/setuptools_scm-6.0.1.tar.gz
         sha256": d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92
                 
-  - name": python-xlib
-    buildsystem": simple
-    build-commands": 
+  - name: python-xlib
+    buildsystem: simple
+    build-commands: 
       - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
     sources:
       - type": archive
