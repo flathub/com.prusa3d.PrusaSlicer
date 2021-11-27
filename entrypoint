@@ -1,0 +1,30 @@
+#/bin/sh
+
+# PRUSA_SLICER_DARK_THEME to true (default) in flatpak manifest to use dark theme
+if [ "$PRUSA_SLICER_DARK_THEME" == "true" ]; then
+    # adwaita dark theme
+    GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer "$@" > /dev/null 2>&1 & \
+    /app/bin/set-dark-theme-variant.py > /dev/null 2>&1 &
+    status=$?
+    if [ $status -eq 0 ]; then
+        echo "✅ com.prusa3d.PrusaSlicer is starting up, using dark variant .... "
+    else
+        # fall back to LC_ALL=en_US.UTF-8 and try again
+        echo "🔥 com.prusa3d.PrusaSlicer failed with $? .... "
+        echo "🆘 will try again with LC_ALL=en_US.UTF-8"
+        LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer "$@" > /dev/null 2>&1 & \
+        /app/bin/set-dark-theme-variant.py > /dev/null 2>&1 &
+    fi
+else
+    # adwaita light theme
+    /app/bin/prusa-slicer "$@" > /dev/null 2>&1
+    status=$?
+    if [ $status -eq 0 ]; then
+        echo "✅ com.prusa3d.PrusaSlicer is starting up .... "
+    else
+        # fall back to LC_ALL=en_US.UTF-8 and try again
+        echo "🔥 com.prusa3d.PrusaSlicer failed with $? .... "
+        echo "🆘 will try again with LC_ALL=en_US.UTF-8"
+        LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer "$@" > /dev/null 2>&1 &
+    fi
+fi

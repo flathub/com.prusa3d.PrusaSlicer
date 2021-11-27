@@ -22,8 +22,8 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  #- --env="LC_ALL=C"
-  - --env="PRUSA_SLICER_DARK_THEME=true"
+  # use dark theme by default
+  - --env=PRUSA_SLICER_DARK_THEME=true
 
 modules:
   
@@ -260,7 +260,7 @@ modules:
       # Pre-Build
       - type: shell
         commands: 
-          # Set PrusaSlicer version, reference Flathub.org for bug seperation.
+          # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.
           - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
@@ -272,8 +272,8 @@ modules:
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove the DesktopAction when #6879 is merged
           - | # use our own executable prusaslicer-bin
-            sed -i 's/Exec=prusa-slicer/Exec=prusaslicer-bin/g' com.prusa3d.PrusaSlicer.desktop
-            sed -i 's/Exec=prusa-slicer/Exec=prusaslicer-bin/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
               Actions=GCodeViewer;
@@ -304,4 +304,4 @@ modules:
         path: set-dark-theme-variant.py
       
       - type: file
-        path: prusaslicer-bin
+        path: entrypoint

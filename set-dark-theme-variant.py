@@ -25,6 +25,8 @@ def set_theme_variant(window_titles, variant):
                 # and the likes.
                 if not win.get_wm_transient_for():
                     win_name = win.get_wm_name()
+                    # if we have windows and PrusaSlicer is in the title
+                    # set the dark variant window.
                     if win_name and window_titles in win_name:
                         return set_theme_variant_by_window_title(win_name, variant)
             except Xlib.error.BadWindow:
