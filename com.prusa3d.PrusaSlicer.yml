@@ -23,16 +23,18 @@ finish-args:
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
   #- --env="LC_ALL=C"
-  - --env="GTK_THEME=Adwaita:dark"
+  - --env="PRUSA_SLICER_DARK_THEME=true"
 
 modules:
   
+  # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
+  # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
+  # see: prusaslicer-bin & set-dark-theme-variant.py (originated from spotify client flatpak) 
   - name: xprop
     sources:
       - type: archive
         url: https://xorg.freedesktop.org/archive/individual/app/xprop-1.2.5.tar.gz
         sha256: b7bf6b6be6cf23e7966a153fc84d5901c14f01ee952fbd9d930aa48e2385d670
-  
   - name: python-setuptools_scm
     buildsystem: simple
     build-commands:
@@ -40,8 +42,7 @@ modules:
     sources: 
       - type: archive
         url: https://files.pythonhosted.org/packages/57/38/930b1241372a9f266a7df2b184fb9d4f497c2cef2e016b014f82f541fe7c/setuptools_scm-6.0.1.tar.gz
-        sha256: d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92
-                
+        sha256: d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92      
   - name: python-xlib
     buildsystem: simple
     build-commands: 
@@ -122,13 +123,13 @@ modules:
         done
 
       - | # Desktop Integration files
-        sed -i 's/Exec=prusa-slicer/Exec=prusa-slicer \& set-dark-theme-variant.py/g' com.prusa3d.PrusaSlicer.desktop
         install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
         install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
         install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         install set-dark-theme-variant.py /app/bin
+        install prusaslicer-bin /app/bin
         
       - | # Desktop Integration mime support
         mkdir -p /app/share/mime/packages/
@@ -269,13 +270,16 @@ modules:
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
           
           # Append desktop action section to PrusaSlicer.desktop file
-          # TODO: remove when #6879 merged
-          - |
+          # TODO: remove the DesktopAction when #6879 is merged
+          - | # use our own executable prusaslicer-bin
+            sed -i 's/Exec=prusa-slicer/Exec=prusaslicer-bin/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer/Exec=prusaslicer-bin/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
-              Exec=prusa-slicer --gcodeviewer %F
+              Exec=prusaslicer-bin --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
               Icon=com.prusa3d.PrusaSlicer.GCodeViewer
@@ -298,3 +302,6 @@ modules:
 
       - type: file
         path: set-dark-theme-variant.py
+      
+      - type: file
+        path: prusaslicer-bin
