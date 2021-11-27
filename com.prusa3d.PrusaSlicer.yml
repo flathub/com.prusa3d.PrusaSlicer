@@ -8,6 +8,8 @@ desktop-file-name-suffix: " (Beta)"
 separate-locales: true
 finish-args:
   - --share=ipc
+  #- --socket=wayland
+  #- --socket=fallback-x11
   - --socket=x11
   - --device=dri
   - --share=network
@@ -83,7 +85,7 @@ modules:
 
     post-install:
 
-      - | # locale
+      - | # locale l10n
         mkdir -p /app/share/runtime/locale
         for i in $(ls /app/share/PrusaSlicer/localization)
         do
