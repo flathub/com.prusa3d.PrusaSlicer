@@ -279,7 +279,7 @@ modules:
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
-              Exec=prusaslicer-bin --gcodeviewer %F
+              Exec=entrypoint --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
               Icon=com.prusa3d.PrusaSlicer.GCodeViewer
