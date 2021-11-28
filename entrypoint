@@ -1,26 +1,37 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
+#set -eo pipefail
+#set -m
+
+LOG_FILE=/tmp/com.prusa3d.PrusaSlicer.txt
+#export LC_MEASUREMENT=nb_NO.UTF-8nohup
 args=("$@")
 
 if [ "$PRUSA_SLICER_DARK_THEME" == "true" ]; then
-	echo "PRUSA_SLICER_DARK_THEME enabled"
-	GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
-	wait $!
-	EXIT_CODE=$?
-	if [ $EXIT_CODE -ne 0 ]; then 
-		echo "there was a locale issue, will force LC_ALL=en_US.UTF-8"
-		LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
-	fi
-	/app/bin/set-dark-theme-variant.py > /dev/null 2>&1 < /dev/null &
+    export GTK_THEME="Adwaita:dark"
+    (prusa-slicer $args &) 2>$LOG_FILE 1>/dev/null && (set-dark-theme-variant.py) &>/dev/null 2>&1
+    exec 3<$LOG_FILE
+    while read -u 3 -r line; do
+        if [[ "$line" == *"An error occured while setting up locale"* ]]; then
+            export GTK_THEME="Adwaita:dark"
+            export LC_ALL=en_US.UTF-8
+            (prusa-slicer $args &) &>/dev/null && (set-dark-theme-variant.py) &>/dev/null 2>&1 && break
+            break
+        fi
+    done
+    exec 3<&-
 else
-	echo "PRUSA_SLICER_DARK_THEME disabled"
-	/app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
-	wait $!
-	EXIT_CODE=$?
-	if [ $EXIT_CODE -ne 0 ]; then
-		echo "there was a locale issue, will force LC_ALL=en_US.UTF-8"
-		LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
-	fi
+    unset GTK_THEME
+    (prusa-slicer $args) 2>$LOG_FILE 1>/dev/null &
+    exec 4<$LOG_FILE
+    while read -u 4 -r line; do
+        if [[ "$line" == *"An error occured while setting up locale"* ]]; then
+            export LC_ALL=en_US.UTF-8
+            (prusa-slicer $args &) &>/dev/null && break
+            break
+        fi
+    done
+    exec 4<&-
 fi
 
-exit $EXIT_CODE
+exit 0
