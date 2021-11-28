@@ -1,18 +1,26 @@
 #!/usr/bin/env sh
 
-set -o errexit
 args=("$@")
 
 if [ "$PRUSA_SLICER_DARK_THEME" == "true" ]; then
-    # dark theme
-    env GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args & /app/bin/set-dark-theme-variant.py
-    s=$?
-    [ $s -eq 0 ] && echo "all good" || env LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args & /app/bin/set-dark-theme-variant.py 
+	echo "PRUSA_SLICER_DARK_THEME enabled"
+	GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
+	wait $!
+	EXIT_CODE=$?
+	if [ $EXIT_CODE -ne 0 ]; then 
+		echo "there was a locale issue, will force LC_ALL=en_US.UTF-8"
+		LC_ALL=en_US.UTF-8 GTK_THEME="Adwaita:dark" /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
+	fi
+	/app/bin/set-dark-theme-variant.py > /dev/null 2>&1 < /dev/null &
 else
-    # light theme
-    $(/app/bin/prusa-slicer $args &> /dev/null) &
-    s=$?
-    [ $s -eq 0 ] && echo "all good" || env LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer $args
+	echo "PRUSA_SLICER_DARK_THEME disabled"
+	/app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
+	wait $!
+	EXIT_CODE=$?
+	if [ $EXIT_CODE -ne 0 ]; then
+		echo "there was a locale issue, will force LC_ALL=en_US.UTF-8"
+		LC_ALL=en_US.UTF-8 /app/bin/prusa-slicer $args > /dev/null 2>&1 < /dev/null &
+	fi
 fi
 
-exit $s
+exit $EXIT_CODE
