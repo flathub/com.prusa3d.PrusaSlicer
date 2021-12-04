@@ -225,8 +225,8 @@ modules:
 
       # PrusaSlicer Source Archive
       - type: archive
-        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta2.zip
-        sha256: a37053888a12b856fc90a1e9b5c9046a4ba4438459cefa88b2fd7dfd00892489
+        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta3.zip
+        sha256: c418a29e373ad1ea9238de7416dcf349244838fc772144dd8e98b8b0e6b677e6
       
       # Pre-Build
       - type: shell
