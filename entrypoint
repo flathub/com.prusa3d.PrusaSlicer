@@ -27,6 +27,14 @@ function monitor_app_log {
     (tail -F -n0 $LOG_FILE &) | grep -q "$WATCH_ERROR" && LOCALE_ERROR_DETECTED=true
     wait_period=0
     while true; do
+
+        # if [ pgrep -f "$APP" ]; then
+        #     echo "APP_RUNNING"
+        #     sleep 1
+        # else
+        #     echo "APP_NOT_RUNNING"
+        # fi
+
         if [ $LOCALE_ERROR_DETECTED == true ]; then
             startup
             LOCALE_ERROR_DETECTED=false

@@ -29,7 +29,7 @@ modules:
   
   # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
   # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
-  # see: prusaslicer-bin & set-dark-theme-variant.py (originated from spotify client flatpak) 
+  # see: entrypoint & set-dark-theme-variant.py (originated from spotify client flatpak) 
   - name: xprop
     sources:
       - type: archive
