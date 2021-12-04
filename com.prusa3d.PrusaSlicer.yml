@@ -250,7 +250,7 @@ modules:
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
         dest: external-packages/wxWidgets
-        sha256: 21ed12eb5c215b00999f0374af652be0a6f785df10d18d0dfec8d81ed4abaea3
+        sha256: ed36a2159c781cce07b06378664e683ebd8cb2f51914aba9acd3bfca3d63d7d3
 
       # PrusaSlicer Source Archive
       - type: archive
