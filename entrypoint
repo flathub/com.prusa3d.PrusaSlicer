@@ -48,7 +48,8 @@ do_start() {
 }
 
 set_fallback() {
-    [ -n "$LANG" ] && echo -e "export LC_ALL=$LANG" >>$PRUSA_SLICER_APP_ENV ||
+    [ -n "$LANG" ] &&
+        echo -e "export LC_ALL=$LANG" >>$PRUSA_SLICER_APP_ENV ||
         echo -e "export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE" >>$PRUSA_SLICER_APP_ENV
 }
 
@@ -61,26 +62,23 @@ do_restart() {
     fi
 }
 
-main() {
-
-    [ -f $PRUSA_SLICER_APP_ENV ] &&
-        [ -f $PRUSA_SLICER_APP_LOG ] && is_init=true || is_init=false
-
-    [ $is_init == false ] &&
-        echo -e "# start of $PRUSA_SLICER_APP_ENV file" >$PRUSA_SLICER_APP_ENV
-    [ $is_init == false ] &&
-        echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG
-    [ $is_init == false ] && [ $PRUSA_SLICER_DARK_THEME == true ] &&
-        echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV
-
+do_init() {
+    (echo -e "# start of $PRUSA_SLICER_APP_ENV file" >$PRUSA_SLICER_APP_ENV)
+    (echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG)
+    [ $PRUSA_SLICER_DARK_THEME == true ] &&
+        (echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV)
     [ ! -e $PRUSA_SLICER_APP_ENV ] &&
         echo -e "❗ $PRUSA_SLICER_APP_ENV file not found!" && exit 1
     [ ! -e $PRUSA_SLICER_APP_LOG ] &&
         echo -e "❗ $PRUSA_SLICER_APP_LOG file not found!" && exit 1
+}
 
+main() {
+    [ -f $PRUSA_SLICER_APP_ENV ] &&
+        [ -f $PRUSA_SLICER_APP_LOG ] && is_init=false || is_init=true
+    [ $is_init == true ] && do_init && $is_init=false
     do_start && do_wait 5
-    [ $(is_running) == false ] &&
-        do_restart
+    [ $(is_running) == false ] && do_restart
 }
 
 main
