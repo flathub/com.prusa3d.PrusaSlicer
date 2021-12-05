@@ -12,8 +12,7 @@ root = disp.screen().root
 
 NET_CLIENT_LIST = disp.intern_atom('_NET_CLIENT_LIST')
 
-
-def set_theme_variant(window_titles, variant):
+def collection_window_ids(window_titles, variant):
     winids = []
     win_ids = root.get_full_property(NET_CLIENT_LIST, Xlib.X.AnyPropertyType)
     if win_ids:
@@ -26,7 +25,6 @@ def set_theme_variant(window_titles, variant):
                     winids.append(str(win_id))
         except:
             pass
-
     return winids
 
 
@@ -41,10 +39,11 @@ variant = 'dark'
 if time.time() - start <= 2:
     disp.next_event()
     time.sleep(1)
-    l = list(set(set_theme_variant(window_titles, variant)))
+    l = list(set(collection_window_ids(window_titles, variant)))
     for i in l:
         print(i)
 else:
-    l = list(set(set_theme_variant(window_titles, variant)))
+    time.sleep(2)
+    l = list(set(collection_window_ids(window_titles, variant)))
     for i in l:
         print(i)
