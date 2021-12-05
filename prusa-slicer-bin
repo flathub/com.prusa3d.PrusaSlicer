@@ -59,7 +59,8 @@ app_start() {
 }
 
 override_locale() {
-     [ -n "$LANG" ] && echo -e "export LC_ALL=$LANG" >> $PRUSA_SLICER_APP_ENV || echo -e "export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE" >> $PRUSA_SLICER_APP_ENV 
+     [ -n "$LANG" ] && echo -e "export LC_ALL=$LANG" >> $PRUSA_SLICER_APP_ENV || \
+        echo -e "export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE" >> $PRUSA_SLICER_APP_ENV 
 }
 
 app_watch() {
@@ -100,6 +101,4 @@ elif [ $(app_is_running) == true ] && [ $RETRY -gt 1 ]; then
     app_start 3
     [ $(app_is_running) == true ] && echo -e "✅ ok" || echo -e "🔥 launch failed"
 fi
-echo -e "\n"
 [ $(app_is_running) == true ] && [ "$(app_pid)" ] && echo -e "🗃️  pids $(app_pid)"
-echo -e "\n"
