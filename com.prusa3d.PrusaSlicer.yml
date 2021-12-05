@@ -29,7 +29,7 @@ modules:
   
   # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
   # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
-  # see: prusa-slicer-bin & get_window_ids.py (originated from spotify client flatpak) 
+  # see: entrypoint & get_window_ids.py (originated from spotify client flatpak) 
   - name: xprop
     sources:
       - type: archive
@@ -129,7 +129,7 @@ modules:
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         install get_window_ids.py /app/bin
-        install prusa-slicer-bin /app/bin
+        install entrypoint /app/bin
         
       - | # Desktop Integration mime support
         mkdir -p /app/share/mime/packages/
@@ -271,15 +271,15 @@ modules:
           
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove the DesktopAction when #6879 is merged
-          - | # use our own prusa-slicer-bin as executable
-            sed -i 's/Exec=prusa-slicer/Exec=prusa-slicer-bin/g' com.prusa3d.PrusaSlicer.desktop
-            sed -i 's/Exec=prusa-slicer/Exec=prusa-slicer-bin/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+          - | # use our own entrypoint as executable
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
-              Exec=prusa-slicer-bin --gcodeviewer %F
+              Exec=entrypoint --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
               Icon=com.prusa3d.PrusaSlicer.GCodeViewer
@@ -304,4 +304,4 @@ modules:
         path: get_window_ids.py
       
       - type: file
-        path: prusa-slicer-bin
+        path: entrypoint
