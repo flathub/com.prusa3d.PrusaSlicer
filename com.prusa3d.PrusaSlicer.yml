@@ -2,7 +2,7 @@ app-id: com.prusa3d.PrusaSlicer
 runtime: org.freedesktop.Platform
 runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
-command: prusa-slicer
+command: entrypoint
 # remove this desktop file suffix on stable release
 desktop-file-name-suffix: " (Beta)"
 separate-locales: true
@@ -20,7 +20,8 @@ finish-args:
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
-  - --talk-name=org.freedesktop.Flatpak
+  - --talk-name=org.freedesktop.DBus.Introspectable
+  #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
   # use dark theme by default
   - --env=PRUSA_SLICER_DARK_THEME=true
