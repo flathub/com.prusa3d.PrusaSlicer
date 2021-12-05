@@ -89,9 +89,11 @@ echo -e "\n"
     echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG
 [ $(app_is_running) == false ] && [ $RETRY == 0 ] && [ $PRUSA_SLICER_DARK_THEME == true ] &&
     echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV
-[ $(app_is_running) == false ] && app_start $RETRY && app_waiter 3
+
 [ ! -e $PRUSA_SLICER_APP_ENV ] && echo -e "❗ $PRUSA_SLICER_APP_ENV file not found!" && exit 1
 [ ! -e $PRUSA_SLICER_APP_LOG ] && echo -e "❗ $PRUSA_SLICER_APP_LOG file not found!" && exit 1
+
+[ $(app_is_running) == false ] && app_start $RETRY && app_waiter 3
 
 # PRUSA_SLICER_APP not running, possible failed due to locale bug
 if [ $(app_is_running) == false ]; then
