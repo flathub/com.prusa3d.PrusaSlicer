@@ -26,17 +26,21 @@ app_detected_locale_issue() {
     [ $? == 0 ] && echo true || echo false
 }
 
-app_waiter() {
+app_wait() {
     wait_begin=1
     wait_until=$1
-
     while [ $(app_is_running) == true ]; do
-        echo -e "-> checking $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS in $(expr $wait_until - $wait_begin)"
-        [ $wait_begin == $wait_until ] && break || wait_begin=$(($wait_begin + 1))
+        #echo -e " --------------------------------------------------------------------------------------"
+        #echo -e " ⚫  PrusaSlicer is starting : $(app_is_running)  $(expr $(($wait_until + 1)) - $wait_begin)"
+        #echo -e " --------------------------------------------------------------------------------------"
+        [ $wait_begin == $wait_until ] && break
         sleep 1
+        wait_begin=$(($wait_begin + 1))
     done
-
-    [ $(app_is_running) == true ] && echo -e "-> ok" || echo -e "-> upps... crashed!"
+    echo -e " --------------------------------------------------------------------------------------"
+    [ $(app_is_running) == true ] && echo -e " 🟢  PrusaSlicer is running, pid $(app_pid)" || echo -e " 🔴  PrusaSlicer stopped running!"
+    echo -e " --------------------------------------------------------------------------------------"
+    #[ $(app_is_running) == false ] && echo -e "\n-- $PRUSA_SLICER_APP_LOG -- >>>\n" && cat $PRUSA_SLICER_APP_LOG && echo -e "\n<<< --\n"
 }
 
 apply_dark_window() {
@@ -47,13 +51,13 @@ apply_dark_window() {
 
 app_start() {
     source $PRUSA_SLICER_APP_ENV
-    
+
     RETRY_STEP=$1
 
-    [ $RETRY_STEP == 0 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS starting"
-    [ $RETRY_STEP == 2 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying again"
-    [ $RETRY_STEP == 3 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying known"
-    
+    [ $RETRY_STEP == 0 ] && echo -e " 🎲  PrusaSlicer, executed $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS"
+    [ $RETRY_STEP == 2 ] && echo -e " 🎲  PrusaSlicer, executed again with LC_ALL=$LC_ALL"
+    [ $RETRY_STEP == 3 ] && echo -e " 🎲  PrusaSlicer, executed with previous generated $PRUSA_SLICER_APP_ENV"
+
     (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
     [ $PRUSA_SLICER_DARK_THEME == true ] && (apply_dark_window &)
 }
@@ -70,31 +74,44 @@ check() {
             break
         else
             maximum_retrys=$(($maximum_retrys + 1))
-            [ $(app_detected_locale_issue) ] && override_locale
+
+            [ $(app_detected_locale_issue) ] && override_locale && echo -e " 🟠  PrusaSlicer: $PRUSA_SLICER_APP_LOCALE_ERROR!" && echo -e " --------------------------------------------------------------------------------------"
             app_start $maximum_retrys
-            app_waiter 3
+            app_wait 5
         fi
     done
 }
 
-# entry point & setup 
+echo -e "\n"
+echo -e " PRUSA SLICER startup script for flatpak package on flathub.org"
+echo -e " --------------------------------------------------------------------------------------"
+echo -e " this startup script was written as a workaround and adresses some locale issues that "
+echo -e " prevented PrusaSlicer from starting up when working in a mixed locale enviroment."
+echo -e " Also some initial support for dark theme/variant was added.\n"
+echo -e " Disable dark theme/variant with --env=PRUSA_SLICER_DARK_THEME=false\n"
+echo -e " Links:\n  - https://github.com/flathub/com.prusa3d.PrusaSlicer/blob/beta/entrypoint"
+echo -e "  - https://github.com/flathub/com.prusa3d.PrusaSlicer/pull/33"
+echo -e " --------------------------------------------------------------------------------------\n"
+
 RETRY=0
 
-if [ -f $PRUSA_SLICER_APP_ENV ] && [ -f $PRUSA_SLICER_APP_LOG ]; then 
-     RETRY=3
+if [ -f $PRUSA_SLICER_APP_ENV ] && [ -f $PRUSA_SLICER_APP_LOG ]; then
+    RETRY=3
 fi
 
 [ $RETRY == 0 ] && [ ! -f $PRUSA_SLICER_APP_ENV ] && echo -e "# start of $PRUSA_SLICER_APP_ENV file" >$PRUSA_SLICER_APP_ENV
 [ $RETRY == 0 ] && [ ! -f $PRUSA_SLICER_APP_LOG ] && echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG
-[ $RETRY == 0 ] && [ $PRUSA_SLICER_DARK_THEME == true ] && echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV 
+[ $RETRY == 0 ] && [ $PRUSA_SLICER_DARK_THEME == true ] && echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV
 
 [ ! -e $PRUSA_SLICER_APP_ENV ] && echo -e "❗ $PRUSA_SLICER_APP_ENV file not found!" && exit 1
 [ ! -e $PRUSA_SLICER_APP_LOG ] && echo -e "❗ $PRUSA_SLICER_APP_LOG file not found!" && exit 1
 
-[ $RETRY == 3 ] && (app_start $RETRY) || (app_start $RETRY & app_waiter 3)
+(
+    app_start $RETRY &
+    app_wait 5
+)
 
 if [ $(app_is_running) == false ]; then
     RETRY=$(($RETRY + 1))
     (check $RETRY)
 fi
-
