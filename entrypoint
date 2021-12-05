@@ -1,0 +1,100 @@
+#!/usr/bin/env sh
+
+set -e
+
+#export LC_MEASUREMENT=nb_NO.UTF-8
+
+PRUSA_SLICER_APP_LOG=/tmp/com.prusa3d.PrusaSlicer.log
+PRUSA_SLICER_APP_ENV=/tmp/com.prusa3d.PrusaSlicer.env
+PRUSA_SLICER_APP_ARGS=("$@")
+PRUSA_SLICER_APP=/app/bin/prusa-slicer
+PRUSA_SLICER_APP_APPLY_THEME=/app/bin/get_window_ids.py
+PRUSA_SLICER_APP_LOCALE_ERROR="An error occured while setting up locale"
+PRUSA_SLICER_APP_FALLBACK_LOCALE=en_US.UTF-8
+
+app_is_running() {
+    (ps aux | grep "$PRUSA_SLICER_APP" | grep -v "grep") >/dev/null
+    [ $? == 0 ] && echo true || echo false
+}
+
+app_pid() {
+    echo $(pgrep -f $PRUSA_SLICER_APP)
+}
+
+app_detected_locale_issue() {
+    (grep "$PRUSA_SLICER_APP_LOCALE_ERROR" $PRUSA_SLICER_APP_LOG) >/dev/null
+    [ $? == 0 ] && echo true || echo false
+}
+
+app_waiter() {
+    wait_begin=1
+    wait_until=$1
+
+    while [ $(app_is_running) == true ]; do
+        echo -e "-> checking $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS in $(expr $wait_until - $wait_begin)"
+        [ $wait_begin == $wait_until ] && break || wait_begin=$(($wait_begin + 1))
+        sleep 1
+    done
+
+    [ $(app_is_running) == true ] && echo -e "-> ok" || echo -e "-> upps... crashed!"
+}
+
+apply_dark_window() {
+    while IFS= read -r window_id; do
+        (xprop -f _GTK_THEME_VARIANT 8u -set _GTK_THEME_VARIANT "dark" -id "$window_id") &>>/dev/null
+    done <<<$($PRUSA_SLICER_APP_APPLY_THEME)
+}
+
+app_start() {
+    source $PRUSA_SLICER_APP_ENV
+    
+    RETRY_STEP=$1
+
+    [ $RETRY_STEP == 0 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS starting"
+    [ $RETRY_STEP == 2 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying again"
+    [ $RETRY_STEP == 3 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying known"
+    
+    (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
+    [ $PRUSA_SLICER_DARK_THEME == true ] && (apply_dark_window &)
+}
+
+override_locale() {
+    [ -n "$LANG" ] && echo -e "export LC_ALL=$LANG" >>$PRUSA_SLICER_APP_ENV ||
+        echo -e "export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE" >>$PRUSA_SLICER_APP_ENV
+}
+
+check() {
+    maximum_retrys=$1
+    while [ $maximum_retrys -le 3 ]; do
+        if [ $(app_is_running) == true ]; then
+            break
+        else
+            maximum_retrys=$(($maximum_retrys + 1))
+            [ $(app_detected_locale_issue) ] && override_locale
+            app_start $maximum_retrys
+            app_waiter 3
+        fi
+    done
+}
+
+# entry point & setup 
+RETRY=0
+
+if [ -f $PRUSA_SLICER_APP_ENV ] && [ -f $PRUSA_SLICER_APP_LOG ]; then 
+     RETRY=3
+fi
+
+[ $RETRY == 0 ] && [ ! -f $PRUSA_SLICER_APP_ENV ] && echo -e "# start of $PRUSA_SLICER_APP_ENV file" >$PRUSA_SLICER_APP_ENV
+[ $RETRY == 0 ] && [ ! -f $PRUSA_SLICER_APP_LOG ] && echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG
+[ $RETRY == 0 ] && [ $PRUSA_SLICER_DARK_THEME == true ] && echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV 
+
+[ ! -e $PRUSA_SLICER_APP_ENV ] && echo -e "❗ $PRUSA_SLICER_APP_ENV file not found!" && exit 1
+[ ! -e $PRUSA_SLICER_APP_LOG ] && echo -e "❗ $PRUSA_SLICER_APP_LOG file not found!" && exit 1
+
+[ $RETRY == 3 ] && (app_start $RETRY) || (app_start $RETRY & app_waiter 3)
+
+if [ $(app_is_running) == false ]; then
+    RETRY=$(($RETRY + 1))
+    (check $RETRY)
+fi
+

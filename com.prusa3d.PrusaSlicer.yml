@@ -22,9 +22,36 @@ finish-args:
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  #- --env="LC_ALL=C"
+  # use dark theme by default
+  - --env=PRUSA_SLICER_DARK_THEME=true
 
 modules:
+  
+  # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
+  # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
+  # see: entrypoint & get_window_ids.py (originated from spotify client flatpak) 
+  - name: xprop
+    sources:
+      - type: archive
+        url: https://xorg.freedesktop.org/archive/individual/app/xprop-1.2.5.tar.gz
+        sha256: b7bf6b6be6cf23e7966a153fc84d5901c14f01ee952fbd9d930aa48e2385d670
+  - name: python-setuptools_scm
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
+    sources: 
+      - type: archive
+        url: https://files.pythonhosted.org/packages/57/38/930b1241372a9f266a7df2b184fb9d4f497c2cef2e016b014f82f541fe7c/setuptools_scm-6.0.1.tar.gz
+        sha256: d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92      
+  - name: python-xlib
+    buildsystem: simple
+    build-commands: 
+      - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
+    sources:
+      - type: archive
+        url: https://files.pythonhosted.org/packages/40/9c/107e22f637d33434404c07d69112b9d26b76ee0dd4dd705131ab6cdcc818/python-xlib-0.31.tar.gz
+        sha256: 74d83a081f532bc07f6d7afcd6416ec38403d68f68b9b9dc9e1f28fbf2d799e9
+  
   - name: glu
     config-opts:
       - --disable-static
@@ -101,6 +128,8 @@ modules:
         install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+        install get_window_ids.py /app/bin
+        install entrypoint /app/bin
         
       - | # Desktop Integration mime support
         mkdir -p /app/share/mime/packages/
@@ -231,7 +260,7 @@ modules:
       # Pre-Build
       - type: shell
         commands: 
-          # Set PrusaSlicer version, reference Flathub.org for bug seperation.
+          # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.
           - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
@@ -241,13 +270,16 @@ modules:
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
           
           # Append desktop action section to PrusaSlicer.desktop file
-          # TODO: remove when #6879 merged
-          - |
+          # TODO: remove the DesktopAction when #6879 is merged
+          - | # use our own entrypoint as executable
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
+
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
               Actions=GCodeViewer;
 
               [Desktop Action GCodeViewer]
-              Exec=prusa-slicer --gcodeviewer %F
+              Exec=entrypoint --gcodeviewer %F
               Name=G-Code Viewer
               Name[de]=G-Code Vorschau
               Icon=com.prusa3d.PrusaSlicer.GCodeViewer
@@ -267,3 +299,9 @@ modules:
       # Adding MIME type for 3mf
       - type: file
         path: com.prusa3d.PrusaSlicer.mime.xml
+
+      - type: file
+        path: get_window_ids.py
+      
+      - type: file
+        path: entrypoint
