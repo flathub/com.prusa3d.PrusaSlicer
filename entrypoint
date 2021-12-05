@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-#set -e
+set -e
 
 #export LC_MEASUREMENT=nb_NO.UTF-8
 
@@ -31,7 +31,7 @@ app_waiter() {
     wait_until=$1
 
     while [ $(app_is_running) == true ]; do
-        echo -e "-> wait  $(expr $wait_until - $wait_begin)"
+        echo -e "-> checking $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS in $(expr $wait_until - $wait_begin)"
         [ $wait_begin == $wait_until ] && break || wait_begin=$(($wait_begin + 1))
         sleep 1
     done
@@ -50,9 +50,9 @@ app_start() {
     
     RETRY_STEP=$1
 
-    [ $RETRY_STEP == 0 ] && echo -e "-> starting"
-    [ $RETRY_STEP == 2 ] && echo -e "-> trying again"
-    [ $RETRY_STEP == 3 ] && echo -e "-> trying known"
+    [ $RETRY_STEP == 0 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS starting"
+    [ $RETRY_STEP == 2 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying again"
+    [ $RETRY_STEP == 3 ] && echo -e "-> $PRUSA_SLICER_APP $PRUSA_SLICER_APP_ARGS trying known"
     
     (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
     [ $PRUSA_SLICER_DARK_THEME == true ] && (apply_dark_window &)
