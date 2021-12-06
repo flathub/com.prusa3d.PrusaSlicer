@@ -35,16 +35,16 @@ do_wait() {
         (cat $PRUSA_SLICER_APP_LOG &)
 }
 
-set_dark_variant() {
-    while IFS= read -r window_id; do
-        (xprop -f _GTK_THEME_VARIANT 8u -set _GTK_THEME_VARIANT "dark" -id "$window_id") &>>/dev/null
-    done <<<$($PRUSA_SLICER_APP_APPLY_THEME)
-}
+# set_dark_variant() {
+#     while IFS= read -r window_id; do
+#         (xprop -f _GTK_THEME_VARIANT 8u -set _GTK_THEME_VARIANT "dark" -id "$window_id") &>>/dev/null
+#     done <<<$($PRUSA_SLICER_APP_APPLY_THEME)
+# }
 
 do_start() {
     source $PRUSA_SLICER_APP_ENV
     (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
-    [ $PRUSA_SLICER_DARK_THEME == true ] && (set_dark_variant &)
+    [ $PRUSA_SLICER_DARK_THEME == true ] && ($PRUSA_SLICER_APP_APPLY_THEME) #(set_dark_variant &)
 }
 
 set_fallback() {

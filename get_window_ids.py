@@ -7,43 +7,49 @@ import subprocess
 import os
 import sys
 
+
 disp = Xlib.display.Display()
 root = disp.screen().root
+inspection_list = [root]
 
 NET_CLIENT_LIST = disp.intern_atom('_NET_CLIENT_LIST')
 
-def collection_window_ids(window_titles, variant):
-    winids = []
-    win_ids = root.get_full_property(NET_CLIENT_LIST, Xlib.X.AnyPropertyType)
-    if win_ids:
-        win_ids = win_ids.value
-        try:
-            for win_id in win_ids:
+
+def set_theme_variant_by_window_id(id):
+    try:
+        subprocess.call(['xprop', '-f', '_GTK_THEME_VARIANT', '8u', '-set', '_GTK_THEME_VARIANT', 'dark', '-id', str(id)],
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except:
+        return False
+
+
+def set_theme_variant():
+
+    start = time.time()
+    root.change_attributes(event_mask=Xlib.X.PropertyChangeMask)
+
+    while True:
+
+        if time.time() - start <= 3:
+            disp.next_event()
+
+        for win_id in root.get_full_property(NET_CLIENT_LIST, Xlib.X.AnyPropertyType).value:
+            try:
                 win = disp.create_resource_object('window', win_id)
-                win_name = win.get_wm_name()
-                if win_name and window_titles in win_name:
-                    winids.append(str(win_id))
-        except:
-            pass
-    return winids
+                if not win.get_wm_transient_for():
+                    win_class = win.get_wm_class()
+                    if win_id and 'prusa-slicer' in win_class:
+                        if set_theme_variant_by_window_id(win_id):
+                            return True
+
+            except Xlib.error.BadWindow:
+                pass
+
+    if time.time() - start <= 10:
+        return False
 
 
-if os.environ.get('PRUSA_SLICER_DARK_THEME') != 'true':
-    sys.exit(0)
-
-start = time.time()
-root.change_attributes(event_mask=Xlib.X.PropertyChangeMask)
-window_titles = ('PrusaSlicer')
-variant = 'dark'
-
-if time.time() - start <= 2:
-    disp.next_event()
-    time.sleep(1)
-    l = list(set(collection_window_ids(window_titles, variant)))
-    for i in l:
-        print(i)
-else:
-    time.sleep(2)
-    l = list(set(collection_window_ids(window_titles, variant)))
-    for i in l:
-        print(i)
+if __name__ == '__main__':
+    root.change_attributes(event_mask=Xlib.X.PropertyChangeMask)
+    set_theme_variant()
