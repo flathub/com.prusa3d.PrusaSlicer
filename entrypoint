@@ -8,7 +8,7 @@ PRUSA_SLICER_APP_LOG=/tmp/com.prusa3d.PrusaSlicer.log
 PRUSA_SLICER_APP_ENV=/tmp/com.prusa3d.PrusaSlicer.env
 PRUSA_SLICER_APP_ARGS=("$@")
 PRUSA_SLICER_APP=/app/bin/prusa-slicer
-PRUSA_SLICER_APP_APPLY_THEME=/app/bin/get_window_ids.py
+PRUSA_SLICER_APP_APPLY_THEME=/app/bin/set-dark-theme-variant.py
 PRUSA_SLICER_APP_LOCALE_ERROR="An error occured while setting up locale"
 PRUSA_SLICER_APP_FALLBACK_LOCALE=en_US.UTF-8
 
@@ -30,9 +30,9 @@ do_wait() {
         sleep 1
         s=$(($s + 1))
     done
-    [ $(is_running) == false ] &&
-        (cat $PRUSA_SLICER_APP_LOG &) ||
-        (cat $PRUSA_SLICER_APP_LOG &)
+    #    [ $(is_running) == false ] &&
+    #        (cat $PRUSA_SLICER_APP_LOG &) ||
+    #        (cat $PRUSA_SLICER_APP_LOG &)
 }
 
 # set_dark_variant() {
@@ -44,7 +44,7 @@ do_wait() {
 do_start() {
     source $PRUSA_SLICER_APP_ENV
     (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
-    [ $PRUSA_SLICER_DARK_THEME == true ] && ($PRUSA_SLICER_APP_APPLY_THEME) #(set_dark_variant &)
+    [ $PRUSA_SLICER_DARK_THEME == true ] && (python $PRUSA_SLICER_APP_APPLY_THEME) #(set_dark_variant &)
 }
 
 set_fallback() {
@@ -58,7 +58,7 @@ do_restart() {
         [ $(is_locale_issue) ] && set_fallback
 
         do_start
-        do_wait 5
+        #(do_wait 5 &)
     fi
 }
 
@@ -77,7 +77,7 @@ main() {
     [ -f $PRUSA_SLICER_APP_ENV ] &&
         [ -f $PRUSA_SLICER_APP_LOG ] && is_init=false || is_init=true
     [ $is_init == true ] && do_init && $is_init=false
-    do_start && do_wait 5
+    (do_start) && (do_wait 5 &)
     [ $(is_running) == false ] && do_restart
 }
 
