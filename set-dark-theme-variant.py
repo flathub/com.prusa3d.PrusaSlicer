@@ -79,11 +79,7 @@ if __name__ == '__main__':
             # disp.next_event() blocks if no events are
             # queued. In combination with while True
             # it creates a very simple event loop.
-            # 
-            # INFO: disp.next_event() this will slow down 
-            # the execution of PrusaSlicer if locale 
-            # issues are present. That is why it is commented
-            # disp.next_event()
+            disp.next_event()
             set_theme_variant_from_win_id_collection(collect, variant)
         else:
             break
