@@ -1,84 +1,21 @@
 #!/usr/bin/env sh
 
-set -e
-
-#export LC_MEASUREMENT=nb_NO.UTF-8
-
-PRUSA_SLICER_APP_LOG=/tmp/com.prusa3d.PrusaSlicer.log
-PRUSA_SLICER_APP_ENV=/tmp/com.prusa3d.PrusaSlicer.env
-PRUSA_SLICER_APP_ARGS=("$@")
-PRUSA_SLICER_APP=/app/bin/prusa-slicer
-PRUSA_SLICER_APP_APPLY_THEME=/app/bin/set-dark-theme-variant.py
 PRUSA_SLICER_APP_LOCALE_ERROR="An error occured while setting up locale"
 PRUSA_SLICER_APP_FALLBACK_LOCALE=en_US.UTF-8
+USE_LOCALE_WORKAROUND=$( (/app/bin/prusa-slicer --help 2>&1 | grep "$PRUSA_SLICER_APP_LOCALE_ERROR") >/dev/null && echo true || echo false)
 
-is_running() {
-    (ps aux | grep "$PRUSA_SLICER_APP" | grep -v "grep") >/dev/null
-    [ $? == 0 ] && echo true || echo false
-}
+echo "--------------------------------------------------------------------------"
+echo "Message: $(date +%T): Starting PrusaSlicer flatpak with entrypoint script"
+echo "--------------------------------------------------------------------------"
 
-is_locale_issue() {
-    (grep "$PRUSA_SLICER_APP_LOCALE_ERROR" $PRUSA_SLICER_APP_LOG) >/dev/null
-    [ $? == 0 ] && echo true || echo false
-}
+if [ $USE_LOCALE_WORKAROUND = true ]; then
+    [ -n "$LANG" ] && export LC_ALL=$LANG || export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE
+    echo "Message: $(date +%T): WARN: Executing prusa-slicer with locale workaround $LC_ALL"
+fi
 
-do_wait() {
-    s=1
-    u=$1
-    while [ $(is_running) == true ]; do
-        [ $s == $u ] && break
-        sleep 1
-        s=$(($s + 1))
-    done
-    #    [ $(is_running) == false ] &&
-    #        (cat $PRUSA_SLICER_APP_LOG &) ||
-    #        (cat $PRUSA_SLICER_APP_LOG &)
-}
+[ $PRUSA_SLICER_DARK_THEME == true ] &&
+    export GTK_THEME='Adwaita:dark' &&
+    echo "Message: $(date +%T): INFO: using dark theme variant"
 
-# set_dark_variant() {
-#     while IFS= read -r window_id; do
-#         (xprop -f _GTK_THEME_VARIANT 8u -set _GTK_THEME_VARIANT "dark" -id "$window_id") &>>/dev/null
-#     done <<<$($PRUSA_SLICER_APP_APPLY_THEME)
-# }
-
-do_start() {
-    source $PRUSA_SLICER_APP_ENV
-    (exec $PRUSA_SLICER_APP ${PRUSA_SLICER_APP_ARGS[@]} &) 2>$PRUSA_SLICER_APP_LOG 1>/dev/null
-    [ $PRUSA_SLICER_DARK_THEME == true ] && (python $PRUSA_SLICER_APP_APPLY_THEME) #(set_dark_variant &)
-}
-
-set_fallback() {
-    [ -n "$LANG" ] &&
-        echo -e "export LC_ALL=$LANG" >>$PRUSA_SLICER_APP_ENV ||
-        echo -e "export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE" >>$PRUSA_SLICER_APP_ENV
-}
-
-do_restart() {
-    if [ $(is_running) == false ]; then
-        [ $(is_locale_issue) ] && set_fallback
-
-        do_start
-        #(do_wait 5 &)
-    fi
-}
-
-do_init() {
-    (echo -e "# start of $PRUSA_SLICER_APP_ENV file" >$PRUSA_SLICER_APP_ENV)
-    (echo -e "# start of $PRUSA_SLICER_APP_LOG file" >$PRUSA_SLICER_APP_LOG)
-    [ $PRUSA_SLICER_DARK_THEME == true ] &&
-        (echo -e "export GTK_THEME='Adwaita:dark'" >>$PRUSA_SLICER_APP_ENV)
-    [ ! -e $PRUSA_SLICER_APP_ENV ] &&
-        echo -e "❗ $PRUSA_SLICER_APP_ENV file not found!" && exit 1
-    [ ! -e $PRUSA_SLICER_APP_LOG ] &&
-        echo -e "❗ $PRUSA_SLICER_APP_LOG file not found!" && exit 1
-}
-
-main() {
-    [ -f $PRUSA_SLICER_APP_ENV ] &&
-        [ -f $PRUSA_SLICER_APP_LOG ] && is_init=false || is_init=true
-    [ $is_init == true ] && do_init && $is_init=false
-    (do_start) && (do_wait 5 &)
-    [ $(is_running) == false ] && do_restart
-}
-
-main
+exec /app/bin/prusa-slicer $@ &
+$(/app/bin/set-dark-theme-variant.py) &
