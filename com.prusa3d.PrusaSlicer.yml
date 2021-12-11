@@ -251,12 +251,12 @@ modules:
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
         dest: external-packages/wxWidgets
-        sha256: ed36a2159c781cce07b06378664e683ebd8cb2f51914aba9acd3bfca3d63d7d3
+        sha256: 78adc312e645d738945172d5ddcee16b1a55cca08e82b43379192262377a206a
 
       # PrusaSlicer Source Archive
       - type: archive
-        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta3.zip
-        sha256: c418a29e373ad1ea9238de7416dcf349244838fc772144dd8e98b8b0e6b677e6
+        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta4.zip
+        sha256: dad351b9dea93383c2d8505d14b12d367927ad6d19360ed69f790ac2f361f73c
       
       # Pre-Build
       - type: shell
