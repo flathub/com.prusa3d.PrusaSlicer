@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
     <mime-type type="application/vnd.ms-3mfdocument">
-        <comment>3D Manufacturing Format</comment>
+        <comment>3D Manufacturing File</comment>
         <sub-class-of type="application/zip"/>
         <glob pattern="*.3mf"/>
         <icon name="com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument"/>
