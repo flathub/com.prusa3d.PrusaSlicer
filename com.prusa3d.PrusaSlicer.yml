@@ -132,9 +132,11 @@ modules:
         install set-dark-theme-variant.py /app/bin
         install entrypoint /app/bin
         
-      - | # Desktop Integration mime support
+      - | # Desktop Integration .3MF mime support
         mkdir -p /app/share/mime/packages/
         install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
+        install -Dm644 com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg /app/share/icons/hicolor/scalable/mimetypes/com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg
+        install -Dm644 com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png /app/share/icons/hicolor/128x128/mimetypes/com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png
         update-mime-database /app/share/mime
 
     sources:
@@ -251,12 +253,15 @@ modules:
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/refs/heads/v3.1.4-patched.zip
         dest: external-packages/wxWidgets
-        sha256: 78adc312e645d738945172d5ddcee16b1a55cca08e82b43379192262377a206a
+        sha256: 22f9393f80b94ea84e68b925cd95e0dc63e14dc7a72d8ca292b12404ccf98d1b
 
       # PrusaSlicer Source Archive
-      - type: archive
-        url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta4.zip
-        sha256: dad351b9dea93383c2d8505d14b12d367927ad6d19360ed69f790ac2f361f73c
+      #- type: archive
+      - type: git
+        #url: https://github.com/prusa3d/PrusaSlicer/archive/refs/tags/version_2.4.0-beta4.zip
+        url: https://github.com/prusa3d/PrusaSlicer.git
+        branch: master
+        #sha256: dad351b9dea93383c2d8505d14b12d367927ad6d19360ed69f790ac2f361f73c
       
       # Pre-Build
       - type: shell
@@ -306,3 +311,9 @@ modules:
       
       - type: file
         path: entrypoint
+
+      - type: file
+        path: com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg
+      
+      - type: file
+        path: com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png
