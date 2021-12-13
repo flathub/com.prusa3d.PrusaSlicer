@@ -270,8 +270,6 @@ modules:
           - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
-            cp resources/icons/PrusaSlicer-gcodeviewer.svg ./com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg
-            cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png
             cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
             cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
             cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
@@ -313,3 +311,9 @@ modules:
       
       - type: file
         path: entrypoint
+
+      - type: file
+        path: com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg
+      
+      - type: file
+        path: com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png
