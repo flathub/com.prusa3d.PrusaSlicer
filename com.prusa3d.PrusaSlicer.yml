@@ -135,7 +135,7 @@ modules:
       - | # Desktop Integration .3MF & .GCODE mime support
         mkdir -p /app/share/mime/packages/
         install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
-        install -Dm644 com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg \n
+        install -Dm644 com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg \
           /app/share/icons/hicolor/scalable/mimetypes/com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.svg
         install -Dm644 com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png \
           /app/share/icons/hicolor/128x128/mimetypes/com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument.png
