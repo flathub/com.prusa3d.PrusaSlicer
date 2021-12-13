@@ -5,5 +5,6 @@
         <sub-class-of type="application/zip"/>
         <glob pattern="*.3mf"/>
         <icon name="com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument"/>
+        <generic-icon name="com.prusa3d.PrusaSlicer.application-vnd-ms-3mfdocument"/>
     </mime-type>
 </mime-info>
