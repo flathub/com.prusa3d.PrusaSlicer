@@ -264,7 +264,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.4.0-rc
+        tag: version_2.4.0-rc2
       
       # Pre-Build
       - type: shell
