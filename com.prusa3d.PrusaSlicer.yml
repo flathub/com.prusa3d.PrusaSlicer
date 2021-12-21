@@ -23,8 +23,8 @@ finish-args:
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  # use dark theme by default
-  - --env=PRUSA_SLICER_DARK_THEME=true
+  # set dark theme 
+  # - --env=PRUSA_SLICER_DARK_THEME=true
 
 modules:
   
