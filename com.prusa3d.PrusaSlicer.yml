@@ -105,6 +105,7 @@ modules:
           -DSLIC3R_FHS=ON \
           -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=ON \
+          -DSLIC3R_PCH=OFF \
           -DSLIC3R_STATIC_EXCLUDE_GLEW=ON \
           -DSLIC3R_STATIC_EXCLUDE_CURL=ON \
           -DSLIC3R_BUILD_TESTS=OFF \
