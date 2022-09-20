@@ -183,6 +183,12 @@ modules:
         dest: external-packages/CGAL
         sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
 
+      # EXPAT
+      - type: file
+        url: https://github.com/libexpat/libexpat/archive/refs/tags/R_2_4_3.zip
+        dest: external-packages/EXPAT
+        sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
+
       # GMP
       - type: file
         url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
