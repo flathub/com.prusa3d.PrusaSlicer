@@ -1,6 +1,6 @@
 app-id: com.prusa3d.PrusaSlicer
 runtime: org.freedesktop.Platform
-runtime-version: "22.08"
+runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: entrypoint
 # remove this desktop file suffix on stable release
@@ -257,9 +257,9 @@ modules:
 
       # TBB
       - type: file
-        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.6.0-rc1.zip
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         dest: external-packages/TBB
-        sha256: bdec0bfd995788ed09609d57aa7fb4a1c8ccba7940b10d20c0b3107fcab4c094
+        sha256: 83ea786c964a384dd72534f9854b419716f412f9d43c0be88d41874763e7bb47
 
       # TIFF, libtiff
       - type: file
@@ -282,8 +282,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        branch: tm_flatpak_tbb_2021.6
-        #tag: version_2.5.0
+        tag: version_2.5.0
       
       # Pre-Build
       - type: shell
