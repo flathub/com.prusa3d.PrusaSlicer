@@ -1,0 +1,69 @@
+diff --git a/src/slic3r/GUI/RemovableDriveManager.cpp b/src/slic3r/GUI/RemovableDriveManager.cpp
+index 5fb8b0132..3d721930b 100644
+--- a/src/slic3r/GUI/RemovableDriveManager.cpp
++++ b/src/slic3r/GUI/RemovableDriveManager.cpp
+@@ -222,7 +222,47 @@ namespace search_for_drives_internal
+ 		}
+ 		globfree(&globbuf);
+ 	}
++
++
++        // Gets a mount point's supporting device path, from mount point path
++        std::string get_dev_from_path(std::string &mount_path)
++        {
++            boost::process::ipstream istd_out;
++            boost::process::ipstream istd_err;
++            boost::process::child child(
++                    boost::process::search_path("findmnt"), "-osource", "-n", mount_path.c_str(), boost::process::std_out > istd_out, boost::process::std_err > istd_err);
++            std::string line;
++            std::string dev_path;
++            while (child.running()) {
++
++                // reads stderr
++                std::getline(istd_err, line);
++                if (! istd_err.eof()) BOOST_LOG_TRIVIAL(trace) << line;
++            }
++
++            // reads pipe final outputs, after child exits
++            std::getline(istd_out, line);
++            if (! istd_out.eof()) {
++                dev_path = line;
++                BOOST_LOG_TRIVIAL(trace) << "dev_path: " << line;
++            }
++
++            // wait for command to finish (blocks ui thread)
++            //
++            std::error_code ec;
++            child.wait(ec);
++            int err = child.exit_code();
++            if (err) {
++                BOOST_LOG_TRIVIAL(error) << "Failed to get device path from mount point" << err;
++            } else {
++                BOOST_LOG_TRIVIAL(info) << "Get device path successfully: " << dev_path;
++            }
++
++            return dev_path;
++        }
++
+ #endif // ! __APPLE__
++
+ }
+ 
+ std::vector<DriveData> RemovableDriveManager::search_for_removable_drives() const
+@@ -262,6 +302,7 @@ std::vector<DriveData> RemovableDriveManager::search_for_removable_drives() cons
+ 	return current_drives;
+ }
+ 
++
+ // Called from UI therefore it blocks the UI thread.
+ // It also blocks updates at the worker thread.
+ // Unix & OSX implementation.
+@@ -311,7 +352,7 @@ void RemovableDriveManager::eject_drive()
+ 		//used insted of system() command;
+ 		//this->eject_device(correct_path);
+ #else
+-    		boost::process::search_path("umount"), correct_path.c_str(), (boost::process::std_out & boost::process::std_err) > istd_err);
++                boost::process::search_path("udisksctl"), "unmount", "--force", "-b", search_for_drives_internal::get_dev_from_path(correct_path).c_str(), (boost::process::std_out & boost::process::std_err) > istd_err);
+ #endif
+ 		std::string line;
+ 		while (child.running() && std::getline(istd_err, line)) {
