@@ -1,6 +1,6 @@
 app-id: com.prusa3d.PrusaSlicer
 runtime: org.freedesktop.Platform
-runtime-version: "22.08"
+runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: entrypoint
 # remove this desktop file suffix on stable release
@@ -290,6 +290,10 @@ modules:
       - type: patch
         path: patches/use_udisks2_for_unmounting.patch
 
+      # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
+      - type: patch
+        path: patches/apply_tbb_patch.patch
+        
       # Pre-Build
       - type: shell
         commands: 
