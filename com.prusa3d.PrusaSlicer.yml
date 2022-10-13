@@ -290,6 +290,11 @@ modules:
       - type: patch
         path: patches/use_udisks2_for_unmounting.patch
 
+      # Patched TBB cmake to make build without lto flag
+      - type: file
+        dest: deps/TBB
+        path: patches/TBB/GNU.cmake
+        
       # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
       - type: patch
         path: patches/apply_tbb_patch.patch
