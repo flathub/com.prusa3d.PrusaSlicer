@@ -1,5 +1,5 @@
 diff --git a/deps/TBB/TBB.cmake b/deps/TBB/TBB.cmake
-index 7020e43..449aa18 100644
+index 7020e43..11ba709 100644
 --- a/deps/TBB/TBB.cmake
 +++ b/deps/TBB/TBB.cmake
 @@ -1,7 +1,10 @@
@@ -13,3 +13,12 @@ index 7020e43..449aa18 100644
      CMAKE_ARGS          
          -DTBB_BUILD_SHARED=OFF
          -DTBB_TEST=OFF
+@@ -9,6 +12,8 @@ prusaslicer_add_cmake_project(
+         -DCMAKE_DEBUG_POSTFIX=_debug
+ )
+ 
++add_compile_definitions(__TBB_DYNAMIC_LOAD_ENABLED=0)
++
+ if (MSVC)
+     add_debug_dep(dep_TBB)
+ endif ()
