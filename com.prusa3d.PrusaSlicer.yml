@@ -297,7 +297,7 @@ modules:
         
       # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
       - type: patch
-        path: patches/tbb_patch.patch
+        path: patches/apply_tbb_patch.patch
         
       # Pre-Build
       - type: shell
