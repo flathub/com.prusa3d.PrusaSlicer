@@ -102,15 +102,14 @@ modules:
           -DCMAKE_INSTALL_PREFIX=/app \
           -DCMAKE_INSTALL_LIBDIR=/app/lib \
           -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
-          -DSLIC3R_ASAN=0 \
+          -DSLIC3R_PCH=0 \
           -DSLIC3R_FHS=1 \
           -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=1 \
-          -DSLIC3R_STATIC_EXCLUDE_GLEW=1 \
           -DSLIC3R_STATIC_EXCLUDE_CURL=1 \
           -DSLIC3R_BUILD_TESTS=0 \
           -DSLIC3R_DESKTOP_INTEGRATION=0 \
-          -DCMAKE_BUILD_TYPE=Release 
+          -DCMAKE_BUILD_TYPE=Debug
         cmake --build . --target install
 
     post-install:
