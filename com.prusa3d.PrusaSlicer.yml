@@ -1,7 +1,8 @@
 app-id: com.prusa3d.PrusaSlicer
 runtime: org.freedesktop.Platform
-runtime-version: "20.08"
+runtime-version: "22.08"
 sdk: org.freedesktop.Sdk
+sdk-extensions: [ "org.freedesktop.Sdk.Extension.llvm14" ]
 command: entrypoint
 # remove this desktop file suffix on stable release
 # desktop-file-name-suffix: " (Beta)"
@@ -86,14 +87,18 @@ modules:
       - /lib/pkgconfig
 
   - name: PrusaSlicer
+    build-options:
+     append-path: "/usr/lib/sdk/llvm14/bin"
+     prepend-ld-library-path: "/usr/lib/sdk/llvm14/lib"
     buildsystem: simple
     build-commands:
-      # start build
       - |
         mkdir -p deps/build && cd deps/build
         cmake ../ \
           -DDEP_WX_GTK3=1 \
-          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
+          -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++
         cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL dep_OCCT 
       - |
         mkdir -p build && cd build
@@ -110,7 +115,9 @@ modules:
           -DSLIC3R_STATIC_EXCLUDE_CURL=1 \
           -DSLIC3R_BUILD_TESTS=0 \
           -DSLIC3R_DESKTOP_INTEGRATION=0 \
-          -DCMAKE_BUILD_TYPE=Debug 
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++
         cmake --build . --target install
 
     post-install:
@@ -259,9 +266,9 @@ modules:
 
       # TBB
       - type: file
-        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.6.0.zip
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         dest: external-packages/TBB
-        sha256: 29376a78addbd0a81ac5fca5cc7ef82528281f0659b7e09a07672b136451c7b1
+        sha256: 83ea786c964a384dd72534f9854b419716f412f9d43c0be88d41874763e7bb47
 
       # TIFF, libtiff
       - type: file
@@ -289,10 +296,6 @@ modules:
       # https://github.com/ivocavalcante/PrusaSlicer-snap/blob/main/patches/use_udisks2_for_unmounting.patch
       - type: patch
         path: patches/use_udisks2_for_unmounting.patch
-        
-      # Use TTB 2021.6 with -DTBB_ENABLE_IPO=OFF
-      - type: patch
-        path: patches/tbb_2021.6_NO_IPO.patch
         
       # Pre-Build
       - type: shell
