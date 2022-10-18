@@ -26,7 +26,172 @@ finish-args:
   - --env=PRUSA_SLICER_DARK_THEME=false
 
 modules:
-  
+  - name: pam
+    config-opts:
+      - --includedir=/app/include/security
+      - --disable-doc
+    sources:
+      - type: archive
+        url: https://github.com/linux-pam/linux-pam/releases/download/v1.4.0/Linux-PAM-1.4.0.tar.xz
+        sha256: cd6d928c51e64139be3bdb38692c68183a509b83d4f2c221024ccd4bcddfd034
+
+  - name: intltool
+    sources:
+      - type: archive
+        url: https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+        sha256: 67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd
+
+  - name: polkit
+    config-opts:
+      - --disable-polkitd
+      - --enable-libelogind=no
+      - --enable-libsystemd-login=no
+      - --disable-man-pages
+      - --disable-introspection
+      - --disable-test
+      - --with-systemdsystemunitdir=no
+    rm-configure: true
+    sources:
+      - type: archive
+        url: https://www.freedesktop.org/software/polkit/releases/polkit-0.116.tar.gz
+        sha256: 88170c9e711e8db305a12fdb8234fac5706c61969b94e084d0f117d8ec5d34b1
+
+      - type: patch
+        path: patches/polkit/polkit-build-Add-option-to-build-without-polkitd.patch
+
+      - type: file
+        path: patches/polkit/polkit-autogen
+        dest-filename: autogen.sh
+
+  - name: gudev
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/GNOME/libgudev.git
+
+  - name: json-c
+    buildsystem: cmake
+    sources:
+      - type: archive
+        url: https://s3.amazonaws.com/json-c_releases/releases/json-c-0.15.tar.gz
+        sha256: b8d80a1ddb718b3ba7492916237bbf86609e9709fb007e7f7d4322f02341a4c6
+
+  - name: kmod
+    buildsystem: autotools
+    config-opts:
+      - --disable-manpages
+    sources:
+      - type: archive
+        url: https://mirrors.edge.kernel.org/pub/linux/utils/kernel/kmod/kmod-25.tar.xz
+        sha256: 7165e6496656159dcb909a91ed708a0fe273a4b128b4b1dc997ccb5189eef1cd
+
+  - name: libnvme
+    buildsystem: meson
+    sources:
+      - type: git
+        url: https://github.com/linux-nvme/libnvme.git
+
+  - name: mpfr
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://www.mpfr.org/mpfr-4.0.2/mpfr-4.0.2.tar.xz
+        sha256: 1d3be708604eae0e42d578ba93b390c2a145f17743a744d8f3f8c2ad5855a38a
+
+  - name: bytesize
+    config-opts: 
+      - --with-gtk-doc=no
+    sources: 
+      - type: archive
+        url: https://github.com/storaged-project/libbytesize/releases/download/2.1/libbytesize-2.1.tar.gz
+        sha256: acc7d40237573adb958039bd9254155a41e57c363fce492f9e8768b42e4bffae
+
+  - name: libaio
+    buildsystem: simple
+    no-autogen: true
+    build-commands:
+      - make prefix=/app install
+    sources:
+      - type: archive
+        url: https://pagure.io/libaio/archive/libaio-0.3.111/libaio-libaio-0.3.111.tar.gz
+        sha256: e6bc17cba66e59085e670fea238ad095766b412561f90b354eb4012d851730ba
+
+  - name: lvm2
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://github.com/lvmteam/lvm2/archive/v2_03_05.tar.gz
+        sha256: 6a1f6f76a099c41e2639147eba3f97cbc0760fa01d315f91852e03142884e0c8
+    post-install:
+      - |
+        chmod 755 /app/lib/libdevmapper.so.1.02
+        chmod 755 /app/sbin/dmsetup
+        chmod 755 /app/sbin/lvm
+
+  - name: popt
+    sources:
+      - type: git
+        url: https://github.com/rpm-software-management/popt.git
+        branch: main
+
+  - name: cryptsetup
+    buildsystem: autotools
+    sources: 
+      - type: archive
+        url: https://mirrors.edge.kernel.org/pub/linux/utils/cryptsetup/v2.3/cryptsetup-2.3.4.tar.gz
+        sha256: 8bc16c0b1c987867f13f0f2114fc4182d92bc866d1f84bb725c2cb9bcc55bf93
+
+  - name: keyutils
+    buildsystem: simple
+    build-commands:
+      - make LIBDIR=/app/lib BINDIR=/app/bin SBINDIR=/app/sbin INCLUDEDIR=/app/include MANDIR=/app/share/man SHAREDIR=/app/share/keyutils install
+    sources:
+      - type: archive
+        url: https://src.fedoraproject.org/repo/pkgs/keyutils/keyutils-1.6.1.tar.bz2/sha512/ea6e20b2594234c7f51581eef2b8fd19c109fa9eacaaef8dfbb4f237bd1d6fdf071ec23b4ff334cb22a46461d09d17cf499987fd1f00e66f27506888876961e1/keyutils-1.6.1.tar.bz2
+        sha256: c8b15722ae51d95b9ad76cc6d49a4c2cc19b0c60f72f61fb9bf43eea7cbd64ce
+
+  - name: blockdev
+    config-opts:
+      - --disable-tests
+      - --with-btrfs=no
+      - --with-dm=no
+      - --with-dmraid=no
+      - --with-gtk-doc=no
+      - --with-kbd=no
+      - --with-lvm=no
+      - --with-lvm_dbus=no
+      - --with-mpath=no
+      - --with-nvdimm=no
+      - --with-escrow=no
+      - --with-tools=no
+    sources:
+      - type: git
+        url: https://github.com/storaged-project/libblockdev.git
+
+  - name: atasmart
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: http://0pointer.de/public/libatasmart-0.19.tar.xz
+        sha256: 61f0ea345f63d28ab2ff0dc352c22271661b66bf09642db3a4049ac9dbdb0f8d
+
+  - name: udisks2
+    buildsystem: autotools
+    config-opts: 
+      - --enable-available-modules=no
+      - --enable-bcache=no
+      - --enable-btrfs=no
+      - --enable-introspection=no
+      - --enable-lvm2=no
+      - --enable-modules=no
+      - --enable-vdo=no
+      - --enable-zram=no
+      - --with-systemdsystemunitdir=no
+      - --with-tmpfilesdir=no
+    sources:
+      - type: git
+        url: https://github.com/storaged-project/udisks.git
+
   # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
   # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
   # see: entrypoint & set-dark-theme-variant.py (originated from spotify client flatpak) 
