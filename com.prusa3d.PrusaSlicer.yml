@@ -68,6 +68,7 @@ modules:
     sources:
       - type: git
         url: https://gitlab.gnome.org/GNOME/libgudev.git
+        commit: 4216ecd4513bd4c8af73543817a51d6f72f166cc
 
   - name: json-c
     buildsystem: cmake
@@ -90,6 +91,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/linux-nvme/libnvme.git
+        commit: 86edb55348a4405d7e51cb4f36af33bbd993c232
 
   - name: mpfr
     buildsystem: autotools
@@ -133,6 +135,7 @@ modules:
       - type: git
         url: https://github.com/rpm-software-management/popt.git
         branch: main
+        commit: 33bd1b4a2caa43c616b64ca15577956b404a0331
 
   - name: cryptsetup
     buildsystem: autotools
@@ -167,6 +170,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/storaged-project/libblockdev.git
+        commit: d03962a4b9fa1b671dc1e620243241aa3842968c
 
   - name: atasmart
     buildsystem: autotools
@@ -191,6 +195,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/storaged-project/udisks.git
+        commit: e52bca0c06e7f46e3563a27cb7da115c12be6c11
 
   # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
   # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
