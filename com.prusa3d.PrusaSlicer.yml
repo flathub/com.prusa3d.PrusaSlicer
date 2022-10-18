@@ -1,6 +1,6 @@
 app-id: com.prusa3d.PrusaSlicer
 runtime: org.freedesktop.Platform
-runtime-version: "20.08"
+runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: entrypoint
 # remove this desktop file suffix on stable release
@@ -110,7 +110,7 @@ modules:
           -DSLIC3R_STATIC_EXCLUDE_CURL=1 \
           -DSLIC3R_BUILD_TESTS=0 \
           -DSLIC3R_DESKTOP_INTEGRATION=0 \
-          -DCMAKE_BUILD_TYPE=Debug 
+          -DCMAKE_BUILD_TYPE=Release 
         cmake --build . --target install
 
     post-install:
@@ -284,7 +284,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.5.0
+        branch: lh_master_250_flatpak
 
       # https://github.com/ivocavalcante/PrusaSlicer-snap/blob/main/patches/use_udisks2_for_unmounting.patch
       - type: patch
