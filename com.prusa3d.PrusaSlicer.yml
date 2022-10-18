@@ -19,7 +19,6 @@ finish-args:
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
-  - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
@@ -286,10 +285,6 @@ modules:
         url: https://github.com/prusa3d/PrusaSlicer.git
         branch: lh_master_250_flatpak
         commit: 4b686af12db49500205ca15038fb7d651ccc4295
-
-      # https://github.com/ivocavalcante/PrusaSlicer-snap/blob/main/patches/use_udisks2_for_unmounting.patch
-      - type: patch
-        path: patches/use_udisks2_for_unmounting.patch
 
       # Patched TBB cmake to make build without lto flag
       - type: file
