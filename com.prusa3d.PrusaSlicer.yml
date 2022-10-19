@@ -11,7 +11,6 @@ finish-args:
   #- --socket=wayland
   #- --socket=fallback-x11
   - --socket=x11
-  # - --device=dri
   - --share=network
   - --device=all
   - --filesystem=home
@@ -19,6 +18,7 @@ finish-args:
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
+  - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
@@ -302,6 +302,7 @@ modules:
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         install set-dark-theme-variant.py /app/bin
         install entrypoint /app/bin
+        install umount /app/bin
         
       - | # Desktop Integration .3MF & .GCODE mime support
         mkdir -p /app/share/mime/packages/
@@ -515,6 +516,10 @@ modules:
       # SEE: https://github.com/prusa3d/PrusaSlicer/issues/2365
       - type: file
         path: entrypoint
+
+      # umount wrapper
+      - type: file
+        path: umount
 
       # TODO: remove mime when PR created and is merged upstream
       # Adding MIME type for 3mf
