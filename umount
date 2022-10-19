@@ -4,5 +4,5 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-exec /app/bin/udisksctl -b $(findmnt -oSOURCE -n "$@")
+exec /app/bin/udisksctl unmount -b $(findmnt -oSOURCE -n "$@")
 
