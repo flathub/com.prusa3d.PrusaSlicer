@@ -26,6 +26,7 @@ finish-args:
   - --env=PRUSA_SLICER_DARK_THEME=false
 
 modules:
+  # umount wrapper require udisks2 to perform device umount, build it and required deps 
   - name: pam
     config-opts:
       - --includedir=/app/include/security
@@ -178,6 +179,10 @@ modules:
       - type: archive
         url: http://0pointer.de/public/libatasmart-0.19.tar.xz
         sha256: 61f0ea345f63d28ab2ff0dc352c22271661b66bf09642db3a4049ac9dbdb0f8d
+    config-opts:
+      - arch":
+          - aarch64:
+            - --build=aarch64-unknown-linux-gnu
 
   - name: udisks2
     buildsystem: autotools
@@ -517,7 +522,7 @@ modules:
       - type: file
         path: entrypoint
 
-      # umount wrapper
+      # umount wrapper used to redirect umount calls to udisksctl unmount
       - type: file
         path: umount
 
