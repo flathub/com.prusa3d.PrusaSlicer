@@ -175,14 +175,13 @@ modules:
 
   - name: atasmart
     buildsystem: autotools
-    build-options:
-      - arch:
-          - aarch64:
-              - config-opts: --build=aarch64-unknown-linux-gnu
     sources:
       - type: archive
         url: http://0pointer.de/public/libatasmart-0.19.tar.xz
         sha256: 61f0ea345f63d28ab2ff0dc352c22271661b66bf09642db3a4049ac9dbdb0f8d
+      - type: file
+        url: http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+        dest-filename: build-aux/config.guess
 
   - name: udisks2
     buildsystem: autotools
