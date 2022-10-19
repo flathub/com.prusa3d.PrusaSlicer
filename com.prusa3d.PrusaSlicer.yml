@@ -19,6 +19,7 @@ finish-args:
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
+  - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
