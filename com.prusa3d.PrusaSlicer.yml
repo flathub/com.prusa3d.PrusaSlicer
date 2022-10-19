@@ -11,7 +11,7 @@ finish-args:
   #- --socket=wayland
   #- --socket=fallback-x11
   - --socket=x11
-  - --device=dri
+  # - --device=dri
   - --share=network
   - --device=all
   - --filesystem=home
@@ -19,7 +19,6 @@ finish-args:
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
   - --own-name=com.prusa3d.prusaslicer.*
-  - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
@@ -92,9 +91,9 @@ modules:
       - |
         mkdir -p deps/build && cd deps/build
         cmake ../ \
-          -DDEP_WX_GTK3=ON \
+          -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL
+        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL dep_OCCT 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -102,12 +101,14 @@ modules:
           -DCMAKE_INSTALL_PREFIX=/app \
           -DCMAKE_INSTALL_LIBDIR=/app/lib \
           -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
-          -DSLIC3R_FHS=ON \
+          -DSLIC3R_PCH=0 \
+          -DSLIC3R_FHS=1 \
           -DSLIC3R_GTK=3 \
-          -DSLIC3R_STATIC=ON \
-          -DSLIC3R_STATIC_EXCLUDE_GLEW=ON \
-          -DSLIC3R_STATIC_EXCLUDE_CURL=ON \
-          -DSLIC3R_BUILD_TESTS=OFF \
+          -DSLIC3R_STATIC=1 \
+          -DSLIC3R_STATIC_EXCLUDE_GLEW=1 \
+          -DSLIC3R_STATIC_EXCLUDE_CURL=1 \
+          -DSLIC3R_BUILD_TESTS=0 \
+          -DSLIC3R_DESKTOP_INTEGRATION=0 \
           -DCMAKE_BUILD_TYPE=Release 
         cmake --build . --target install
 
@@ -183,6 +184,12 @@ modules:
         dest: external-packages/CGAL
         sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
 
+      # EXPAT
+      - type: file
+        url: https://github.com/libexpat/libexpat/archive/refs/tags/R_2_4_3.zip
+        dest: external-packages/EXPAT
+        sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
+
       # GMP
       - type: file
         url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
@@ -206,6 +213,12 @@ modules:
         url: https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz
         dest: external-packages/NLopt
         sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
+      
+      # OCCT
+      - type: file
+        url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_2.zip
+        dest: external-packages/OCCT
+        sha256: c696b923593e8c18d059709717dbf155b3e72fdd283c8522047a790ec3a432c5
 
       # OpenCSG
       - type: file
@@ -227,9 +240,9 @@ modules:
 
       # OpenVDB
       - type: file
-        url: https://github.com/tamasmeszaros/openvdb/archive/refs/tags/v6.2.1-prusa3d.zip
+        url: https://github.com/tamasmeszaros/openvdb/archive/a68fd58d0e2b85f01adeb8b13d7555183ab10aa5.zip
         dest: external-packages/OpenVDB
-        sha256: caf9f0c91976722883ff9cb32420ef142af22f7e625fc643b91c23d6e4172f62
+        sha256: f353e7b99bd0cbfc27ac9082de51acf32a8bc0b3e21ff9661ecca6f205ec1d81
 
       # PNG, libpng
       - type: file
@@ -245,9 +258,9 @@ modules:
 
       # TBB
       - type: file
-        url: https://github.com/wjakob/tbb/archive/a0dc9bf76d0120f917b641ed095360448cabc85b.tar.gz
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         dest: external-packages/TBB
-        sha256: 0545cb6033bd1873fcae3ea304def720a380a88292726943ae3b9b207f322efe
+        sha256: 83ea786c964a384dd72534f9854b419716f412f9d43c0be88d41874763e7bb47
 
       # TIFF, libtiff
       - type: file
@@ -260,12 +273,28 @@ modules:
         url: https://github.com/prusa3d/wxWidgets/archive/489f6118256853cf5b299d595868641938566cdb.zip
         dest: external-packages/wxWidgets
         sha256: 5b22d465377cedd8044bba69bea958b248953fd3628c1de4913a84d4e6f6175b
+      
+      # ZLIB
+      - type: file
+        url: https://github.com/madler/zlib/archive/refs/tags/v1.2.11.zip
+        dest: external-packages/ZLIB
+        sha256: f5cc4ab910db99b2bdbba39ebbdc225ffc2aa04b4057bc2817f1b94b6978cfc3
 
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.4.2
-      
+        branch: lh_master_250_flatpak
+        commit: 4b686af12db49500205ca15038fb7d651ccc4295
+
+      # Patched TBB cmake to make build without lto flag
+      - type: file
+        dest: deps/TBB
+        path: patches/TBB/GNU.cmake
+        
+      # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
+      - type: patch
+        path: patches/apply_tbb_patch.patch
+        
       # Pre-Build
       - type: shell
         commands: 
