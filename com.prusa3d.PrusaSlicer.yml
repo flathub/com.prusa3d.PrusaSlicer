@@ -324,7 +324,11 @@ modules:
       # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
       - type: patch
         path: patches/apply_tbb_patch.patch
-        
+
+      # Fix for bug #55. More info: https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/55
+      - type: patch
+        path: patches/fix_55.patch
+
       # Pre-Build
       - type: shell
         commands: 
