@@ -17,5 +17,5 @@ fi
     export GTK_THEME='Adwaita:dark' &&
     echo "Message: $(date +%T): INFO: using dark theme variant"
 
-exec /app/bin/prusa-slicer $@ &
+exec /app/bin/prusa-slicer "$@" &
 $(/app/bin/set-dark-theme-variant.py) &
