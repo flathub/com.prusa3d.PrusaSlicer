@@ -164,9 +164,9 @@ modules:
 
       # Boost
       - type: file
-        url: https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip
         dest: external-packages/Boost
-        sha256: aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a
+        sha256: f22143b5528e081123c3c5ed437e92f648fe69748e95fa6e2bd41484e2986cc3
 
       # boost_polygon
       - type: file
@@ -176,15 +176,15 @@ modules:
 
       # Cereal
       - type: file
-        url: https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz
+        url: https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.0.zip
         dest: external-packages/Cereal
-        sha256: 1921f26d2e1daf9132da3c432e2fd02093ecaedf846e65d7679ddf868c7289c4
+        sha256: 71642cb54658e98c8f07a0f0d08bf9766f1c3771496936f6014169d3726d9657
 
       # CGAL
       - type: file
-        url: https://github.com/CGAL/cgal/archive/releases/CGAL-5.0.zip
+        url: https://github.com/CGAL/cgal/archive/refs/tags/v5.4.zip
         dest: external-packages/CGAL
-        sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
+        sha256: d7605e0a5a5ca17da7547592f6f6e4a59430a0bc861948974254d0de43eab4c0
 
       # EXPAT
       - type: file
@@ -206,7 +206,7 @@ modules:
 
       # MPFR
       - type: file
-        url: http://ftp.vim.org/ftp/gnu/mpfr/mpfr-3.1.6.tar.bz2
+        url: https://www.mpfr.org/mpfr-3.1.6/mpfr-3.1.6.tar.bz2
         dest: external-packages/MPFR
         sha256: cf4f4b2d80abb79e820e78c8077b6725bbbb4e8f41896783c899087be0e94068
 
@@ -272,9 +272,9 @@ modules:
 
       # wxWidgets, Prusa custom patched
       - type: file
-        url: https://github.com/prusa3d/wxWidgets/archive/489f6118256853cf5b299d595868641938566cdb.zip
+        url: https://github.com/prusa3d/wxWidgets/archive/4fd2120c913c20c3bb66ee9d01d8ff5087a8b90a.zip
         dest: external-packages/wxWidgets
-        sha256: 5b22d465377cedd8044bba69bea958b248953fd3628c1de4913a84d4e6f6175b
+        sha256: 5b59e8b4dccf73e109c6588f6a69bcfe4e02e930af53c43d5d1329c1f3d83ec9
       
       # ZLIB
       - type: file
