@@ -3,15 +3,12 @@ runtime: org.freedesktop.Platform
 runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: entrypoint
-# remove this desktop file suffix on stable release
-# desktop-file-name-suffix: " (Beta)"
 separate-locales: true
 finish-args:
   - --share=ipc
   #- --socket=wayland
   #- --socket=fallback-x11
   - --socket=x11
-  # - --device=dri
   - --share=network
   - --device=all
   - --filesystem=home
@@ -21,7 +18,6 @@ finish-args:
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
-  #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
   # set dark theme 
   - --env=PRUSA_SLICER_DARK_THEME=false
