@@ -81,7 +81,7 @@ modules:
           -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
           -DSLIC3R_PCH=OFF \
           -DSLIC3R_FHS=ON \
-          -DSLIC3R_GTK=ON \
+          -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=ON \
           -DSLIC3R_BUILD_TESTS=OFF \
           -DSLIC3R_DESKTOP_INTEGRATION=OFF \
