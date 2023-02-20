@@ -1,0 +1,22 @@
+diff --git a/src/slic3r/GUI/DoubleSlider.cpp b/src/slic3r/GUI/DoubleSlider.cpp
+index ce33099..605d4c7 100644
+--- a/src/slic3r/GUI/DoubleSlider.cpp
++++ b/src/slic3r/GUI/DoubleSlider.cpp
+@@ -1131,7 +1131,7 @@ void Control::draw_ruler(wxDC& dc)
+ 
+         while (tick <= m_max_value) {
+             value += m_ruler.long_step;
+-            if (value > m_ruler.max_values[sequence] && sequence < m_ruler.count()) {
++            if (sequence < m_ruler.count() && value > m_ruler.max_values[sequence]) {
+                 value = m_ruler.long_step;
+                 for (; tick < values_size; tick++)
+                     if (m_values[tick] < value)
+@@ -1164,7 +1164,7 @@ void Control::draw_ruler(wxDC& dc)
+ 
+             draw_short_ticks(dc, short_tick, tick);
+ 
+-            if (value == m_ruler.max_values[sequence] && sequence < m_ruler.count()) {
++            if (sequence < m_ruler.count() && value == m_ruler.max_values[sequence]) {
+                 value = 0.0;
+                 sequence++;
+                 tick++;
