@@ -284,7 +284,7 @@ modules:
 
       # Allow PrusaSlicer to use wayland
       - type: patch
-        path: patches/0001-don-t-override-GDK_BACKEND-env.patch
+        path: patches/0001-enable-wayland.patch
 
       # Pre-Build
       - type: shell
