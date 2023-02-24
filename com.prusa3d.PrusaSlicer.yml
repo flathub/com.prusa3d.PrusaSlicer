@@ -258,9 +258,9 @@ modules:
 
       # wxWidgets, Prusa custom patched
       - type: file
-        url: https://github.com/prusa3d/wxWidgets/archive/4fd2120c913c20c3bb66ee9d01d8ff5087a8b90a.zip
+        url: https://github.com/wxWidgets/wxWidgets/archive/refs/tags/v3.2.2.1.tar.gz
         dest: external-packages/wxWidgets
-        sha256: 5b59e8b4dccf73e109c6588f6a69bcfe4e02e930af53c43d5d1329c1f3d83ec9
+        sha256: 0b96807e700288652f1538d8f7db25559cbb890f15fe2001ca7eef6f7cce3262
       
       # ZLIB
       - type: file
@@ -285,6 +285,10 @@ modules:
       # Allow PrusaSlicer to use wayland
       - type: patch
         path: patches/0001-enable-wayland.patch
+
+      # Upgrade wxWidget to 3.2.2.1
+      - type: patch
+        path: patches/0001-upgrade-wxWidget-to-3.2.2.1.patch
 
       # Pre-Build
       - type: shell
