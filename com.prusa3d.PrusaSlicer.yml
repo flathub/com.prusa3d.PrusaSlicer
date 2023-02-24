@@ -3,15 +3,12 @@ runtime: org.freedesktop.Platform
 runtime-version: "21.08"
 sdk: org.freedesktop.Sdk
 command: entrypoint
-# remove this desktop file suffix on stable release
-# desktop-file-name-suffix: " (Beta)"
 separate-locales: true
 finish-args:
   - --share=ipc
   #- --socket=wayland
   #- --socket=fallback-x11
   - --socket=x11
-  - --device=dri
   - --share=network
   - --device=all
   - --filesystem=home
@@ -21,7 +18,6 @@ finish-args:
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
-  #- --talk-name=org.freedesktop.Flatpak
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
   # set dark theme 
   - --env=PRUSA_SLICER_DARK_THEME=false
@@ -50,8 +46,8 @@ modules:
       - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/40/9c/107e22f637d33434404c07d69112b9d26b76ee0dd4dd705131ab6cdcc818/python-xlib-0.31.tar.gz
-        sha256: 74d83a081f532bc07f6d7afcd6416ec38403d68f68b9b9dc9e1f28fbf2d799e9
+        url: https://files.pythonhosted.org/packages/86/f5/8c0653e5bb54e0cbdfe27bf32d41f27bc4e12faa8742778c17f2a71be2c0/python-xlib-0.33.tar.gz
+        sha256: 55af7906a2c75ce6cb280a584776080602444f75815a7aff4d287bb2d7018b32
   
   - name: glu
     config-opts:
@@ -66,25 +62,6 @@ modules:
       - /lib/*.la
       - /lib/pkgconfig
 
-  - name: glew
-    no-autogen: true
-    make-args:
-      - GLEW_PREFIX=/app
-      - GLEW_DEST=/app
-      - LIBDIR=/app/lib
-    make-install-args:
-      - GLEW_PREFIX=/app
-      - GLEW_DEST=/app
-      - LIBDIR=/app/lib
-    sources:
-      - type: archive
-        url: https://downloads.sourceforge.net/project/glew/glew/2.2.0/glew-2.2.0.tgz
-        sha256: d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1
-    cleanup:
-      - /include
-      - /lib/*.a
-      - /lib/pkgconfig
-
   - name: PrusaSlicer
     buildsystem: simple
     build-commands:
@@ -92,9 +69,9 @@ modules:
       - |
         mkdir -p deps/build && cd deps/build
         cmake ../ \
-          -DDEP_WX_GTK3=ON \
+          -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL
+        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -102,12 +79,12 @@ modules:
           -DCMAKE_INSTALL_PREFIX=/app \
           -DCMAKE_INSTALL_LIBDIR=/app/lib \
           -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
+          -DSLIC3R_PCH=OFF \
           -DSLIC3R_FHS=ON \
           -DSLIC3R_GTK=3 \
           -DSLIC3R_STATIC=ON \
-          -DSLIC3R_STATIC_EXCLUDE_GLEW=ON \
-          -DSLIC3R_STATIC_EXCLUDE_CURL=ON \
           -DSLIC3R_BUILD_TESTS=OFF \
+          -DSLIC3R_DESKTOP_INTEGRATION=OFF \
           -DCMAKE_BUILD_TYPE=Release 
         cmake --build . --target install
 
@@ -131,7 +108,8 @@ modules:
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         install set-dark-theme-variant.py /app/bin
         install entrypoint /app/bin
-        
+        install umount /app/bin
+
       - | # Desktop Integration .3MF & .GCODE mime support
         mkdir -p /app/share/mime/packages/
         install -m644 -p -t /app/share/mime/packages com.prusa3d.PrusaSlicer.mime.xml
@@ -161,9 +139,9 @@ modules:
 
       # Boost
       - type: file
-        url: https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.gz
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip
         dest: external-packages/Boost
-        sha256: aeb26f80e80945e82ee93e5939baebdca47b9dee80a07d3144be1e1a6a66dd6a
+        sha256: f22143b5528e081123c3c5ed437e92f648fe69748e95fa6e2bd41484e2986cc3
 
       # boost_polygon
       - type: file
@@ -173,15 +151,21 @@ modules:
 
       # Cereal
       - type: file
-        url: https://github.com/USCiLab/cereal/archive/v1.2.2.tar.gz
+        url: https://github.com/USCiLab/cereal/archive/refs/tags/v1.3.0.zip
         dest: external-packages/Cereal
-        sha256: 1921f26d2e1daf9132da3c432e2fd02093ecaedf846e65d7679ddf868c7289c4
+        sha256: 71642cb54658e98c8f07a0f0d08bf9766f1c3771496936f6014169d3726d9657
 
       # CGAL
       - type: file
-        url: https://github.com/CGAL/cgal/archive/releases/CGAL-5.0.zip
+        url: https://github.com/CGAL/cgal/archive/refs/tags/v5.4.zip
         dest: external-packages/CGAL
-        sha256: c2b035bd078687b6d8c0fb6371a7443adcdb647856af9969532c4050cd5f48e5
+        sha256: d7605e0a5a5ca17da7547592f6f6e4a59430a0bc861948974254d0de43eab4c0
+
+      # EXPAT
+      - type: file
+        url: https://github.com/libexpat/libexpat/archive/refs/tags/R_2_4_3.zip
+        dest: external-packages/EXPAT
+        sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
 
       # GMP
       - type: file
@@ -197,7 +181,7 @@ modules:
 
       # MPFR
       - type: file
-        url: http://ftp.vim.org/ftp/gnu/mpfr/mpfr-3.1.6.tar.bz2
+        url: https://www.mpfr.org/mpfr-3.1.6/mpfr-3.1.6.tar.bz2
         dest: external-packages/MPFR
         sha256: cf4f4b2d80abb79e820e78c8077b6725bbbb4e8f41896783c899087be0e94068
 
@@ -206,6 +190,12 @@ modules:
         url: https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz
         dest: external-packages/NLopt
         sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
+      
+      # OCCT
+      - type: file
+        url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_2.zip
+        dest: external-packages/OCCT
+        sha256: c696b923593e8c18d059709717dbf155b3e72fdd283c8522047a790ec3a432c5
 
       # OpenCSG
       - type: file
@@ -227,9 +217,15 @@ modules:
 
       # OpenVDB
       - type: file
-        url: https://github.com/tamasmeszaros/openvdb/archive/refs/tags/v6.2.1-prusa3d.zip
+        url: https://github.com/tamasmeszaros/openvdb/archive/a68fd58d0e2b85f01adeb8b13d7555183ab10aa5.zip
         dest: external-packages/OpenVDB
-        sha256: caf9f0c91976722883ff9cb32420ef142af22f7e625fc643b91c23d6e4172f62
+        sha256: f353e7b99bd0cbfc27ac9082de51acf32a8bc0b3e21ff9661ecca6f205ec1d81
+
+      # GLEW
+      - type: file
+        url: https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip
+        dest: external-packages/GLEW
+        sha256: a9046a913774395a095edcc0b0ac2d81c3aacca61787b39839b941e9be14e0d4
 
       # PNG, libpng
       - type: file
@@ -245,9 +241,15 @@ modules:
 
       # TBB
       - type: file
-        url: https://github.com/wjakob/tbb/archive/a0dc9bf76d0120f917b641ed095360448cabc85b.tar.gz
+        url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         dest: external-packages/TBB
-        sha256: 0545cb6033bd1873fcae3ea304def720a380a88292726943ae3b9b207f322efe
+        sha256: 83ea786c964a384dd72534f9854b419716f412f9d43c0be88d41874763e7bb47
+      
+      # NanoSVG
+      - type: file
+        url: https://github.com/fltk/nanosvg/archive/abcd277ea45e9098bed752cf9c6875b533c0892f.zip
+        dest: external-packages/NanoSVG
+        sha256: e859938fbaee4b351bd8a8b3d3c7a75b40c36885ce00b73faa1ce0b98aa0ad34
 
       # TIFF, libtiff
       - type: file
@@ -257,15 +259,30 @@ modules:
 
       # wxWidgets, Prusa custom patched
       - type: file
-        url: https://github.com/prusa3d/wxWidgets/archive/489f6118256853cf5b299d595868641938566cdb.zip
+        url: https://github.com/prusa3d/wxWidgets/archive/4fd2120c913c20c3bb66ee9d01d8ff5087a8b90a.zip
         dest: external-packages/wxWidgets
-        sha256: 5b22d465377cedd8044bba69bea958b248953fd3628c1de4913a84d4e6f6175b
+        sha256: 5b59e8b4dccf73e109c6588f6a69bcfe4e02e930af53c43d5d1329c1f3d83ec9
+      
+      # ZLIB
+      - type: file
+        url: https://github.com/madler/zlib/archive/refs/tags/v1.2.11.zip
+        dest: external-packages/ZLIB
+        sha256: f5cc4ab910db99b2bdbba39ebbdc225ffc2aa04b4057bc2817f1b94b6978cfc3
 
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.4.2
-      
+        tag: version_2.6.0-alpha4
+
+      # Patched TBB cmake to make build without lto flag
+      - type: file
+        dest: deps/TBB
+        path: patches/TBB/GNU.cmake
+        
+      # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
+      - type: patch
+        path: patches/apply_tbb_patch.patch
+
       # Pre-Build
       - type: shell
         commands: 
@@ -316,6 +333,10 @@ modules:
       # SEE: https://github.com/prusa3d/PrusaSlicer/issues/2365
       - type: file
         path: entrypoint
+
+      # umount wrapper used to redirect umount calls to udisk2
+      - type: file
+        path: umount
 
       # TODO: remove mime when PR created and is merged upstream
       # Adding MIME type for 3mf
