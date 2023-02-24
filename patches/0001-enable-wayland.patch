@@ -1,12 +1,26 @@
-From bd071f99a1ac9c513befa74fd68466ddda415678 Mon Sep 17 00:00:00 2001
+From ee548e773b2e57e57f42443a9ef93a08cc7e6a00 Mon Sep 17 00:00:00 2001
 From: Elia Devito <eliadevito@gmail.com>
 Date: Tue, 21 Feb 2023 15:32:30 +0100
 Subject: [PATCH] enable wayland
 
 ---
- src/PrusaSlicer.cpp | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ deps/wxWidgets/wxWidgets.cmake |  2 +-
+ src/PrusaSlicer.cpp            | 18 +++++++++---------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/deps/wxWidgets/wxWidgets.cmake b/deps/wxWidgets/wxWidgets.cmake
+index 214a38139..92b0c502f 100644
+--- a/deps/wxWidgets/wxWidgets.cmake
++++ b/deps/wxWidgets/wxWidgets.cmake
+@@ -37,7 +37,7 @@ prusaslicer_add_cmake_project(wxWidgets
+         -DwxUSE_EXPAT=sys
+         -DwxUSE_LIBSDL=OFF
+         -DwxUSE_XTEST=OFF
+-        -DwxUSE_GLCANVAS_EGL=OFF
++        -DwxUSE_GLCANVAS_EGL=ON
+         -DwxUSE_WEBREQUEST=OFF
+ )
+ 
 diff --git a/src/PrusaSlicer.cpp b/src/PrusaSlicer.cpp
 index c5bbccb24..d473872e4 100644
 --- a/src/PrusaSlicer.cpp
