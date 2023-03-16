@@ -296,6 +296,10 @@ modules:
       - type: patch
         path: patches/apply_tbb_patch.patch
 
+      # PrusaSlicer 2.5.0 patch. More info: https://github.com/prusa3d/PrusaSlicer/commit/4b686af12db49500205ca15038fb7d651ccc4295
+      - type: patch
+        path: patches/0001-Fixed-undefined-behavior-dereferencing-std-unique_pt.patch
+
       # Fix for bug #55. More info: https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/55
       - type: patch
         path: patches/fix_55.patch
