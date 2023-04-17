@@ -12,6 +12,7 @@ finish-args:
   - --share=network
   - --device=all
   - --filesystem=home
+  - --filesystem=xdg-run/gvfs # make GnomeVFS accessible
   - --filesystem=/run/media
   - --filesystem=/media
   # Allow PrusaSlicer to own its session bus. 
