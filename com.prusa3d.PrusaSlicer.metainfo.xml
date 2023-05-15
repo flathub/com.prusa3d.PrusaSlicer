@@ -69,6 +69,7 @@
         </p>
     </description>
     <releases>
+        <release version="2.6.0-beta1" date="2023-05-13" />
         <release version="2.6.0-alpha6" date="2023-03-31" />
         <release version="2.6.0-alpha5" date="2023-03-06" />
         <release version="2.6.0-alpha4" date="2023-02-18" />
