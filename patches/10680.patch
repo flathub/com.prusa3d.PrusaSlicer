@@ -1,0 +1,24 @@
+From 1c4c3a64cef63ed7ba20d82dc9fc81320043af46 Mon Sep 17 00:00:00 2001
+From: davidk <kdavid@gmail.com>
+Date: Sat, 27 May 2023 13:01:22 -0700
+Subject: [PATCH] libslic3r/utils.cpp: Add missing include
+
+---
+ src/libslic3r/utils.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libslic3r/utils.cpp b/src/libslic3r/utils.cpp
+index db9537edb3..5c85674e59 100644
+--- a/src/libslic3r/utils.cpp
++++ b/src/libslic3r/utils.cpp
+@@ -7,8 +7,10 @@
+ #include <cstdarg>
+ #include <stdio.h>
+ 
++#include "format.hpp"
+ #include "Platform.hpp"
+ #include "Time.hpp"
++
+ #include "libslic3r.h"
+ 
+ #ifdef WIN32
