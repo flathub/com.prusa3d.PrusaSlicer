@@ -284,6 +284,10 @@ modules:
       - type: patch
         path: patches/apply_tbb_patch.patch
 
+      # Apply https://github.com/prusa3d/PrusaSlicer/pull/10680 patche to fix build failure.
+      - type: patch
+        path: patches/10680.patch
+
       # Pre-Build
       - type: shell
         commands: 
