@@ -3,14 +3,12 @@ runtime: org.gnome.Platform
 runtime-version: "46"
 sdk: org.gnome.Sdk
 command: entrypoint
-#desktop-file-name-suffix: " (Beta)"
 separate-locales: true
 finish-args:
   - --share=ipc
   #- --socket=wayland
   #- --socket=fallback-x11
   - --socket=x11
-  # - --device=dri
   - --share=network
   - --device=all
   - --filesystem=home
@@ -74,7 +72,7 @@ modules:
         cmake ../ \
           -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_OpenCSG dep_CGAL dep_OCCT 
+        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -82,14 +80,12 @@ modules:
           -DCMAKE_INSTALL_PREFIX=/app \
           -DCMAKE_INSTALL_LIBDIR=/app/lib \
           -DCMAKE_PREFIX_PATH=/run/build/PrusaSlicer/deps/build/destdir/usr/local \
-          -DSLIC3R_PCH=0 \
-          -DSLIC3R_FHS=1 \
+          -DSLIC3R_PCH=OFF \
+          -DSLIC3R_FHS=ON \
           -DSLIC3R_GTK=3 \
-          -DSLIC3R_STATIC=1 \
-          -DSLIC3R_STATIC_EXCLUDE_GLEW=1 \
-          -DSLIC3R_STATIC_EXCLUDE_CURL=1 \
-          -DSLIC3R_BUILD_TESTS=0 \
-          -DSLIC3R_DESKTOP_INTEGRATION=0 \
+          -DSLIC3R_STATIC=ON \
+          -DSLIC3R_BUILD_TESTS=OFF \
+          -DSLIC3R_DESKTOP_INTEGRATION=OFF \
           -DCMAKE_BUILD_TYPE=Release 
         cmake --build . --target install
 
@@ -144,27 +140,15 @@ modules:
 
       # Boost
       - type: file
-        url: https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip
+        url: https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.zip
         dest: external-packages/Boost
-        sha256: 9effa3d7f9d92b8e33e2b41d82f4358f97ff7c588d5918720339f2b254d914c6
+        sha256: f22143b5528e081123c3c5ed437e92f648fe69748e95fa6e2bd41484e2986cc3
 
-      # CGAL
+      # boost_polygon
       - type: file
-        url: https://github.com/CGAL/cgal/archive/refs/tags/v5.4.zip
-        dest: external-packages/CGAL
-        sha256: d7605e0a5a5ca17da7547592f6f6e4a59430a0bc861948974254d0de43eab4c0
-
-      # CURL
-      - type: file
-        url: https://github.com/curl/curl/archive/refs/tags/curl-7_75_0.zip
-        dest: external-packages/CURL
-        sha256: a63ae025bb0a14f119e73250f2c923f4bf89aa93b8d4fafa4a9f5353a96a765a
-
-      # Catch2
-      - type: file
-        url: https://github.com/catchorg/Catch2/archive/refs/tags/v2.13.10.zip
-        dest: external-packages/Catch2
-        sha256: 121e7488912c2ce887bfe4699ebfb983d0f2e0d68bcd60434cdfd6bb0cf78b43
+        url: https://github.com/prusa3d/polygon/archive/refs/heads/prusaslicer_gmp.zip
+        dest: external-packages/boost_polygon
+        sha256: abeb9710f0a7069fb9b22181ae5c56f6066002f125db210e7ffb27032aed6824
 
       # Cereal
       - type: file
@@ -172,17 +156,11 @@ modules:
         dest: external-packages/Cereal
         sha256: 71642cb54658e98c8f07a0f0d08bf9766f1c3771496936f6014169d3726d9657
 
-      # EXPAT
+      # CGAL
       - type: file
-        url: https://github.com/libexpat/libexpat/archive/refs/tags/R_2_4_3.zip
-        dest: external-packages/EXPAT
-        sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
-
-       # GLEW
-      - type: file
-        url: https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip
-        dest: external-packages/GLEW
-        sha256: a9046a913774395a095edcc0b0ac2d81c3aacca61787b39839b941e9be14e0d4
+        url: https://github.com/CGAL/cgal/archive/refs/tags/v5.4.zip
+        dest: external-packages/CGAL
+        sha256: d7605e0a5a5ca17da7547592f6f6e4a59430a0bc861948974254d0de43eab4c0
 
       # EXPAT
       - type: file
@@ -210,7 +188,7 @@ modules:
 
       # MPFR
       - type: file
-        url: https://www.mpfr.org/mpfr-current/mpfr-4.2.1.tar.bz2
+        url: https://www.mpfr.org/mpfr-3.1.6/mpfr-3.1.6.tar.bz2
         dest: external-packages/MPFR
         sha256: b9df93635b20e4089c29623b19420c4ac848a1b29df1cfd59f26cab0d2666aa0
 
@@ -262,6 +240,12 @@ modules:
         dest: external-packages/OpenVDB
         sha256: f353e7b99bd0cbfc27ac9082de51acf32a8bc0b3e21ff9661ecca6f205ec1d81
 
+      # GLEW
+      - type: file
+        url: https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip
+        dest: external-packages/GLEW
+        sha256: a9046a913774395a095edcc0b0ac2d81c3aacca61787b39839b941e9be14e0d4
+
       # PNG, libpng
       - type: file
         url: https://github.com/glennrp/libpng/archive/refs/tags/v1.6.35.zip
@@ -279,6 +263,12 @@ modules:
         url: https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.5.0.zip
         dest: external-packages/TBB
         sha256: 83ea786c964a384dd72534f9854b419716f412f9d43c0be88d41874763e7bb47
+      
+      # NanoSVG
+      - type: file
+        url: https://github.com/fltk/nanosvg/archive/abcd277ea45e9098bed752cf9c6875b533c0892f.zip
+        dest: external-packages/NanoSVG
+        sha256: e859938fbaee4b351bd8a8b3d3c7a75b40c36885ce00b73faa1ce0b98aa0ad34
 
       # TIFF, libtiff
       - type: file
@@ -302,7 +292,7 @@ modules:
       - type: file
         url: https://github.com/prusa3d/wxWidgets/archive/78aa2dc0ea7ce99dc19adc1140f74c3e2e3f3a26.zip
         dest: external-packages/wxWidgets
-        sha256: 5b22d465377cedd8044bba69bea958b248953fd3628c1de4913a84d4e6f6175b
+        sha256: 94b7d972373503e380e5a8b0ca63b1ccb956da4006402298dd89a0c5c7041b1e
       
       # ZLIB
       - type: file
@@ -313,7 +303,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.5.2
+        tag: version_2.6.0
 
       # Patched TBB cmake to make build without lto flag
       - type: file
@@ -323,14 +313,6 @@ modules:
       # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
       - type: patch
         path: patches/apply_tbb_patch.patch
-
-      # PrusaSlicer 2.5.0 patch. More info: https://github.com/prusa3d/PrusaSlicer/commit/4b686af12db49500205ca15038fb7d651ccc4295
-      - type: patch
-        path: patches/0001-Fixed-undefined-behavior-dereferencing-std-unique_pt.patch
-
-      # Fix for bug #55. More info: https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/55
-      - type: patch
-        path: patches/fix_55.patch
 
       # Pre-Build
       - type: shell
