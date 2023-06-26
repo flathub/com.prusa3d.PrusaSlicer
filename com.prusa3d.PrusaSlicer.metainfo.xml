@@ -69,42 +69,7 @@
         </p>
     </description>
     <releases>
-        <release version="2.6.0" date="2023-06-20">
-            <description>
-                <ul>
-                    <li>Organic Supports</li>
-                    <li>Automatic FDM Support Painter</li>
-                    <li>Text embossing tool</li>
-                    <li>Improved Cut tool</li>
-                    <li>Adding connectors and dowel pins</li>
-                    <li>Measurement Tool</li>
-                    <li>Dynamic overhang speed (and dynamic fan speed on overhangs)</li>
-                    <li>Extending sparse infill</li>
-                    <li>Improved Ensure vertical shell thickness</li>
-                    <li>Option to avoid crossing curled overhangs</li>
-                    <li>Exporting STL objects with boolean operations</li>
-                    <li>Assigning tool heads to different features</li>
-                    <li>Idle temperature settings for multi-tool printers</li>
-                    <li>Wipe tower stabilizing cone</li>
-                    <li>One-click import from Pritables.com</li>
-                    <li>Template filament profiles</li>
-                    <li>New experimental support for SLA</li>
-                    <li>One-file vendor profile enables adding new printers without a new PrusaSlicer release</li>
-                    <li>G-Code thumbnails can now be exported in JPG and QOI formats</li>
-                    <li>SLA hollowing is now up to 10x faster</li>
-                    <li>SLA time estimate is now more accurate for the Original Prusa SL1S Speed</li>
-                    <li>New and updated 3rd party printer profiles</li>
-                    <li>"Arrange" and "Fill bed with instances" functions now take into account skirt and brim</li>
-                    <li>More intuitive Klipper firmware support</li>
-                    <li>Opening 3MF files now gives the option to import the geometry only</li>
-                    <li>New "PrusaConnect" host type with pre-filled URL</li>
-                    <li>It is newly possible to set acceleration separately for external perimeters, solid infill and top solid infill</li>
-                    <li>"Set Number of Instances" now works when multiple objects are selected</li>
-                    <li>Optional scrolling to mouse cursor rather than screen center</li>
-                </ul>
-            </description>
-            <url>https://files.prusa3d.com/?latest=slicer-stable</url>
-        </release>
+        <release version="2.6.0" date="2023-06-20" />
         <release version="2.5.2" date="2023-03-30" />
         <release version="2.5.1" date="2023-03-15" />
         <release version="2.5.0" date="2022-10-19" />
