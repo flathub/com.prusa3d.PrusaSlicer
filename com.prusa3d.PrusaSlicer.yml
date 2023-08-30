@@ -285,6 +285,10 @@ modules:
       - type: patch
         path: patches/apply_tbb_patch.patch
 
+      # Fix for https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/81
+      type: patch
+      path: patches/0001-add-support-for-flatpak-in-perform_downloader_deskto.patch
+
       # Pre-Build
       - type: shell
         commands: 
