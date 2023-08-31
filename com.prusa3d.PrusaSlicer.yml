@@ -293,6 +293,10 @@ modules:
       - type: patch
         path: patches/0001-add-boost-log-trivial.hpp-to-CutUtlis.cpp.patch
 
+       # Add include to fix tbb build error
+      - type: patch
+        path: patches/0001-add-tbb-parallel_for.h-include-to-Measure.cpp.patch
+
       # Pre-Build
       - type: shell
         commands: 
