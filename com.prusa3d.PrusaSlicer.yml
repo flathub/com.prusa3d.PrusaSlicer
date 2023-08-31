@@ -289,6 +289,10 @@ modules:
       - type: patch
         path: patches/0001-add-support-for-flatpak-in-perform_downloader_deskto.patch
 
+      # Add include to fix boost build error
+      - type: patch
+        path: patches/0001-add-boost-log-trivial.hpp-to-CutUtlis.cpp.patch
+
       # Pre-Build
       - type: shell
         commands: 
