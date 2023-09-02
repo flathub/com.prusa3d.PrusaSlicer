@@ -1,4 +1,4 @@
-From 660e13ab5addf8badff778a0c6394605c4e20589 Mon Sep 17 00:00:00 2001
+From 7896532dca6b5dfa66d5de2062fc12472ca29e62 Mon Sep 17 00:00:00 2001
 From: Elia Devito <eliadevito@gmail.com>
 Date: Sat, 2 Sep 2023 12:22:18 +0200
 Subject: [PATCH] add support for flatpak in
@@ -9,7 +9,7 @@ Subject: [PATCH] add support for flatpak in
  1 file changed, 12 insertions(+), 4 deletions(-)
 
 diff --git a/src/slic3r/GUI/DesktopIntegrationDialog.cpp b/src/slic3r/GUI/DesktopIntegrationDialog.cpp
-index 031001978..312454e5f 100644
+index 031001978a..a6a5e24b8e 100644
 --- a/src/slic3r/GUI/DesktopIntegrationDialog.cpp
 +++ b/src/slic3r/GUI/DesktopIntegrationDialog.cpp
 @@ -467,6 +467,7 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration()
@@ -38,7 +38,7 @@ index 031001978..312454e5f 100644
 -    // Escape ' characters in appimage, other special symbols will be esacaped in desktop file by 'excutable_path'
 -    //boost::replace_all(excutable_path, "'", "'\\''");
 -    excutable_path = escape_string(excutable_path);
-+    // for flatpak are not required neither quotes nor escape
++    // For flatpak there are not required neither quotes nor escape
 +    if (strcmp(container_env, "flatpak") != 0) {
 +        // Escape ' characters in appimage, other special symbols will be esacaped in desktop file by 'excutable_path'
 +        //boost::replace_all(excutable_path, "'", "'\\''");
@@ -56,6 +56,3 @@ index 031001978..312454e5f 100644
          "Terminal=false\n"
          "Type=Application\n"
          "MimeType=x-scheme-handler/prusaslicer;\n"
--- 
-2.41.0
-
