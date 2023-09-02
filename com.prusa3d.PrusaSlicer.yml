@@ -285,21 +285,13 @@ modules:
       - type: patch
         path: patches/apply_tbb_patch.patch
 
-      # Fix for https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/81
+      # Add support for flatpak in dowloader desktop integration More info: https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/81
       - type: patch
         path: patches/0001-add-support-for-flatpak-in-perform_downloader_deskto.patch
 
-      # Add include to fix boost build error
+      # Fix build error. More info: https://github.com/prusa3d/PrusaSlicer/pull/11218
       - type: patch
-        path: patches/0001-add-boost-log-trivial.hpp-to-CutUtlis.cpp.patch
-
-       # Add include to fix tbb build error
-      - type: patch
-        path: patches/0001-add-tbb-parallel_for.h-include-to-Measure.cpp.patch
-
-       # Add include to fix TextLines build error
-      - type: patch
-        path: patches/0001-add-libslic3r-ClipperUtils.hpp-to-TextLines.cpp.patch
+        path: patches/add_missing_includes_PR_11218.patch
 
       # Pre-Build
       - type: shell
