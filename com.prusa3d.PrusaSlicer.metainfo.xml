@@ -70,10 +70,6 @@
     </description>
     <releases>
         <release version="2.6.1" date="2023-09-06">
-        <description>
-            <p>New PrusaSlicer version.</p>
-            <p>Full changelog: https://files.prusa3d.com/?latest=slicer-stable</p>
-        </description>
             <url>https://files.prusa3d.com/?latest=slicer-stable</url>
         </release>
         <release version="2.6.0" date="2023-06-20" />
