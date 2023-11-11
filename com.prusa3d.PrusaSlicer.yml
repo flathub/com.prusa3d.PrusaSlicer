@@ -290,12 +290,12 @@ modules:
 
       # Patched TBB cmake to make build without lto flag
       - type: file
-        dest: deps/TBB
+        dest: deps/+TBB
         path: patches/TBB/GNU.cmake
         
       # Apply TTB patches to fix build failure. More info: https://github.com/prusa3d/PrusaSlicer/issues/8922
       - type: patch
-        path: patches/0001-add-TBB-patch.patch
+        path: patches/0001-apply-TBB-patch.patch
 
       # Add printables.com desktop integration support for flatpak builds. More info: https://github.com/prusa3d/PrusaSlicer/pull/11229
       - type: patch
