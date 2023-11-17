@@ -69,7 +69,10 @@
         </p>
     </description>
     <releases>
-        <release version="2.7.1" date="2023-11-11">
+        <release version="2.7.1-rc1" date="2023-11-16">
+            <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.7.0-rc1</url>
+        </release>
+        <release version="2.7.1-beta1" date="2023-11-11">
             <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.7.0-beta1</url>
         </release>
         <release version="2.6.1" date="2023-09-06" />
