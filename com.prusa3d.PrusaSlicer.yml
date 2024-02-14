@@ -326,13 +326,13 @@ modules:
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
-              Actions=GCodeViewer;
+            Actions=GCodeViewer;
 
-              [Desktop Action GCodeViewer]
-              Exec=entrypoint --gcodeviewer %F
-              Name=G-Code Viewer
-              Name[de]=G-Code Vorschau
-              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
+            [Desktop Action GCodeViewer]
+            Exec=entrypoint --gcodeviewer %F
+            Name=G-Code Viewer
+            Name[de]=G-Code Vorschau
+            Icon=com.prusa3d.PrusaSlicer.GCodeViewer
 
             EOT
           
