@@ -73,7 +73,7 @@ modules:
         cmake ../ \
           -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_LibBGCode 
+        cmake --build . --target dep_CURL dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_LibBGCode 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -132,6 +132,12 @@ modules:
       #
       # NOTE: The url, dest folder name and sha256 must match from PrusaSlicer's cmake scripts and folder names in PrusaSlicer/deps/
       # -
+
+      # CURL
+      - type: file
+        url: https://github.com/curl/curl/archive/refs/tags/curl-7_75_0.zip
+        dest: external-packages/CURL
+        sha256: a63ae025bb0a14f119e73250f2c923f4bf89aa93b8d4fafa4a9f5353a96a765a
 
       # Blosc
       - type: file
@@ -320,13 +326,13 @@ modules:
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
-              Actions=GCodeViewer;
+            Actions=GCodeViewer;
 
-              [Desktop Action GCodeViewer]
-              Exec=entrypoint --gcodeviewer %F
-              Name=G-Code Viewer
-              Name[de]=G-Code Vorschau
-              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
+            [Desktop Action GCodeViewer]
+            Exec=entrypoint --gcodeviewer %F
+            Name=G-Code Viewer
+            Name[de]=G-Code Vorschau
+            Icon=com.prusa3d.PrusaSlicer.GCodeViewer
 
             EOT
           
