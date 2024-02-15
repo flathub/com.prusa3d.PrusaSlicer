@@ -2,12 +2,11 @@
 <component type="desktop">
     <id>com.prusa3d.PrusaSlicer</id>
     <launchable type="desktop-id">com.prusa3d.PrusaSlicer.desktop</launchable>
-    <provides>
-        <id>prusa-slicer.desktop</id>
-    </provides>
     <name>PrusaSlicer</name>
     <summary>Get perfect 3D prints!</summary>
-    <developer_name>Prusa Research a.s</developer_name>
+    <developer id="prusa3d.com">
+        <name>Prusa Research a.s</name>
+    </developer>
     <url type="homepage">https://www.prusa3d.com/prusaslicer/</url>
     <url type="help">https://help.prusa3d.com</url>
     <url type="bugtracker">https://github.com/prusa3d/PrusaSlicer/issues</url>
@@ -22,6 +21,7 @@
         <control>pointing</control>
     </recommends>
     <provides>
+        <id>prusa-slicer.desktop</id>
         <mediatype>text/x.gcode</mediatype>
         <mediatype>model/stl</mediatype>
         <mediatype>application/x-amf</mediatype>
