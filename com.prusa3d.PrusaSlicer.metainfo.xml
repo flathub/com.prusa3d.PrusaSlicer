@@ -69,6 +69,10 @@
         </p>
     </description>
     <releases>
+        <release version="2.7.2-alpha2" date="2024-02-09">
+            Update to 2.7.2-alpha2
+            <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.7.2</url>
+        </release>
         <release version="2.7.1" date="2023-12-14">
             <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.7.1</url>
         </release>
