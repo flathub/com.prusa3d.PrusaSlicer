@@ -1,5 +1,14 @@
 #!/usr/bin/env sh
 
+# Starting to this release we register prusaslicer:// protocol handler directly inside flatpak dekstop file.
+# If exists a previous integration remove them
+DESKTOP_FILE=~/.local/share/applications/PrusaSlicerURLProtocol.desktop
+if [ -f "$DESKTOP_FILE" ]; then
+    if grep -q flatpak "$DESKTOP_FILE"; then
+      rm -f "$DESKTOP_FILE"
+    fi
+fi
+
 PRUSA_SLICER_APP_LOCALE_ERROR="An error occured while setting up locale"
 PRUSA_SLICER_APP_FALLBACK_LOCALE=en_US.UTF-8
 USE_LOCALE_WORKAROUND=$( (/app/bin/prusa-slicer --help 2>&1 | grep "$PRUSA_SLICER_APP_LOCALE_ERROR") >/dev/null && echo true || echo false)
