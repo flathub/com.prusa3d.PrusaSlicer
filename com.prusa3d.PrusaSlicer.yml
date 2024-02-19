@@ -330,7 +330,7 @@ modules:
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove the DesktopAction when #6879 is merged
           - | # use our own entrypoint as executable
-            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint %u/g' com.prusa3d.PrusaSlicer.desktop
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
             
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
