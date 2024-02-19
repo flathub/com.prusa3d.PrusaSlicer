@@ -303,9 +303,9 @@ modules:
       - type: patch
         path: patches/0001-apply-TBB-patch.patch
 
-      # Add printables.com desktop integration support for flatpak builds. More info: https://github.com/prusa3d/PrusaSlicer/pull/11229
+      # Don't perform downloader desktop integration if builded with SLIC3R_DESKTOP_INTEGRATION = 0. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252
       - type: patch
-        path: patches/add_printables_com_desktop_integration_support_for_flatpak_builds_PR_11229.patch
+        path: patches/don-t-perform-downloader-desktop-integration-if-buil.patch
 
       # Pre-Build
       - type: shell
@@ -318,13 +318,17 @@ modules:
             cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
             cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-          
+
+          # Register prusaslicer:// protocol handler
+          - |
+            sed -i 's/^\(MimeType=.*\)/\1x-scheme-handler\/prusaslicer;/g' com.prusa3d.PrusaSlicer.desktop
+
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove the DesktopAction when #6879 is merged
           - | # use our own entrypoint as executable
-            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint %u/g' com.prusa3d.PrusaSlicer.desktop
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-
+            
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
             Actions=GCodeViewer;
 
@@ -335,7 +339,7 @@ modules:
             Icon=com.prusa3d.PrusaSlicer.GCodeViewer
 
             EOT
-          
+
           # Replace icon names with flatpak icon names based on app-id
           - | 
             sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
