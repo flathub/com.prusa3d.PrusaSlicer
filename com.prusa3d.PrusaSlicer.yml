@@ -73,7 +73,7 @@ modules:
         cmake ../ \
           -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_LibBGCode 
+        cmake --build . --target dep_CURL dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_LibBGCode 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -144,12 +144,18 @@ modules:
         url: https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip
         dest: external-packages/Boost
         sha256: 9effa3d7f9d92b8e33e2b41d82f4358f97ff7c588d5918720339f2b254d914c6
-
+        
       # CGAL
       - type: file
         url: https://github.com/CGAL/cgal/archive/refs/tags/v5.4.zip
         dest: external-packages/CGAL
         sha256: d7605e0a5a5ca17da7547592f6f6e4a59430a0bc861948974254d0de43eab4c0
+
+      # CURL
+      - type: file
+        url: https://github.com/curl/curl/archive/refs/tags/curl-7_75_0.zip
+        dest: external-packages/CURL
+        sha256: a63ae025bb0a14f119e73250f2c923f4bf89aa93b8d4fafa4a9f5353a96a765a
 
       # Catch2
       - type: file
@@ -181,7 +187,7 @@ modules:
         dest: external-packages/GMP
         sha256: eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c
 
-      # JPEG, libjpeg-turbo
+      # JPEG
       - type: file
         url: https://github.com/libjpeg-turbo/libjpeg-turbo/archive/refs/tags/3.0.1.zip
         dest: external-packages/JPEG
@@ -189,9 +195,9 @@ modules:
 
       # LibBGCode
       - type: file
-        url: https://github.com/prusa3d/libbgcode/archive/04556c4f64d4b7a5942d8d193d1eb87fc7e1005f.zip
+        url: https://github.com/prusa3d/libbgcode/archive/6f43cb004ef3d3bda37dde49f6235e24d2717629.zip
         dest: external-packages/LibBGCode
-        sha256: f0745b2dae95f0a49ae75bfbe4d775c751499fc4245864675e2dab06c13b2c8f
+        sha256: eb5198caecb6a693a294af6a56c37b0adb1eb159a34a9c3116970b80659ee9f9
 
       # MPFR
       - type: file
@@ -286,7 +292,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.7.0
+        tag: version_2.7.2-rc1
 
       # Patched TBB cmake to make build without lto flag
       - type: file
@@ -297,9 +303,13 @@ modules:
       - type: patch
         path: patches/0001-apply-TBB-patch.patch
 
-      # Add printables.com desktop integration support for flatpak builds. More info: https://github.com/prusa3d/PrusaSlicer/pull/11229
+      # Add missing includes
       - type: patch
-        path: patches/add_printables_com_desktop_integration_support_for_flatpak_builds_PR_11229.patch
+        path: patches/0001-add-missing-include.patch
+
+      # Don't perform downloader desktop integration if builded with SLIC3R_DESKTOP_INTEGRATION = 0. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252
+      - type: patch
+        path: patches/don-t-perform-downloader-desktop-integration-if-buil.patch
 
       # Pre-Build
       - type: shell
@@ -312,24 +322,28 @@ modules:
             cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
             cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-          
+
+          # Register prusaslicer:// protocol handler
+          - |
+            sed -i 's/^\(MimeType=.*\)/\1x-scheme-handler\/prusaslicer;/g' com.prusa3d.PrusaSlicer.desktop
+
           # Append desktop action section to PrusaSlicer.desktop file
           # TODO: remove the DesktopAction when #6879 is merged
           - | # use our own entrypoint as executable
-            sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.desktop
+            sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint %u/g' com.prusa3d.PrusaSlicer.desktop
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-
+            
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
-              Actions=GCodeViewer;
+            Actions=GCodeViewer;
 
-              [Desktop Action GCodeViewer]
-              Exec=entrypoint --gcodeviewer %F
-              Name=G-Code Viewer
-              Name[de]=G-Code Vorschau
-              Icon=com.prusa3d.PrusaSlicer.GCodeViewer
+            [Desktop Action GCodeViewer]
+            Exec=entrypoint --gcodeviewer %F
+            Name=G-Code Viewer
+            Name[de]=G-Code Vorschau
+            Icon=com.prusa3d.PrusaSlicer.GCodeViewer
 
             EOT
-          
+
           # Replace icon names with flatpak icon names based on app-id
           - | 
             sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
