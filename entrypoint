@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# Starting to this release we register prusaslicer:// protocol handler directly inside flatpak dekstop file.
+# Starting from release 2.7.2 we register prusaslicer:// protocol handler directly inside flatpak dekstop file.
 # If exists a previous integration remove them
 DESKTOP_FILE=~/.local/share/applications/PrusaSlicerURLProtocol.desktop
 if [ -f "$DESKTOP_FILE" ]; then
