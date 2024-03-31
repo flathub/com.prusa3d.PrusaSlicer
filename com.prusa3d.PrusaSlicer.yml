@@ -292,7 +292,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.7.2
+        tag: version_2.7.3
 
       # Patched TBB cmake to make build without lto flag
       - type: file
@@ -303,9 +303,9 @@ modules:
       - type: patch
         path: patches/0001-apply-TBB-patch.patch
 
-      # Don't perform downloader desktop integration if builded with SLIC3R_DESKTOP_INTEGRATION = 0. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252
+      # Fix download from printables. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252#issuecomment-2024900154
       - type: patch
-        path: patches/don-t-perform-downloader-desktop-integration-if-buil.patch
+        path: patches/0001-set-default-value-for-url_downloader_dest-when-Prusa.patch
 
       # Pre-Build
       - type: shell
