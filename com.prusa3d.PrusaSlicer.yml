@@ -292,7 +292,8 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.7.3
+        branch: lm_desktop_integration_fix
+        commit: 6c8359f6ec4785d93d7050779967388d8e4319e4
 
       # Patched TBB cmake to make build without lto flag
       - type: file
