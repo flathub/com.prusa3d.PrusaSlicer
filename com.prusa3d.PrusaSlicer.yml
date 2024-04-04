@@ -303,10 +303,6 @@ modules:
       - type: patch
         path: patches/0001-apply-TBB-patch.patch
 
-      # Fix download from printables. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252#issuecomment-2024900154
-      - type: patch
-        path: patches/0001-set-default-value-for-url_downloader_dest-when-Prusa.patch
-
       # Pre-Build
       - type: shell
         commands: 
