@@ -1,4 +1,4 @@
-From 6b7bae28a5db206a806220ebc8c178f3e6c48ff7 Mon Sep 17 00:00:00 2001
+From f9d0eea93bdbbd83ef4864b32480a13b16f39b19 Mon Sep 17 00:00:00 2001
 From: Elia Devito <eliadevito@gmail.com>
 Date: Mon, 19 Feb 2024 22:53:32 +0100
 Subject: [PATCH] don't call show_downloader_registration_dialog() if 
@@ -9,7 +9,7 @@ Subject: [PATCH] don't call show_downloader_registration_dialog() if
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/slic3r/GUI/GUI_App.cpp b/src/slic3r/GUI/GUI_App.cpp
-index 93222d975..ab60b2e2d 100644
+index 4e343939c..e60b766f1 100644
 --- a/src/slic3r/GUI/GUI_App.cpp
 +++ b/src/slic3r/GUI/GUI_App.cpp
 @@ -3329,12 +3329,12 @@ bool GUI_App::config_wizard_startup()
@@ -28,5 +28,5 @@ index 93222d975..ab60b2e2d 100644
  }
  
 -- 
-2.44.0
+2.45.1
 
