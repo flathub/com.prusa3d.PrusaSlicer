@@ -1,0 +1,88 @@
+From b15bd533dd0515db3fb4837a725a9f1917b3c515 Mon Sep 17 00:00:00 2001
+From: Elia Devito <eliadevito@gmail.com>
+Date: Fri, 7 Jun 2024 19:01:55 +0200
+Subject: [PATCH] remove libtiff dependecy
+
+---
+ deps/+TIFF/TIFF.cmake           | 15 ---------------
+ deps/+wxWidgets/wxWidgets.cmake |  2 +-
+ deps/CMakeLists.txt             |  2 +-
+ src/CMakeLists.txt              |  7 -------
+ 4 files changed, 2 insertions(+), 24 deletions(-)
+ delete mode 100644 deps/+TIFF/TIFF.cmake
+
+diff --git a/deps/+TIFF/TIFF.cmake b/deps/+TIFF/TIFF.cmake
+deleted file mode 100644
+index 9281dd5a6..000000000
+--- a/deps/+TIFF/TIFF.cmake
++++ /dev/null
+@@ -1,15 +0,0 @@
+-add_cmake_project(TIFF
+-    URL https://gitlab.com/libtiff/libtiff/-/archive/v4.6.0/libtiff-v4.6.0.zip
+-    URL_HASH SHA256=5d652432123223338a6ee642a6499d98ebc5a702f8a065571e1001d4c08c37e6
+-    CMAKE_ARGS
+-        -Dtiff-tools:BOOL=OFF
+-        -Dtiff-tests:BOOL=OFF
+-        -Dlzma:BOOL=OFF
+-        -Dwebp:BOOL=OFF
+-        -Djbig:BOOL=OFF
+-        -Dzstd:BOOL=OFF
+-        -Dpixarlog:BOOL=OFF
+-        -Dlibdeflate:BOOL=OFF
+-)
+-
+-set(DEP_TIFF_DEPENDS ZLIB PNG JPEG OpenGL)
+diff --git a/deps/+wxWidgets/wxWidgets.cmake b/deps/+wxWidgets/wxWidgets.cmake
+index ac15a48d0..fc505ada5 100644
+--- a/deps/+wxWidgets/wxWidgets.cmake
++++ b/deps/+wxWidgets/wxWidgets.cmake
+@@ -33,7 +33,7 @@ add_cmake_project(wxWidgets
+         -DwxUSE_REGEX=OFF
+         -DwxUSE_LIBXPM=builtin
+         -DwxUSE_LIBJPEG=sys
+-        -DwxUSE_LIBTIFF=sys
++        -DwxUSE_LIBTIFF=OFF
+         -DwxUSE_EXPAT=sys
+         -DwxUSE_LIBSDL=OFF
+         -DwxUSE_XTEST=OFF
+diff --git a/deps/CMakeLists.txt b/deps/CMakeLists.txt
+index 3c496e33f..0c8bac082 100644
+--- a/deps/CMakeLists.txt
++++ b/deps/CMakeLists.txt
+@@ -236,7 +236,7 @@ if (DEP_DEBUG AND NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+ 
+   # Exclude the libraries which have no problem to link to Debug builds in
+   # Release mode (mostly C libraries)
+-  set(DEP_DEBUG_EXCLUDES GMP MPFR OpenSSL NanoSVG TIFF JPEG ZLIB heatshrink)
++  set(DEP_DEBUG_EXCLUDES GMP MPFR OpenSSL NanoSVG JPEG ZLIB heatshrink)
+   if (UNIX)
+     # Making a separate debug build on Unix of wx is a nightmare
+     list(APPEND DEP_DEBUG_EXCLUDES wxWidgets)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2ea3c3111..a2512ed61 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -61,7 +61,6 @@ if (SLIC3R_GUI)
+     endif()
+ 
+     find_package(JPEG MODULE QUIET)
+-    find_package(TIFF MODULE QUIET) # Tiff exported config is broken for static build
+     find_package(NanoSVG REQUIRED)
+ 
+     string(REGEX MATCH "wxpng" WX_PNG_BUILTIN ${wxWidgets_LIBRARIES})
+@@ -70,12 +69,6 @@ if (SLIC3R_GUI)
+         list(APPEND wxWidgets_LIBRARIES ${PNG_LIBRARIES})
+     endif ()
+ 
+-    string(REGEX MATCH "wxtiff" WX_TIFF_BUILTIN ${wxWidgets_LIBRARIES})
+-    if (TIFF_FOUND AND NOT WX_TIFF_BUILTIN)
+-        list(FILTER wxWidgets_LIBRARIES EXCLUDE REGEX tiff)
+-        list(APPEND wxWidgets_LIBRARIES ${TIFF_LIBRARIES})
+-    endif ()
+-
+     string(REGEX MATCH "wxjpeg" WX_JPEG_BUILTIN ${wxWidgets_LIBRARIES})
+     if (JPEG_FOUND AND NOT WX_JPEG_BUILTIN)
+         list(FILTER wxWidgets_LIBRARIES EXCLUDE REGEX jpeg)
+-- 
+2.45.1
+
