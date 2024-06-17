@@ -320,6 +320,10 @@ modules:
       - type: patch
         path: patches/wxWidgets/0001-add-wxWidget-patch.patch
 
+      # Add missing includes
+      - type: patch
+        path: patches/0001-add-missing-includes.patch
+
       # Pre-Build
       - type: shell
         commands: 
