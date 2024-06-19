@@ -31,31 +31,31 @@
     <screenshots>
         <screenshot type="default">
             <image>https://user-images.githubusercontent.com/590307/132481769-1588494a-68f8-49d2-b109-a7ff29d70b45.png</image>
-            <caption>CLEAR AND SIMPLE UI</caption>
+            <caption>Clear and simple UI</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481801-e10cfb66-f43c-4e41-a800-de67e4f8362f.png</image>
-            <caption>PERFECT FOR ORIGINAL PRUSA</caption>
+            <caption>Perfect for ORIGINAL PRUSA</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481816-3e47f822-f802-4fa0-ba6a-b935ae44eeda.png</image>
-            <caption>BUILT-IN 3RD PARTY PRINTER PROFILES</caption>
+            <caption>Built-in 3rd party printer profiles</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481953-d511563f-9da0-4c18-be84-449b0b745ff3.png</image>
-            <caption>MSLA AND MULTI MATERIAL SUPPORT</caption>
+            <caption>MSLA and multi material support</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481881-8eba7c09-5c11-43b1-b5cf-0d1893b7b224.png</image>
-            <caption>AUTO-UPDATING PROFILES</caption>
+            <caption>Auto-updating profiles</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481906-1afe7527-ff9b-47f8-bc44-34c7e00b4a12.png</image>
-            <caption>FIRMWARE FLASHER</caption>
+            <caption>Firmware flasher</caption>
         </screenshot>
         <screenshot>
             <image>https://user-images.githubusercontent.com/590307/132481933-28d4e818-d70e-4e82-a9a3-63e60f7a443f.png</image>
-            <caption>G-CODE VIEWER</caption>
+            <caption>G-CODE viewer</caption>
         </screenshot>
     </screenshots>
     <description>
@@ -69,6 +69,9 @@
         </p>
     </description>
     <releases>
+        <release version="2.8.0-alpha5" date="2024-06-15">
+            <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.8.0-alpha5</url>
+        </release>
         <release version="2.7.2-rc2" date="2024-02-27">
             Update to 2.7.2-rc2
             <url>https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.7.2-rc2</url>
