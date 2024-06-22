@@ -303,7 +303,7 @@ modules:
       - type: patch
         path: patches/0001-apply-TBB-patch.patch
 
-      # Fix download from printables. More info: https://github.com/prusa3d/PrusaSlicer/pull/12252#issuecomment-2041171255
+      # Fix download from printables. More info: https://github.com/prusa3d/PrusaSlicer/pull/12785
       - type: patch
         path: patches/0001-don-t-call-show_downloader_registration_dialog-if-SL.patch
 
@@ -319,6 +319,10 @@ modules:
       # Add wxWidgets patches
       - type: patch
         path: patches/wxWidgets/0001-add-wxWidget-patch.patch
+
+      # Add missing includes
+      - type: patch
+        path: patches/0001-add-missing-include.patch
 
       # Pre-Build
       - type: shell
