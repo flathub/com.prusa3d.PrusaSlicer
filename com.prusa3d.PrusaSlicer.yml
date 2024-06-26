@@ -292,7 +292,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.8.0-rc1
+        tag: version_2.8.0-rc2
 
       # Patched TBB cmake to make build without lto flag
       - type: file
