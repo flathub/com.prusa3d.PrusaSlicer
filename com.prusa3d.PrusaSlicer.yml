@@ -311,15 +311,6 @@ modules:
       - type: patch
         path: patches/0001-don-t-build-occt-doc.patch
 
-      # Add libwebkit2gtk-4.1 support to wxWidgets. More info: https://github.com/wxWidgets/wxWidgets/issues/23630
-      - type: file
-        dest: deps/+wxWidgets
-        path: patches/wxWidgets/0001-Add-support-for-building-WebView-with-libwebkit2gtk-.patch
-
-      # Add wxWidgets patches
-      - type: patch
-        path: patches/wxWidgets/0001-add-wxWidget-patch.patch
-
       # Pre-Build
       - type: shell
         commands: 
