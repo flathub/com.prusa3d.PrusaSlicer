@@ -1,6 +1,6 @@
-From 6b7bae28a5db206a806220ebc8c178f3e6c48ff7 Mon Sep 17 00:00:00 2001
+From 4b14521ae566bbde58747870633ec22696102950 Mon Sep 17 00:00:00 2001
 From: Elia Devito <eliadevito@gmail.com>
-Date: Mon, 19 Feb 2024 22:53:32 +0100
+Date: Fri, 7 Jun 2024 12:16:11 +0200
 Subject: [PATCH] don't call show_downloader_registration_dialog() if 
  SLIC3R_DESKTOP_INTEGRATION = 0
 
@@ -9,7 +9,7 @@ Subject: [PATCH] don't call show_downloader_registration_dialog() if
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/slic3r/GUI/GUI_App.cpp b/src/slic3r/GUI/GUI_App.cpp
-index 93222d975..ab60b2e2d 100644
+index 4e343939c..864a32168 100644
 --- a/src/slic3r/GUI/GUI_App.cpp
 +++ b/src/slic3r/GUI/GUI_App.cpp
 @@ -3329,12 +3329,12 @@ bool GUI_App::config_wizard_startup()
@@ -17,16 +17,16 @@ index 93222d975..ab60b2e2d 100644
          return true;
      } 
 -#ifndef __APPLE__    
-+#if !defined(__APPLE__) && defined(SLIC3R_DESKTOP_INTEGRATION) 
++#if !defined(__APPLE__) && ((defined(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION)) || !defined(__linux__))
      else if (is_editor() && m_last_app_conf_lower_version && app_config->get_bool("downloader_url_registered")) {
          show_downloader_registration_dialog();
          return true;
      }
 -#endif
-+#endif //!defined(__APPLE__) && defined(SLIC3R_DESKTOP_INTEGRATION)
++#endif //!defined(__APPLE__) && ((defined(__linux__) && defined(SLIC3R_DESKTOP_INTEGRATION)) || !defined(__linux__))
      return false;
  }
  
 -- 
-2.44.0
+2.45.1
 
