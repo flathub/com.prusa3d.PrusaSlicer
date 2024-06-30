@@ -104,9 +104,11 @@ modules:
 
       - | # Desktop Integration files
         install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
-        install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.png
+        install -Dm644 com.prusa3d.PrusaSlicer.svg /app/share/icons/hicolor/scalable/apps/com.prusa3d.PrusaSlicer.svg
+        install -Dm644 com.prusa3d.PrusaSlicer.png /app/share/icons/hicolor/256x256/apps/com.prusa3d.PrusaSlicer.png
         install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
-        install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/128x128/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
+        install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.svg /app/share/icons/hicolor/scalable/apps/com.prusa3d.PrusaSlicer.GCodeViewer.svg
+        install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.png /app/share/icons/hicolor/256x256/apps/com.prusa3d.PrusaSlicer.GCodeViewer.png
         install -Dm644 com.prusa3d.PrusaSlicer.GCodeViewer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.GCodeViewer.desktop
         install set-dark-theme-variant.py /app/bin
         install entrypoint /app/bin
@@ -318,8 +320,6 @@ modules:
           - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
           - |
-            cp resources/icons/PrusaSlicer.png ./com.prusa3d.PrusaSlicer.png
-            cp resources/icons/PrusaSlicer-gcodeviewer_128px.png ./com.prusa3d.PrusaSlicer.GCodeViewer.png
             cp src/platform/unix/PrusaSlicer.desktop ./com.prusa3d.PrusaSlicer.desktop
             cp src/platform/unix/PrusaGcodeviewer.desktop ./com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
@@ -386,3 +386,15 @@ modules:
         path: icons/com.prusa3d.PrusaSlicer.text-x-gcode.svg
       - type: file
         path: icons/com.prusa3d.PrusaSlicer.text-x-gcode.png
+
+      # app icons
+      # The icon should be SVG, or a PNG with a size greater or equal to 256x256 pixels. It has to be square.
+      # See: https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/quality-guidelines/#icon-size
+      - type: file
+        path: icons/com.prusa3d.PrusaSlicer.svg
+      - type: file
+        path: icons/com.prusa3d.PrusaSlicer.png
+      - type: file
+        path: icons/com.prusa3d.PrusaSlicer.GCodeViewer.svg
+      - type: file
+        path: icons/com.prusa3d.PrusaSlicer.GCodeViewer.png

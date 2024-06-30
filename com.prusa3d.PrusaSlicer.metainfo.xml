@@ -3,7 +3,7 @@
     <id>com.prusa3d.PrusaSlicer</id>
     <launchable type="desktop-id">com.prusa3d.PrusaSlicer.desktop</launchable>
     <name>PrusaSlicer</name>
-    <summary>Get perfect 3D prints!</summary>
+    <summary>Get perfect 3D prints</summary>
     <developer id="prusa3d.com">
         <name>Prusa Research a.s</name>
     </developer>
@@ -28,6 +28,10 @@
         <mediatype>application/prs.wavefront-obj</mediatype>
         <mediatype>application/vnd.ms-3mfdocument</mediatype>
     </provides>
+    <branding>
+        <color type="primary" scheme_preference="light">#ff6e00</color>
+        <color type="primary" scheme_preference="dark">#666666</color>
+    </branding>
     <screenshots>
         <screenshot type="default">
             <image>https://user-images.githubusercontent.com/590307/132481769-1588494a-68f8-49d2-b109-a7ff29d70b45.png</image>
