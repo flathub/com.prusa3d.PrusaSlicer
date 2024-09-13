@@ -315,6 +315,10 @@ modules:
       - type: patch
         path: patches/0001-don-t-call-show_downloader_registration_dialog-if-SL.patch
 
+      # Build fail during generation of OCCT overview documentation, disable it fix problem
+      - type: patch
+        path: patches/0001-don-t-build-occt-doc.patch
+
       # Pre-Build
       - type: shell
         commands:
