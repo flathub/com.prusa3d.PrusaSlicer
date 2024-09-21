@@ -16,19 +16,19 @@ finish-args:
   - --filesystem=xdg-run/gvfs # make GnomeVFS accessible
   - --filesystem=/run/media
   - --filesystem=/media
-  # Allow PrusaSlicer to own its session bus. 
+  # Allow PrusaSlicer to own its session bus.
   - --own-name=com.prusa3d.prusaslicer.*
   - --system-talk-name=org.freedesktop.UDisks2
   - --talk-name=org.freedesktop.DBus.Introspectable.*
   - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
-  # set dark theme 
+  # set dark theme
   - --env=PRUSA_SLICER_DARK_THEME=false
 
 modules:
-  
+
   # xprop, xlib is needed to manipulate the X11 window and set _GTK_THEME_VARIANT dark on X11
   # and paint the window dark when PRUSA_SLICER_DARK_THEME is true
-  # see: entrypoint & set-dark-theme-variant.py (originated from spotify client flatpak) 
+  # see: entrypoint & set-dark-theme-variant.py (originated from spotify client flatpak)
   - name: xprop
     sources:
       - type: archive
@@ -38,19 +38,19 @@ modules:
     buildsystem: simple
     build-commands:
       - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
-    sources: 
+    sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/57/38/930b1241372a9f266a7df2b184fb9d4f497c2cef2e016b014f82f541fe7c/setuptools_scm-6.0.1.tar.gz
-        sha256: d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92      
+        sha256: d1925a69cb07e9b29416a275b9fadb009a23c148ace905b2fb220649a6c18e92
   - name: python-xlib
     buildsystem: simple
-    build-commands: 
+    build-commands:
       - pip3 install --no-deps --no-build-isolation --verbose --prefix=${FLATPAK_DEST} .
     sources:
       - type: archive
         url: https://files.pythonhosted.org/packages/86/f5/8c0653e5bb54e0cbdfe27bf32d41f27bc4e12faa8742778c17f2a71be2c0/python-xlib-0.33.tar.gz
         sha256: 55af7906a2c75ce6cb280a584776080602444f75815a7aff4d287bb2d7018b32
-  
+
   - name: glu
     config-opts:
       - --disable-static
@@ -73,7 +73,7 @@ modules:
         cmake ../ \
           -DDEP_WX_GTK3=1 \
           -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicer/external-packages
-        cmake --build . --target dep_CURL dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_LibBGCode 
+        cmake --build . --target dep_CURL dep_Boost dep_TBB dep_wxWidgets dep_Cereal dep_NLopt dep_OpenVDB dep_Qhull dep_GLEW dep_OpenCSG dep_CGAL dep_OCCT dep_Eigen dep_LibBGCode 
       - |
         mkdir -p build && cd build
         cmake ../ \
@@ -87,7 +87,7 @@ modules:
           -DSLIC3R_STATIC=ON \
           -DSLIC3R_BUILD_TESTS=OFF \
           -DSLIC3R_DESKTOP_INTEGRATION=OFF \
-          -DCMAKE_BUILD_TYPE=Release 
+          -DCMAKE_BUILD_TYPE=Release
         cmake --build . --target install
 
     post-install:
@@ -177,6 +177,12 @@ modules:
         dest: external-packages/EXPAT
         sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
 
+      # Eigen
+      - type: file
+        url: https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip
+        dest: external-packages/Eigen
+        sha256: e09b89aae054e9778ee3f606192ee76d645eec82c402c01c648b1fe46b6b9857
+
        # GLEW
       - type: file
         url: https://sourceforge.net/projects/glew/files/glew/2.2.0/glew-2.2.0.zip
@@ -197,9 +203,9 @@ modules:
 
       # LibBGCode
       - type: file
-        url: https://github.com/prusa3d/libbgcode/archive/8ae75bd0eea622f0e34cae311b3bd065b55eae9b.zip
+        url: https://github.com/prusa3d/libbgcode/archive/b5c57c423c958a78dacae468aeee63ab3d2de947.zip
         dest: external-packages/LibBGCode
-        sha256: 141a8cea3baea6066527389fda734057181414c4fa296d34501ef8f69ea412e9
+        sha256: ade82ffe9c1a1876c9d4d264948fa146d33d6a9c7cc23f6422fbbdb2949c5d75
 
       # MPFR
       - type: file
@@ -221,9 +227,9 @@ modules:
 
       # OCCT
       - type: file
-        url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_2.zip
+        url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_1.zip
         dest: external-packages/OCCT
-        sha256: c696b923593e8c18d059709717dbf155b3e72fdd283c8522047a790ec3a432c5
+        sha256: b7cf65430d6f099adc9df1749473235de7941120b5b5dd356067d12d0909b1d3
 
       # OpenCSG
       - type: file
@@ -294,7 +300,7 @@ modules:
       # PrusaSlicer Source Archive
       - type: git
         url: https://github.com/prusa3d/PrusaSlicer.git
-        tag: version_2.8.0
+        tag: version_2.8.1
 
       # Patched TBB cmake to make build without lto flag
       - type: file
@@ -315,7 +321,7 @@ modules:
 
       # Pre-Build
       - type: shell
-        commands: 
+        commands:
           # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.
           - sed -i 's/+UNKNOWN/+flathub.org/g' version.inc
 
@@ -332,7 +338,7 @@ modules:
           - | # use our own entrypoint as executable
             sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint %u/g' com.prusa3d.PrusaSlicer.desktop
             sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
-            
+
             cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
             Actions=GCodeViewer;
 
@@ -345,7 +351,7 @@ modules:
             EOT
 
           # Replace icon names with flatpak icon names based on app-id
-          - | 
+          - |
             sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
             sed -i 's/Icon=PrusaSlicer-gcodeviewer/Icon=com.prusa3d.PrusaSlicer.GCodeViewer/g' com.prusa3d.PrusaSlicer.desktop
             sed -i 's/Icon=PrusaSlicer/Icon=com.prusa3d.PrusaSlicer/g' com.prusa3d.PrusaSlicer.desktop
@@ -357,7 +363,7 @@ modules:
       # script to set dark theme variant
       - type: file
         path: set-dark-theme-variant.py
-      
+
       # start-up script
       # README: workaround for the following issues, also enables dark theme variant:
       # SEE: https://github.com/flathub/com.prusa3d.PrusaSlicer/issues/27
