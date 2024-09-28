@@ -134,9 +134,9 @@ modules:
 
   # OCCT
   - type: file
-    url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_2.zip
+    url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_1.zip
     dest: external-packages/OCCT
-    sha256: c696b923593e8c18d059709717dbf155b3e72fdd283c8522047a790ec3a432c5
+    sha256: b7cf65430d6f099adc9df1749473235de7941120b5b5dd356067d12d0909b1d3
 
   # NLopt
   - type: file
