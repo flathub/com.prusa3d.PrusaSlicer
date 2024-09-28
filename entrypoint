@@ -18,7 +18,7 @@ echo "Message: $(date +%T): Starting PrusaSlicer flatpak with entrypoint script"
 echo "--------------------------------------------------------------------------"
 
 if [ $USE_LOCALE_WORKAROUND = true ]; then
-    [ -n "$LANG" ] && export LC_ALL=$LANG || export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE
+    export LC_ALL=$PRUSA_SLICER_APP_FALLBACK_LOCALE
     echo "Message: $(date +%T): WARN: Executing prusa-slicer with locale workaround $LC_ALL"
 fi
 
