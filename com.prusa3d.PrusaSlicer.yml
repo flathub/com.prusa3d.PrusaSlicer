@@ -72,17 +72,25 @@ modules:
   - /lib/*.la
   - /lib/pkgconfig
 
+# https://docs.flatpak.org/en/latest/module-sources.html
 - name: cmake
   buildsystem: simple
   build-commands:
     - mkdir -p /app/cmake
-    - tar -xf cmake-3.27.0-linux-${FLATPAK_ARCH}.tar.gz --strip-components=1 -C /app/cmake
+    - tar -xf cmake.tar.gz --strip-components=1 -C /app/cmake
   sources:
     - type: file
-      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-${FLATPAK_ARCH}.tar.gz
-      sha256: 
-        x86_64: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
-        aarch64: 97c2f8cf9e063a7acf9f15ed472d87c511bf5cb62d3e42b9c90524fb0c2e4748
+      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-x86_64.tar.gz
+      sha256: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
+      dest-filename: cmake.tar.gz
+      only-arches:
+        - x86_64
+    - type: file
+      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-aarch64.tar.gz
+      sha256: 97c2f8cf9e063a7acf9f15ed472d87c511bf5cb62d3e42b9c90524fb0c2e4748
+      dest-filename:  cmake.tar.gz
+      only-arches:
+        - aarch64
   cleanup:
     - "*"
 
