@@ -75,14 +75,16 @@ modules:
 - name: cmake
   buildsystem: simple
   build-commands:
-  - mkdir -p /app/cmake
-  - tar -xf cmake-3.27.0-linux-x86_64.tar.gz --strip-components=1 -C /app/cmake
+    - mkdir -p /app/cmake
+    - tar -xf cmake-3.27.0-linux-${FLATPAK_ARCH}.tar.gz --strip-components=1 -C /app/cmake
   sources:
-  - type: file
-    url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-x86_64.tar.gz
-    sha256: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
+    - type: file
+      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-${FLATPAK_ARCH}.tar.gz
+      sha256: 
+        x86_64: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
+        aarch64: 97c2f8cf9e063a7acf9f15ed472d87c511bf5cb62d3e42b9c90524fb0c2e4748
   cleanup:
-  - "*"
+    - "*"
 
 - name: PrusaSlicerDeps
   buildsystem: simple
@@ -115,6 +117,12 @@ modules:
     url: https://github.com/libexpat/libexpat/archive/refs/tags/R_2_4_3.zip
     dest: external-packages/EXPAT
     sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
+
+  # Eigen
+  - type: file
+    url: https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip
+    dest: external-packages/Eigen
+    sha256: e09b89aae054e9778ee3f606192ee76d645eec82c402c01c648b1fe46b6b9857
 
   # OCCT
   - type: file
