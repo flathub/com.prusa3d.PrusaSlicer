@@ -286,7 +286,6 @@ modules:
   buildsystem: simple
   build-commands:
   - |
-    set -e
     mkdir -p build && cd build
     /app/cmake/bin/cmake ../ \
       -GNinja \
