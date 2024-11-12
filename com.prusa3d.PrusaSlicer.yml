@@ -1,6 +1,6 @@
 app-id: com.prusa3d.PrusaSlicer
 runtime: org.gnome.Platform
-runtime-version: "46"
+runtime-version: "47"
 sdk: org.gnome.Sdk
 command: entrypoint
 desktop-file-name-suffix: ""
@@ -76,29 +76,30 @@ modules:
 - name: cmake
   buildsystem: simple
   build-commands:
-    - mkdir -p /app/cmake
-    - tar -xf cmake.tar.gz --strip-components=1 -C /app/cmake
+  - mkdir -p /app/cmake
+  - tar -xf cmake.tar.gz --strip-components=1 -C /app/cmake
   sources:
-    - type: file
-      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-x86_64.tar.gz
-      sha256: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
-      dest-filename: cmake.tar.gz
-      only-arches:
-        - x86_64
-    - type: file
-      url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-aarch64.tar.gz
-      sha256: 97c2f8cf9e063a7acf9f15ed472d87c511bf5cb62d3e42b9c90524fb0c2e4748
-      dest-filename:  cmake.tar.gz
-      only-arches:
-        - aarch64
+  - type: file
+    url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-x86_64.tar.gz
+    sha256: 89c7e74d29f442e4734954310e09dd12d13636991f2d90d0ed1bececb8bf9b9c
+    dest-filename: cmake.tar.gz
+    only-arches:
+    - x86_64
+  - type: file
+    url: https://cmake.org/files/v3.27/cmake-3.27.0-linux-aarch64.tar.gz
+    sha256: 97c2f8cf9e063a7acf9f15ed472d87c511bf5cb62d3e42b9c90524fb0c2e4748
+    dest-filename: cmake.tar.gz
+    only-arches:
+    - aarch64
   cleanup:
-    - "*"
+  - "*"
 
 - name: PrusaSlicerDeps
   buildsystem: simple
   build-commands:
   # start build
   - |
+    set -e
     mkdir -p deps/build && cd deps/build
     /app/cmake/bin/cmake ../ \
       -DDEP_WX_GTK3=1 \
@@ -126,12 +127,6 @@ modules:
     dest: external-packages/EXPAT
     sha256: 8851e199d763dc785277d6d414ed3e70ff683915158b51b8d8781df0e3af950a
 
-  # Eigen
-  - type: file
-    url: https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip
-    dest: external-packages/Eigen
-    sha256: e09b89aae054e9778ee3f606192ee76d645eec82c402c01c648b1fe46b6b9857
-
   # OCCT
   - type: file
     url: https://github.com/Open-Cascade-SAS/OCCT/archive/refs/tags/V7_6_1.zip
@@ -143,6 +138,12 @@ modules:
     url: https://github.com/stevengj/nlopt/archive/v2.5.0.tar.gz
     dest: external-packages/NLopt
     sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
+
+  # Eigen
+  - type: file
+    url: https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip
+    dest: external-packages/Eigen
+    sha256: e09b89aae054e9778ee3f606192ee76d645eec82c402c01c648b1fe46b6b9857
 
   # JPEG
   - type: file
@@ -285,6 +286,7 @@ modules:
   buildsystem: simple
   build-commands:
   - |
+    set -e
     mkdir -p build && cd build
     /app/cmake/bin/cmake ../ \
       -GNinja \
@@ -293,6 +295,7 @@ modules:
       -DCMAKE_PREFIX_PATH=/app/deps/usr/local \
       -DSLIC3R_PCH=OFF \
       -DSLIC3R_FHS=ON \
+      -DSLIC3R_ASAN=OFF \
       -DSLIC3R_GTK=3 \
       -DSLIC3R_STATIC=ON \
       -DSLIC3R_BUILD_TESTS=ON \
@@ -336,7 +339,6 @@ modules:
     install -Dm644 com.prusa3d.PrusaSlicer.text-x-gcode.png \
       /app/share/icons/hicolor/128x128/mimetypes/com.prusa3d.PrusaSlicer.text-x-gcode.png
     update-mime-database /app/share/mime
-
   sources:
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
