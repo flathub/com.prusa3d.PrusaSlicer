@@ -356,7 +356,7 @@ modules:
     - |
       sed -i 's/^\(MimeType=.*\)/\1x-scheme-handler\/prusaslicer;/g' com.prusa3d.PrusaSlicer.desktop
     - |
-      sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint %u/g' com.prusa3d.PrusaSlicer.desktop
+      sed -i 's/Exec=prusa-slicer %F/Exec=entrypoint --single-instance-on-url %u/g' com.prusa3d.PrusaSlicer.desktop
       sed -i 's/Exec=prusa-slicer/Exec=entrypoint/g' com.prusa3d.PrusaSlicer.GCodeViewer.desktop
 
       cat <<EOT >> com.prusa3d.PrusaSlicer.desktop
