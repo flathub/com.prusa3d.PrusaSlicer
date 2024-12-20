@@ -34,31 +34,31 @@
     </branding>
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/plater.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/plater.png</image>
             <caption>Clear and simple UI</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/preview.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/preview.png</image>
             <caption>Detailed GCode preview</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/multiplebed.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/multiplebed.png</image>
             <caption>Multiple bed support</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/plater_sidebar.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/plater_sidebar.png</image>
             <caption>Multiple material support</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/printables.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/printables.png</image>
             <caption>Intergration of printables.com</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/connect.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/connect.png</image>
             <caption>Prusa Connect integration</caption>
         </screenshot>
         <screenshot>
-            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/feecc9e792d0b5284e5eabba10c4950cca9a2810/screenshots/SLA.png</image>
+            <image>https://raw.githubusercontent.com/flathub/com.prusa3d.PrusaSlicer/59900c957ae1b1f51f855cfdb7692797385ed2ff/screenshots/SLA.png</image>
             <caption>SLA slicing</caption>
         </screenshot>
     </screenshots>
