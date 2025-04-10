@@ -113,7 +113,7 @@ modules:
   # PrusaSlicer dependencies source
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_2.9.1
+    tag: version_2.9.2
 
   # Cereal
   - type: file
@@ -177,7 +177,7 @@ modules:
 
   # MPFR
   - type: file
-    url: https://www.mpfr.org/mpfr-current/mpfr-4.2.1.tar.bz2
+    url: https://www.mpfr.org/mpfr-4.2.1/mpfr-4.2.1.tar.bz2
     dest: external-packages/MPFR
     sha256: b9df93635b20e4089c29623b19420c4ac848a1b29df1cfd59f26cab0d2666aa0
 
@@ -349,7 +349,7 @@ modules:
   sources:
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_2.9.1
+    tag: version_2.9.2
   - type: patch # Fix download from printables. More info: https://github.com/prusa3d/PrusaSlicer/pull/12785
     path: patches/0001-don-t-call-show_downloader_registration_dialog-if-SL.patch
 
