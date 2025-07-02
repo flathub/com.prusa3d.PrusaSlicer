@@ -140,10 +140,11 @@ modules:
     sha256: c6dd7a5701fff8ad5ebb45a3dc8e757e61d52658de3918e38bab233e7fd3b4ae
 
   # Eigen
-  - type: file
-    url: https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip
+  - type: git
+    url: https://gitlab.com/libeigen/eigen.git
     dest: external-packages/Eigen
-    sha256: e09b89aae054e9778ee3f606192ee76d645eec82c402c01c648b1fe46b6b9857
+    commit: 21ae2afd4edaa1b69782c67a54182d34efe43f9c
+    tag: 3.3.7
 
   # JPEG
   - type: file
@@ -287,6 +288,10 @@ modules:
   # Build fail during generation of OCCT overview documentation, disable it fix problem
   - type: patch
     path: patches/0001-don-t-build-occt-doc.patch
+
+  # Build fail during generation of OCCT overview documentation, disable it fix problem
+  - type: patch
+    path: patches/0001-Eigen-git-source.patch
 
 - name: PrusaSlicer
   buildsystem: simple
