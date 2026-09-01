@@ -1,0 +1,33 @@
+diff --git a/src/slic3r-platform-wx/CMakeLists.txt b/src/slic3r-platform-wx/CMakeLists.txt
+index e43a2cc..15e9b6e 100644
+--- a/src/slic3r-platform-wx/CMakeLists.txt
++++ b/src/slic3r-platform-wx/CMakeLists.txt
+@@ -36,6 +36,28 @@ target_link_libraries(slic3r-platform-wx PUBLIC
+     imgui_backend_ogl3
+     slic3r-shared
+ )
++if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    # wxWidgets is built with wxUSE_GLCANVAS_EGL=ON (see the deps patch), so
++    # wxGLCanvas uses EGL and native Wayland surfaces rather than GLX. The wx
++    # libraries are static, so the wx CONFIG package does not propagate these
++    # dependencies and they must be linked explicitly here. Without them the
++    # final link fails with "DSO missing from command line":
++    #   libwx_gtk3u_core-3.3.a(utilsx11.cpp.o) -> XGetWindowAttributes
++    #                                             (libX11; wx core uses Xlib
++    #                                             regardless of the GL backend)
++    #   libwx_gtk3u_gl-3.3.a(glegl.cpp.o)      -> wl_compositor_interface
++    #                                             (libwayland-client)
++    find_package(X11 REQUIRED)
++    find_package(OpenGL REQUIRED COMPONENTS EGL)
++    find_package(PkgConfig REQUIRED)
++    pkg_check_modules(WAYLAND REQUIRED IMPORTED_TARGET wayland-client wayland-egl)
++    target_link_libraries(slic3r-platform-wx PUBLIC
++        X11::X11
++        OpenGL::EGL
++        PkgConfig::WAYLAND
++    )
++endif ()
++
+ target_include_directories(slic3r-platform-wx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+ 
+ 

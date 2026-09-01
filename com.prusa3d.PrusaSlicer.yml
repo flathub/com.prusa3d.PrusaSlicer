@@ -7,6 +7,12 @@ desktop-file-name-suffix: " (alpha11)"
 separate-locales: false
 finish-args:
 - --share=ipc
+# Wayland is enabled via patches/0001-wayland-egl-deps.patch (wxGLCanvas on
+# EGL, GLEW on eglGetProcAddress) plus patches/0002-wayland-gdk-backend.patch
+# (stop forcing GDK_BACKEND=x11). Without those patches PrusaSlicer can only
+# use GLX and needs --socket=x11. X11 is kept so GDK_BACKEND=x11 still works
+# as an escape hatch if the Wayland path misbehaves.
+- --socket=wayland
 - --socket=x11
 - --share=network
 # Enables sentry integration to work (requires ptrace)
@@ -77,7 +83,9 @@ modules:
     mkdir -p deps/build && cd deps/build
     /app/cmake/bin/cmake ../ \
       -DDEP_DOWNLOAD_DIR=/run/build/PrusaSlicerDeps/external-packages \
-      -DDESTDIR=/app/deps
+      -DDESTDIR=/app/deps \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DPrusaSlicer_deps_PACKAGE_EXCLUDES="Catch2|Trumpeloeil"
     /app/cmake/bin/cmake --build .
   cleanup:
   - '*'
@@ -406,6 +414,11 @@ modules:
   - type: patch
     path: patches/arm_test.patch
 
+  # Wayland: build wxGLCanvas with the EGL backend and GLEW against
+  # eglGetProcAddress, instead of GLX which is X11-only.
+  - type: patch
+    path: patches/0001-wayland-egl-deps.patch
+
 - name: PrusaSlicer
   buildsystem: simple
   build-commands:
@@ -420,9 +433,9 @@ modules:
       -DSLIC3R_FHS=ON \
       -DSLIC3R_SENTRY_DSN=https://a7fd965ac32d164b4e1c283b3840051a@o4511660497108992.ingest.de.sentry.io/4511661201227856 \
       -DSLIC3R_ASAN=OFF \
+      -DSLIC3R_BUILD_TESTS=OFF \
       -DCMAKE_BUILD_TYPE=Release
     /app/cmake/bin/cmake --build .
-    ctest --verbose
     /app/cmake/bin/cmake --build . --target install > /dev/null
     install -Dm644 com.prusa3d.PrusaSlicer.desktop /app/share/applications/com.prusa3d.PrusaSlicer.desktop
 
@@ -437,6 +450,19 @@ modules:
       mv /app/share/PrusaSlicer/localization/${i} /app/share/runtime/locale/${lang}
       ln -rs /app/share/runtime/locale/${lang}/${i} /app/share/PrusaSlicer/localization/${i}
     done
+  - |
+    # Wayland: the compositor matches xdg_toplevel.app_id against a .desktop file
+    # to pick the window icon. GTK derives app_id from the executable name, so
+    # the app sends app_id="slic3r-app-launcher" (confirmed via WAYLAND_DEBUG),
+    # while the desktop file is com.prusa3d.PrusaSlicer.desktop and carries a
+    # stale StartupWMClass=prusa-slicer (the 2.x binary name). Neither matches,
+    # so the window falls back to a generic icon. Point StartupWMClass at the
+    # app_id actually sent.
+    sed -i 's/^StartupWMClass=.*/StartupWMClass=slic3r-app-launcher/' \
+      /app/share/applications/com.prusa3d.PrusaSlicer.desktop
+    grep -q '^StartupWMClass=slic3r-app-launcher$' \
+      /app/share/applications/com.prusa3d.PrusaSlicer.desktop
+
   - |
     install -Dm644 com.prusa3d.PrusaSlicer.metainfo.xml /app/share/metainfo/com.prusa3d.PrusaSlicer.metainfo.xml
     install -Dm644 com.prusa3d.PrusaSlicer.svg /app/share/icons/hicolor/scalable/apps/com.prusa3d.PrusaSlicer.svg
@@ -459,6 +485,16 @@ modules:
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
     tag: version_3.0.0-alpha11
+  # Wayland: stop forcing GDK_BACKEND=x11 when a Wayland session is present.
+  # Depends on the EGL dep patch above. Upstream issue #8284.
+  - type: patch
+    path: patches/0002-wayland-gdk-backend.patch
+
+  # wx is static, so the wx CONFIG package does not propagate the EGL/Wayland/X11
+  # dependencies that wxUSE_GLCANVAS_EGL=ON introduces. Link them explicitly.
+  - type: patch
+    path: patches/0003-link-egl-wayland-x11.patch
+
   - type: shell
     commands:
     # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.

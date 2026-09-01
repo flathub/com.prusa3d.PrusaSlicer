@@ -1,0 +1,26 @@
+diff --git a/src/slic3r-app-desktop/src/Slic3r/App/Desktop/DesktopApp.cpp b/src/slic3r-app-desktop/src/Slic3r/App/Desktop/DesktopApp.cpp
+index 01c15dd..4c9ee94 100644
+--- a/src/slic3r-app-desktop/src/Slic3r/App/Desktop/DesktopApp.cpp
++++ b/src/slic3r-app-desktop/src/Slic3r/App/Desktop/DesktopApp.cpp
+@@ -162,10 +162,17 @@ int run(const Slic3r::App::InitParams& init_params, AppServices& app_services)
+     ::setenv("WEBKIT_DISABLE_COMPOSITING_MODE", "1", /* replace */ false);
+     ::setenv("WEBKIT_DISABLE_DMABUF_RENDERER", "1", /* replace */ false);
+ 
+-    // On Linux, wxGTK has no support for Wayland, and the app crashes on
+-    // startup if gtk3 is used. This env var has to be set explicitly to
+-    // instruct the window manager to fall back to X server mode.
+-    ::setenv("GDK_BACKEND", "x11", /* replace */ true);
++    // Historically wxGTK could not run on Wayland: wxGLCanvas was built
++    // without the EGL backend, so it could only create GLX contexts, which are
++    // X11-only. X11 was therefore forced unconditionally here.
++    //
++    // With wxWidgets built with wxUSE_GLCANVAS_EGL=ON and GLEW built with
++    // GLEW_EGL=ON, wxGLCanvas creates EGL contexts, which work on both Wayland
++    // and X11. Only fall back to X11 when there is no Wayland session, and no
++    // longer override an explicit GDK_BACKEND set by the user (see #8284).
++    if (::getenv("WAYLAND_DISPLAY") == nullptr) {
++        ::setenv("GDK_BACKEND", "x11", /* replace */ false);
++    }
+ 
+     if (app_services.app_config().get<Theme::Style>("theme") == Theme::Style::Light) {
+         setenv("GTK_THEME", "Adwaita:light", 1);
