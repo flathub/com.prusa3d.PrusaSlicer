@@ -3,7 +3,7 @@ runtime: org.gnome.Platform
 runtime-version: "50"
 sdk: org.gnome.Sdk
 command: slic3r-app-launcher
-desktop-file-name-suffix: " (alpha12)"
+desktop-file-name-suffix: " (alpha13)"
 separate-locales: false
 finish-args:
 - --share=ipc
@@ -21,9 +21,12 @@ finish-args:
 - --system-talk-name=org.freedesktop.UDisks2
 - --talk-name=org.freedesktop.DBus.Introspectable.*
 - --talk-name=com.prusa3d.prusaslicer.InstanceCheck.*
+# Allow access to the spacenavd socket for 3D mouse support.
+- --filesystem=/run/spnav.sock:ro
+- --env=SPNAV_SOCKET=/run/spnav.sock
 
 build-options:
-  strip: true
+  strip: false
   cflags: ""
   cflags-override: true
   cxxflags: ""
@@ -86,7 +89,7 @@ modules:
   # PrusaSlicer dependencies source
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_3.0.0-alpha12
+    tag: version_3.0.0-alpha13
 
   # yamlCpp
   - type: file
@@ -135,6 +138,12 @@ modules:
     url: https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
     dest: external-packages/Eigen
     sha256: eba3f3d414d2f8cba2919c78ec6daab08fc71ba2ba4ae502b7e5d4d99fc02cda
+
+  # hidapi
+  - type: file
+    url: https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.15.0.zip
+    dest: external-packages/hidapi
+    sha256: dea0c29849e7cac86a4561bf36ba0d97a755a16dc99b9e75714f4af7ea2af2f1
 
   # JPEG
   - type: file
@@ -214,6 +223,12 @@ modules:
     dest: external-packages/spdlog
     sha256: b74274c32c8be5dba70b7006c1d41b7d3e5ff0dff8390c8b6390c1189424e094
 
+  # Paho
+  - type: file
+    url: https://github.com/eclipse-paho/paho.mqtt.c/archive/refs/tags/v1.3.16.zip
+    dest: external-packages/Paho
+    sha256: dfecd4d29b164db267dc642d35fb1590c96edb88157992260948cbd7d8de41b0
+
   # Tracy
   - type: file
     url: https://github.com/wolfpld/tracy/archive/refs/tags/v0.13.1.tar.gz
@@ -252,7 +267,7 @@ modules:
 
   # GMP
   - type: file
-    url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
+    url: https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.bz2
     dest: external-packages/GMP
     sha256: eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c
 
@@ -273,6 +288,20 @@ modules:
     url: https://github.com/facebook/zstd/releases/download/v1.5.6/zstd-1.5.6.tar.gz
     dest: external-packages/zstd
     sha256: 8c29e06cf42aacc1eafc4077ae2ec6c6fcb96a626157e0593d5e82a34fd403c1
+
+  # matdb
+  - type: file
+    url: https://slicer-assets.prusa3d.com/versions/7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497/matdb.zip
+    dest: external-packages/matdb
+    sha256: 7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497
+  - type: patch
+    path: patches/matdb.patch
+
+  # libspnav
+  - type: file
+    url: https://github.com/FreeSpacenav/libspnav/releases/download/v1.2/libspnav-1.2.tar.gz
+    dest: external-packages/libspnav
+    sha256: 093747e7e03b232e08ff77f1ad7f48552c06ac5236316a5012db4269951c39db
 
   # GLEW
   - type: file
@@ -390,9 +419,15 @@ modules:
 
   # LibBGCode
   - type: file
-    url: https://github.com/prusa3d/libbgcode/archive/6744dbe827c03cf3a99b7783de43c9d945e38b97.zip
+    url: https://github.com/prusa3d/libbgcode/archive/167c8e19a26e74de42bbb3622480ee04a9420394.zip
     dest: external-packages/LibBGCode
-    sha256: 139fe2a40fd0bdb6be7e7b86c9306bcb148eeb1872c36791a8cf87e00e4800b8
+    sha256: 68f82acf1855227d0db8b2af847638dfba0973dab6f568ce879bbb418b732266
+
+  # Pahocpp
+  - type: file
+    url: https://github.com/eclipse/paho.mqtt.cpp/archive/5e0d1bf37b4826d680ec066ec42afd133851a681.zip
+    dest: external-packages/Pahocpp
+    sha256: bdd104b8c07d908743b919229e946026c51dc0bf3e157888f43a9490832bb97b
 
   # rangev3
   - type: file
@@ -400,8 +435,31 @@ modules:
     dest: external-packages/rangev3
     sha256: 015adb2300a98edfceaf0725beec3337f542af4915cec4d0b89fa0886f4ba9cb
 
+- name: mold
+  buildsystem: simple
+  build-commands:
+  - mkdir -p /app/mold
+  - tar -xf mold.tar.gz --strip-components=1 -C /app/mold
+  sources:
+  - type: file
+    url: https://github.com/rui314/mold/releases/download/v3.0.0/mold-3.0.0-x86_64-linux.tar.gz
+    sha256: 6c90d4a474c7c0409dfb575be03a5345878ac14fdba18de8b40fa58c60121189
+    dest-filename: mold.tar.gz
+    only-arches:
+    - x86_64
+  - type: file
+    url: https://github.com/rui314/mold/releases/download/v3.0.0/mold-3.0.0-aarch64-linux.tar.gz
+    sha256: 52c759d3689babaea4c42af2f31062a74ab83e17ffb5a8090232534c67b70577
+    dest-filename: mold.tar.gz
+    only-arches:
+    - aarch64
+  cleanup:
+  - "*"
+
 - name: PrusaSlicer
   buildsystem: simple
+  build-options:
+    append-path: /app/mold/bin
   build-commands:
   - |
     set -e
@@ -414,7 +472,10 @@ modules:
       -DSLIC3R_FHS=ON \
       -DSLIC3R_SENTRY_DSN=https://a7fd965ac32d164b4e1c283b3840051a@o4511660497108992.ingest.de.sentry.io/4511661201227856 \
       -DSLIC3R_ASAN=OFF \
-      -DCMAKE_BUILD_TYPE=Release
+      -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold \
+      -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold \
+      -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo
     /app/cmake/bin/cmake --build .
     ctest --verbose
     /app/cmake/bin/cmake --build . --target install > /dev/null
@@ -452,7 +513,7 @@ modules:
   # Pre-Build
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_3.0.0-alpha12
+    tag: version_3.0.0-alpha13
   - type: shell
     commands:
     # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.
