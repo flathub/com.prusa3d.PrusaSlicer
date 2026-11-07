@@ -3,7 +3,7 @@ runtime: org.gnome.Platform
 runtime-version: "50"
 sdk: org.gnome.Sdk
 command: slic3r-app-launcher
-desktop-file-name-suffix: " (alpha13)"
+desktop-file-name-suffix: " (alpha14)"
 separate-locales: false
 finish-args:
 - --share=ipc
@@ -89,7 +89,7 @@ modules:
   # PrusaSlicer dependencies source
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_3.0.0-alpha13
+    tag: version_3.0.0-alpha14
 
   # yamlCpp
   - type: file
@@ -291,9 +291,9 @@ modules:
 
   # matdb
   - type: file
-    url: https://slicer-assets.prusa3d.com/versions/7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497/matdb.zip
+    url: https://slicer-assets.prusa3d.com/versions/4210fcca63a43cd879fc830133cf2b415aa333d150fc5f0e179b9524332172bd/matdb.zip
     dest: external-packages/matdb
-    sha256: 7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497
+    sha256: 4210fcca63a43cd879fc830133cf2b415aa333d150fc5f0e179b9524332172bd
   - type: patch
     path: patches/matdb.patch
 
@@ -472,6 +472,7 @@ modules:
       -DSLIC3R_FHS=ON \
       -DSLIC3R_SENTRY_DSN=https://a7fd965ac32d164b4e1c283b3840051a@o4511660497108992.ingest.de.sentry.io/4511661201227856 \
       -DSLIC3R_ASAN=OFF \
+      -DSLIC3R_PCH=OFF \
       -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold \
       -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold \
       -DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold \
@@ -513,7 +514,7 @@ modules:
   # Pre-Build
   - type: git
     url: https://github.com/prusa3d/PrusaSlicer
-    tag: version_3.0.0-alpha13
+    tag: version_3.0.0-alpha14
   - type: shell
     commands:
     # Set PrusaSlicer version for build and reference Flathub.org for better bug seperation.

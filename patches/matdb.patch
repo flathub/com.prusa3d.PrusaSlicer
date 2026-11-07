@@ -7,8 +7,8 @@ index abb06f7eef..5433f6acdb 100644
  
  ExternalProject_Add(dep_matdb
 -    URL https://slicer-assets.prusa3d.com/matdb.zip
-+    URL https://slicer-assets.prusa3d.com/versions/7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497/matdb.zip
-+    URL_HASH SHA256=7052d991b1deb2570a4359c1ab9dfba5df5b64eb3e3f28f712ba4180639b6497
++    URL https://slicer-assets.prusa3d.com/versions/4210fcca63a43cd879fc830133cf2b415aa333d150fc5f0e179b9524332172bd/matdb.zip
++    URL_HASH SHA256=4210fcca63a43cd879fc830133cf2b415aa333d150fc5f0e179b9524332172bd
 +
      DOWNLOAD_DIR ${_matdb_download_dir}
  
